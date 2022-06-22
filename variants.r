@@ -184,7 +184,7 @@ plot_genomic_context = function(rec, gene_id, res, gene, txdb) {
 #'
 #' @param res  A full results GRanges object from `annotate_coding()`
 #' @param fname  File name to save results to
-save_xlsx = function(res, fname) {
+save_xlsx = function(res, fname, min_cov=2, min_af=0.1) {
     gr2df = function(gr) as_tibble(as.data.frame(unname(gr))) %>%
         mutate(var_id = names(gr)) %>%
         dplyr::select(var_id, everything())
@@ -194,6 +194,7 @@ save_xlsx = function(res, fname) {
     alt_in_ref = function(a,r) grepl(as.character(a), as.character(r), fixed=TRUE)
     subs = subs[!mapply(alt_in_ref, a=subs$alt_prot, r=subs$ref_prot)]
     subs = subs[!is.na(subs$gene_count) & subs$gene_count > 0 & subs$gene_tpm > 0]
+    subs = subs[subs$cov_alt >= min_af * subs$cov_ref & subs$cov_alt >= min_cov]
     subs = subs[!duplicated(subs$alt_prot)]
 
     # peptide is not contained within another peptide
