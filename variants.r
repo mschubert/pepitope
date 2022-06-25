@@ -218,16 +218,62 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1) {
         rowwise() %>% mutate(tiled = list(tile_cDNA(cDNA))) %>% ungroup() %>%
         mutate(n_tiles = sapply(tiled, length)) %>%
         tidyr::unnest(tiled) %>%
-        mutate(tiled = unlist(tiled),
+        mutate(tiled = unlist(tiled, use.names=FALSE),
                nt = nchar(tiled),
                peptide = as.character(Biostrings::translate(Biostrings::DNAStringSet(tiled))))
+
+    pep$Bbs1_replaced = vcountPattern("GAAGAC", pep$tiled) + vcountPattern("GTCTTC", pep$tiled)
+    pep$tiled = sapply(pep$tiled, remove_cutsite, site="GAAGAC", seed=178529, USE.NAMES=FALSE)
+#    stopifnot(pep$peptide == as.character(Biostrings::translate(Biostrings::DNAStringSet(pep$tiled)))) #FIXME: atn init codons
 
     sv = list(
         `All Variants` = gr2df(res) %>% dplyr::select(-(ref_nuc:alt_prot)),
         `Unique Protein-Coding` = gr2df(subs),
-        `93 nt Peptides` = pep %>% dplyr::select(var_id:cDNA, n_tiles, tiled, nt, peptide)
+        `93 nt Peptides` = pep %>% dplyr::select(var_id:cDNA, n_tiles, Bbs1_replaced, tiled, nt, peptide)
     )
     writexl::write_xlsx(sv, path=fname)
+}
+
+#' Remove a Restriction Enzyme cut site but keep AA
+#'
+#' @param nuc   cDNA nucleotide string
+#' @param site  Recognition site to be replaced (fwd+rev comp)
+#' @param seed  Set random seed to select same changes on multiple runs
+#' @return      cDNA with minimal changes to no longer contain the cut site
+remove_cutsite = function(nuc, site, seed=NULL) {
+    set.seed(seed)
+    revtrans = function(aa) {
+        aa_split = strsplit(as.character(aa), "+")[[1]]
+        tr = Biostrings::getGeneticCode()
+        lapply(aa_split, function(x) names(tr)[tr == x]) %>%
+            do.call(tidyr::crossing, .) %>%
+            rowwise() %>%
+            purrr::pmap_chr(paste0)
+    }
+    alt_nuc = function(nuc, match) {
+        subs = subseq(Biostrings::DNAString(nuc), start(match), end(match))
+        possib = revtrans(Biostrings::translate(subs, no.init.codon=start(match)!=1))
+        lapply(possib, Biostrings::replaceAt, x=nuc, at=match)
+    }
+
+    rc = function(x) as.character(Biostrings::reverseComplement(Biostrings::DNAString(x)))
+    m = c(vmatchPattern(site, nuc), vmatchPattern(rc(site), nuc)) %>% unlist()
+    if (length(m) == 0)
+        return(nuc)
+
+    start(m) = floor((start(m)-1)/3) * 3 + 1
+    end(m) = ceiling((end(m))/3) * 3
+
+    nucs = nuc = Biostrings::DNAStringSet(nuc)
+    for (i in seq_along(m))
+        nucs = lapply(nucs, alt_nuc, match=m[i]) %>% do.call(c, .)
+    nucs = Biostrings::DNAStringSet(nucs)
+
+    valid = vcountPattern(site, nucs) + vcountPattern(rc(site), nucs) == 0
+    nchange = mapply(function(i) stringdist::stringdist(subseq(nuc, m[i]), subseq(nucs, m[i])),
+                     i=seq_along(m)) %>% as.matrix() %>% rowSums()
+    min_valid = which(valid & nchange == min(nchange[valid]))
+    as.character(nucs[sample(min_valid, 1)])
 }
 
 sys$run({
