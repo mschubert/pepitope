@@ -217,13 +217,15 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1) {
                             tx_id=tx_name, ref=as.character(ref_nuc),
                             alt=as.character(alt_nuc))) %>%
         tidyr::pivot_longer(c(ref, alt), names_to="type", values_to="cDNA") %>%
-        dplyr::filter(!duplicated(cDNA)) %>%
         rowwise() %>% mutate(tiled = list(tile_cDNA(cDNA))) %>% ungroup() %>%
         mutate(n_tiles = sapply(tiled, length)) %>%
         tidyr::unnest(tiled) %>%
         mutate(tiled = unlist(tiled, use.names=FALSE),
                nt = nchar(tiled),
                peptide = as.character(Biostrings::translate(Biostrings::DNAStringSet(tiled), no.init.codon=TRUE)))
+
+    stopifnot(pep$type[duplicated(pep$tiled)] == "ref")
+    pep = pep[!duplicated(pep$tiled),]
 
     pep$Bbs1_replaced = vcountPattern("GAAGAC", pep$tiled) + vcountPattern("GTCTTC", pep$tiled)
     pep$tiled = sapply(pep$tiled, remove_cutsite, site="GAAGAC", seed=178529, USE.NAMES=FALSE)
