@@ -41,7 +41,7 @@ annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
     has_start = subseq(codv$ref_prot,1,1) == "M"
     has_stop = subseq(reverse(codv$ref_prot),1,1) == "*"
     n_stop = vcountPattern("*", codv$ref_prot)
-    codv = codv[has_start & has_stop & n_stop==1]
+    codv = codv[has_start & has_stop & n_stop==1] #TODO: replace alt init codons by M
 
     # get coding sequences with updated variants
     upd_seqs = function(i) {
@@ -121,7 +121,7 @@ subset_context = function(codv, ctx_codons=15) {
     # get nuc and protein sequences incl context
     codv$ref_nuc = subseq(codv$ref_nuc, ctx_start-add_to_start, ctx_end_ref+add_to_end)
     codv$alt_nuc = subseq(codv$alt_nuc, ctx_start-add_to_start, ctx_end_alt+add_to_end)
-    codv$ref_prot = Biostrings::translate(codv$ref_nuc)
+    codv$ref_prot = Biostrings::translate(codv$ref_nuc) #TODO: no alt init codons (atn M replaced by ATG above)
     codv$alt_prot = Biostrings::translate(codv$alt_nuc)
     codv$alt_nnuc = nchar(codv$alt_nuc)
     codv$alt_shift = add_to_end - add_to_start
@@ -214,17 +214,20 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1) {
         lapply(starts, function(s) substr(p, s, s+92))
     }
     pep = with(subs, tibble(var_id=names(subs), gene_id=GENEID,
-                            tx_id=tx_name, cDNA=as.character(alt_nuc))) %>%
+                            tx_id=tx_name, ref=as.character(ref_nuc),
+                            alt=as.character(alt_nuc))) %>%
+        tidyr::pivot_longer(c(ref, alt), names_to="type", values_to="cDNA") %>%
+        dplyr::filter(!duplicated(cDNA)) %>%
         rowwise() %>% mutate(tiled = list(tile_cDNA(cDNA))) %>% ungroup() %>%
         mutate(n_tiles = sapply(tiled, length)) %>%
         tidyr::unnest(tiled) %>%
         mutate(tiled = unlist(tiled, use.names=FALSE),
                nt = nchar(tiled),
-               peptide = as.character(Biostrings::translate(Biostrings::DNAStringSet(tiled))))
+               peptide = as.character(Biostrings::translate(Biostrings::DNAStringSet(tiled), no.init.codon=TRUE)))
 
     pep$Bbs1_replaced = vcountPattern("GAAGAC", pep$tiled) + vcountPattern("GTCTTC", pep$tiled)
     pep$tiled = sapply(pep$tiled, remove_cutsite, site="GAAGAC", seed=178529, USE.NAMES=FALSE)
-#    stopifnot(pep$peptide == as.character(Biostrings::translate(Biostrings::DNAStringSet(pep$tiled)))) #FIXME: atn init codons
+#    stopifnot(pep$peptide == as.character(Biostrings::translate(Biostrings::DNAStringSet(pep$tiled), no.init.codon=TRUE)))
 
     sv = list(
         `All Variants` = gr2df(res) %>% dplyr::select(-(ref_nuc:alt_prot)),
@@ -252,7 +255,7 @@ remove_cutsite = function(nuc, site, seed=NULL) {
     }
     alt_nuc = function(nuc, match) {
         subs = subseq(Biostrings::DNAString(nuc), start(match), end(match))
-        possib = revtrans(Biostrings::translate(subs, no.init.codon=start(match)!=1))
+        possib = revtrans(Biostrings::translate(subs, no.init.codon=TRUE))
         lapply(possib, Biostrings::replaceAt, x=nuc, at=match)
     }
 
