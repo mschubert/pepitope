@@ -119,7 +119,7 @@ subset_context = function(codv, ctx_codons=15) {
               c(add_to_start, add_to_end) <= ctx+3)
 
     # get nuc and protein sequences incl context
-    codv$ref_nuc = subseq(codv$ref_nuc, ctx_start-add_to_start, ctx_end_ref+add_to_end)
+    codv$ref_nuc = subseq(codv$ref_nuc, ctx_start-add_to_start, ctx_end_ref+add_to_end) #TODO: merge if context overlaps? [only correct if same allele/read support]
     codv$alt_nuc = subseq(codv$alt_nuc, ctx_start-add_to_start, ctx_end_alt+add_to_end)
     codv$ref_prot = Biostrings::translate(codv$ref_nuc) #TODO: no alt init codons (atn M replaced by ATG above)
     codv$alt_prot = Biostrings::translate(codv$alt_nuc)
@@ -285,7 +285,8 @@ sys$run({
     args = sys$cmd$parse(
         opt('c', 'config', 'yaml', 'samples.yaml'),
         opt('a', 'patient', 'identifier', 'M14TIL102'),
-        opt('o', 'outfile', 'rds', 'M14TIL102.xlsx')
+        opt('o', 'outfile', 'rds', 'M14TIL102.rds'),
+        opt('x', 'export', 'xlsx', 'M14TIL102.xlsx')
 #        opt('p', 'plotfile', 'pdf', 'var_M14TIL102.pdf')
     )
 
@@ -311,7 +312,8 @@ sys$run({
     res = annotate_coding(rec, txdb, asm, tx_coding) %>%
         add_gex(rec)
 
-    save_xlsx(res, args$outfile)
+    saveRDS(res, file=args$outfile)
+    save_xlsx(res, args$export)
 #todo: use canonical transcript if all have same ctx
 
 #    cur_var2 = res3[res3$GENEID =="ENSG00000162572"]
