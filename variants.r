@@ -39,7 +39,7 @@ annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
 
     # filter for proper ORFs
     has_start = subseq(codv$ref_prot,1,1) == "M"
-    has_stop = subseq(reverse(codv$ref_prot),1,1) == "*"
+    has_stop = subseq(IRanges::reverse(codv$ref_prot),1,1) == "*"
     n_stop = vcountPattern("*", codv$ref_prot)
     codv = codv[has_start & has_stop & n_stop==1] #TODO: replace alt init codons by M
 
