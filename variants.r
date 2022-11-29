@@ -67,7 +67,7 @@ annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
     # check if we didn't change the length of any nuc
     stopifnot(with(codv,
         nchar(ref_nuc) - nchar(REFCODON) == nchar(alt_nuc) - nchar(VARCODON) |
-        CONSEQUENCE %in% c("frameshift", "nonsense") |
+        CONSEQUENCE %in% c("frameshift", "nonsense", "nostart") |
         vcountPattern("*", REFAA) > 0 | # transcript extension
         vcountPattern("*", VARAA) > 0 # "missense"+nonsense
     ))
