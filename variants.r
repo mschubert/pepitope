@@ -39,8 +39,6 @@ annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
     # get coding sequences with updated variants
     upd_seqs = function(i) {
         new = codv$varAllele[[i]]
-        if (as.character(strand(codv[i])) == "-")
-            new = Biostrings::reverseComplement(new)
         Biostrings::replaceAt(codv$ref_nuc[[i]], codv$CDSLOC[i], new)
     }
     codv$alt_nuc = DNAStringSet(lapply(seq_along(codv$ref_nuc), upd_seqs))
