@@ -19,8 +19,9 @@ annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
     vcf_diff = readVcf(rec$dna$vcf_diff)
     codv = predictCoding(vcf_diff, txdb, asm)
 
+    stopifnot(!any(duplicated(rownames(geno(vcf_diff)$AD))))
     covs = geno(vcf_diff)$AD[,grepl(tumor_cov, colnames(geno(vcf_diff)$AD))]
-    cmat = do.call(rbind, covs)[names(codv),]
+    cmat = do.call(rbind, covs[names(codv)])
     codv$cov_ref = cmat[,1]
     codv$cov_alt = cmat[,2]
 #    codv$ALT = do.call(c, codv$ALT) # assume one variant per row
