@@ -16,18 +16,10 @@ vmatchPattern = Biostrings::vmatchPattern
 #' @param tumor_cov  Part of column name to get ref/alt coverage (regex)
 #' @return      A GRanges object with annotated variants
 annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
-    vcf_diff = readVcf(rec$dna$vcf_diff)
-    codv = predictCoding(vcf_diff, txdb, asm)
-
-    stopifnot(!any(duplicated(rownames(geno(vcf_diff)$AD))))
-    covs = geno(vcf_diff)$AD[,grepl(tumor_cov, colnames(geno(vcf_diff)$AD))]
-    cmat = do.call(rbind, covs[names(codv)])
-    codv$cov_ref = cmat[,1]
-    codv$cov_alt = cmat[,2]
-#    codv$ALT = do.call(c, codv$ALT) # assume one variant per row
+    vr = readVcfAsVRanges(rec$dna$vcf_diff, "GRCh38")
+    codv = predictCoding(vr, txdb, asm)
 
 #    codv2 = predictCoding(vcf_tumor, txdb, asm) # 1637 var names @codv, 26k @codv2, 223 common?!
-
 #    splice = locateVariants(vcf_diff, txdb, SpliceSiteVariants())
 
     tx = transcripts(txdb)
@@ -46,12 +38,12 @@ annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
 
     # get coding sequences with updated variants
     upd_seqs = function(i) {
-        new = codv$ALT[[i]]
+        new = codv$varAllele[[i]]
         if (as.character(strand(codv[i])) == "-")
             new = Biostrings::reverseComplement(new)
-        Biostrings::replaceAt(codv$ref_nuc[i], codv$CDSLOC[i], new)
+        Biostrings::replaceAt(codv$ref_nuc[[i]], codv$CDSLOC[i], new)
     }
-    codv$alt_nuc = lapply(seq_along(codv$ref_nuc), upd_seqs) %>% do.call(c, .)
+    codv$alt_nuc = DNAStringSet(lapply(seq_along(codv$ref_nuc), upd_seqs))
 
     # get protein sequences and adjust nuc for premature stop
     codv$alt_prot = Biostrings::translate(codv$alt_nuc)
