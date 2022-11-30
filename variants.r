@@ -41,7 +41,7 @@ annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
         new = codv$varAllele[[i]]
         Biostrings::replaceAt(codv$ref_nuc[[i]], codv$CDSLOC[i], new)
     }
-    codv$alt_nuc = DNAStringSet(lapply(seq_along(codv$ref_nuc), upd_seqs))
+    codv$alt_nuc = Biostrings::DNAStringSet(lapply(seq_along(codv$ref_nuc), upd_seqs))
 
     # get protein sequences and adjust nuc for premature stop
     codv$alt_prot = Biostrings::translate(codv$alt_nuc)
@@ -53,16 +53,16 @@ annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
             nuc_utr3 = getSeq(asm, utr3[[codv$TXID[i]]])
             codv$alt_nuc[i] = Biostrings::xscat(codv$alt_nuc[i], nuc_utr3)
             codv$alt_prot[i] = Biostrings::translate(codv$alt_nuc[i])
-            first_stop = start(vmatchPattern("*", codv$alt_prot[i])[[1]])[1]
+            first_stop = IRanges::start(vmatchPattern("*", codv$alt_prot[i])[[1]])[1]
         } else
-            first_stop = start(stops[[i]][1])
+            first_stop = IRanges::start(stops[[i]][1])
 
         codv$alt_prot[i] = subseq(codv$alt_prot[i], 1, first_stop)
         codv$alt_nuc[i] = subseq(codv$alt_nuc[i], 1, first_stop*3)
     }
 
     codv$CONSEQUENCE = as.character(codv$CONSEQUENCE)
-    codv$CONSEQUENCE[start(codv$CDSLOC) == 1 & codv$VARCODON != "ATG"] = "nostart"
+    codv$CONSEQUENCE[IRanges::start(codv$CDSLOC) == 1 & codv$VARCODON != "ATG"] = "nostart"
 
     # check if we didn't change the length of any nuc
     stopifnot(with(codv,
@@ -81,10 +81,10 @@ annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
 #' @return  GRanges object with sequence information of only context
 subset_context = function(codv, ctx_codons=15) {
     ctx = ctx_codons * 3
-    stopAA = sapply(vmatchPattern("*", codv$VARAA), function(x) start(x)[1]-1) * 3
+    stopAA = sapply(vmatchPattern("*", codv$VARAA), function(x) IRanges::start(x)[1]-1) * 3
     len_delta = pmin(nchar(codv$VARCODON), stopAA, na.rm=TRUE) - nchar(codv$REFCODON)
 
-    roi_codon_start = floor((start(codv$CDSLOC)-1)/3) * 3 + 1
+    roi_codon_start = floor((IRanges::start(codv$CDSLOC)-1)/3) * 3 + 1
     roi_codon_end_ref = ceiling((end(codv$CDSLOC))/3) * 3
     len_ref = nchar(codv$ref_nuc) - 3
     len_alt = nchar(codv$alt_nuc) - 3
@@ -185,7 +185,7 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1) {
     alt_in_ref = function(a,r) grepl(as.character(a), as.character(r), fixed=TRUE)
     subs = subs[!mapply(alt_in_ref, a=subs$alt_prot, r=subs$ref_prot)]
     subs = subs[!is.na(subs$gene_count) & subs$gene_count > 0 & subs$gene_tpm > 0]
-    subs = subs[subs$cov_alt >= min_af * subs$cov_ref & subs$cov_alt >= min_cov]
+    subs = subs[subs$AF >= min_af & subs$AF*subs$DP >= min_cov]
     subs = subs[!duplicated(subs$alt_prot)]
 
     # peptide is not contained within another peptide
