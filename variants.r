@@ -41,24 +41,25 @@ annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
         new = codv$varAllele[[i]]
         Biostrings::replaceAt(codv$ref_nuc[[i]], codv$CDSLOC[i], new)
     }
+#    atn = Biostrings::replaceAt(codv$ref_nuc, as(codv$CDSLOC, "IRangesList"), codv$varAllele)
     codv$alt_nuc = Biostrings::DNAStringSet(lapply(seq_along(codv$ref_nuc), upd_seqs))
 
     # get protein sequences and adjust nuc for premature stop
     codv$alt_prot = Biostrings::translate(codv$alt_nuc)
     stops = vmatchPattern("*", codv$alt_prot)
-    for (i in seq_along(codv)) {
-        if (length(stops[[i]]) == 0) {
+    first = sapply(stops, function(s) IRanges::start(s)[1])
+    changed = which(is.na(first) | first != nchar(codv$alt_prot))
+    for (i in changed) {
+        if (is.na(first[i])) {
             if (! codv$TXID[[i]] %in% names(utr3))
                 next
             nuc_utr3 = getSeq(asm, utr3[[codv$TXID[i]]])
             codv$alt_nuc[i] = Biostrings::xscat(codv$alt_nuc[i], nuc_utr3)
             codv$alt_prot[i] = Biostrings::translate(codv$alt_nuc[i])
-            first_stop = IRanges::start(vmatchPattern("*", codv$alt_prot[i])[[1]])[1]
-        } else
-            first_stop = IRanges::start(stops[[i]][1])
-
-        codv$alt_prot[i] = subseq(codv$alt_prot[i], 1, first_stop)
-        codv$alt_nuc[i] = subseq(codv$alt_nuc[i], 1, first_stop*3)
+            first[i] = IRanges::start(vmatchPattern("*", codv$alt_prot[i])[[1]])[1]
+        }
+        codv$alt_prot[i] = subseq(codv$alt_prot[i], 1, first[i])
+        codv$alt_nuc[i] = subseq(codv$alt_nuc[i], 1, first[i]*3)
     }
 
     codv$CONSEQUENCE = as.character(codv$CONSEQUENCE)
@@ -66,10 +67,10 @@ annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
 
     # check if we didn't change the length of any nuc
     stopifnot(with(codv,
-        nchar(ref_nuc) - nchar(REFCODON) == nchar(alt_nuc) - nchar(VARCODON) |
-        CONSEQUENCE %in% c("frameshift", "nonsense", "nostart") |
-        vcountPattern("*", REFAA) > 0 | # transcript extension
-        vcountPattern("*", VARAA) > 0 # "missense"+nonsense
+        nchar(codv$ref_nuc) - nchar(codv$REFCODON) == nchar(codv$alt_nuc) - nchar(codv$VARCODON) |
+        codv$CONSEQUENCE %in% c("frameshift", "nonsense", "nostart") |
+        vcountPattern("*", codv$REFAA) > 0 | # transcript extension
+        vcountPattern("*", codv$VARAA) > 0 # "missense"+nonsense
     ))
     codv
 }
@@ -85,7 +86,7 @@ subset_context = function(codv, ctx_codons=15) {
     len_delta = pmin(nchar(codv$VARCODON), stopAA, na.rm=TRUE) - nchar(codv$REFCODON)
 
     roi_codon_start = floor((IRanges::start(codv$CDSLOC)-1)/3) * 3 + 1
-    roi_codon_end_ref = ceiling((end(codv$CDSLOC))/3) * 3
+    roi_codon_end_ref = ceiling((IRanges::end(codv$CDSLOC))/3) * 3
     len_ref = nchar(codv$ref_nuc) - 3
     len_alt = nchar(codv$alt_nuc) - 3
 
@@ -95,7 +96,7 @@ subset_context = function(codv, ctx_codons=15) {
 
     ctx_start = pmax(1, roi_codon_start - ctx)
     ctx_end_ref = pmin(len_ref, roi_codon_end_ref + ctx)
-    ctx_end_alt = pmin(len_alt, roi_codon_end_alt + ctx)
+    ctx_end_alt = pmin(floor((len_alt-1)/3)*3, roi_codon_end_alt + ctx) #TODO: better to force %%3 for nuc length?
     ctx_len_alt = ctx_end_alt - ctx_start + 1
 
     ctx_start_over = pmax(0, ctx + 1 - roi_codon_start)
@@ -247,7 +248,7 @@ remove_cutsite = function(nuc, site, seed=NULL) {
             purrr::pmap_chr(paste0)
     }
     alt_nuc = function(nuc, match) {
-        subs = subseq(Biostrings::DNAString(nuc), start(match), end(match))
+        subs = subseq(Biostrings::DNAString(nuc), IRanges::start(match), IRanges::end(match))
         possib = revtrans(Biostrings::translate(subs, no.init.codon=TRUE))
         lapply(possib, Biostrings::replaceAt, x=nuc, at=match)
     }
@@ -257,8 +258,8 @@ remove_cutsite = function(nuc, site, seed=NULL) {
     if (length(m) == 0)
         return(nuc)
 
-    start(m) = floor((start(m)-1)/3) * 3 + 1
-    end(m) = ceiling((end(m))/3) * 3
+    IRanges::start(m) = floor((IRanges::start(m)-1)/3) * 3 + 1
+    IRanges::end(m) = ceiling((IRanges::end(m))/3) * 3
 
     nucs = nuc = Biostrings::DNAStringSet(nuc)
     for (i in seq_along(m))
