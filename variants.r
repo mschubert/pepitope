@@ -180,7 +180,7 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1) {
     gr2df = function(gr) as_tibble(as.data.frame(unname(gr))) %>%
         mutate(var_id = names(gr)) %>%
         dplyr::select(var_id, everything()) %>%
-        arrange(var_id)
+        arrange(order(gtools::mixedorder(var_id)))
 
     # changes peptide, is unique and is expressed
     names(res) = sprintf("%s:%i", GenomicRanges::seqnames(res), IRanges::start(res))
