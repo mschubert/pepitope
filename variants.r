@@ -179,13 +179,15 @@ plot_genomic_context = function(rec, gene_id, res, gene, txdb) {
 save_xlsx = function(res, fname, min_cov=2, min_af=0.1) {
     gr2df = function(gr) as_tibble(as.data.frame(unname(gr))) %>%
         mutate(var_id = names(gr)) %>%
-        dplyr::select(var_id, everything())
+        dplyr::select(var_id, everything()) %>%
+        arrange(var_id)
 
     # changes peptide, is unique and is expressed
+    names(res) = sprintf("%s:%i", GenomicRanges::seqnames(res), IRanges::start(res))
     subs = subset_context(res[! res$CONSEQUENCE %in% c("synonymous", "nonsense", "nostart")])
     alt_in_ref = function(a,r) grepl(as.character(a), as.character(r), fixed=TRUE)
     subs = subs[!mapply(alt_in_ref, a=subs$alt_prot, r=subs$ref_prot)]
-    subs = subs[!is.na(subs$gene_count) & subs$gene_count > 0 & subs$gene_tpm > 0]
+    subs = subs[!is.na(subs$gene_count) & subs$gene_count > 0] # & subs$gene_tpm > 0]
     subs = subs[subs$AF >= min_af & subs$AF*subs$DP >= min_cov]
     subs = subs[!duplicated(subs$alt_prot)]
 
@@ -205,9 +207,9 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1) {
         starts = round(seq(0, nchar(p)-93, length.out=ntile)/3) * 3 + 1
         lapply(starts, function(s) substr(p, s, s+92))
     }
-    pep = with(subs, tibble(var_id=names(subs), gene_id=GENEID,
-                            tx_id=tx_name, ref=as.character(ref_nuc),
-                            alt=as.character(alt_nuc))) %>%
+    pep = with(subs, tibble(var_id=names(subs), gene_id=subs$GENEID,
+                            tx_id=subs$tx_name, ref=as.character(subs$ref_nuc),
+                            alt=as.character(subs$alt_nuc))) %>%
         tidyr::pivot_longer(c(ref, alt), names_to="type", values_to="cDNA") %>%
         rowwise() %>% mutate(tiled = list(tile_cDNA(cDNA))) %>% ungroup() %>%
         mutate(n_tiles = sapply(tiled, length)) %>%
@@ -216,7 +218,7 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1) {
                nt = nchar(tiled),
                peptide = as.character(Biostrings::translate(Biostrings::DNAStringSet(tiled), no.init.codon=TRUE)))
 
-    stopifnot(pep$type[duplicated(pep$tiled)] == "ref")
+#    stopifnot(pep$type[duplicated(pep$tiled)] == "ref")
     pep = pep[!duplicated(pep$tiled),]
 
     pep$Bbs1_replaced = vcountPattern("GAAGAC", pep$tiled) + vcountPattern("GTCTTC", pep$tiled)
