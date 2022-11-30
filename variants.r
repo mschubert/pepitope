@@ -86,12 +86,12 @@ subset_context = function(codv, ctx_codons=15) {
     len_delta = pmin(nchar(codv$VARCODON), stopAA, na.rm=TRUE) - nchar(codv$REFCODON)
 
     roi_codon_start = floor((IRanges::start(codv$CDSLOC)-1)/3) * 3 + 1
-    roi_codon_end_ref = ceiling((IRanges::end(codv$CDSLOC))/3) * 3
+    roi_codon_end_ref = ceiling(IRanges::end(codv$CDSLOC)/3) * 3
     len_ref = nchar(codv$ref_nuc) - 3
     len_alt = nchar(codv$alt_nuc) - 3
 
     is_frameshift = abs(len_delta) %% 3 != 0
-    roi_codon_end_alt = pmin(ceiling((end(codv$CDSLOC)+len_delta)/3) * 3, len_alt)
+    roi_codon_end_alt = pmin(ceiling((IRanges::end(codv$CDSLOC)+len_delta)/3) * 3, len_alt)
     roi_codon_end_alt[is_frameshift] = nchar(codv$alt_nuc)[is_frameshift] - 3
 
     ctx_start = pmax(1, roi_codon_start - ctx)
