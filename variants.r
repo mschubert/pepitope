@@ -226,7 +226,7 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1) {
 #    stopifnot(pep$peptide == as.character(Biostrings::translate(Biostrings::DNAStringSet(pep$tiled), no.init.codon=TRUE)))
 
     sv = list(
-        `All Variants` = gr2df(res) %>% dplyr::select(-(ref_nuc:alt_prot)),
+        `All Variants` = gr2df(res) %>% dplyr::select(-tx_name, -(ref_nuc:alt_prot)) %>% distinct(),
         `Unique Protein-Coding` = gr2df(subs),
         `93 nt Peptides` = pep %>% dplyr::select(var_id:cDNA, n_tiles, Bbs1_replaced, tiled, nt, peptide)
     )
