@@ -187,7 +187,8 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1) {
     subs = subset_context(res[! res$CONSEQUENCE %in% c("synonymous", "nonsense", "nostart")])
     alt_in_ref = function(a,r) grepl(as.character(a), as.character(r), fixed=TRUE)
     subs = subs[!mapply(alt_in_ref, a=subs$alt_prot, r=subs$ref_prot)]
-    subs = subs[!is.na(subs$gene_count) & subs$gene_count > 0] # & subs$gene_tpm > 0]
+    if ("gene_count" %in% colnames(S4Vectors::mcols(subs)))
+        subs = subs[!is.na(subs$gene_count) & subs$gene_count > 0] # & subs$gene_tpm > 0]
     subs = subs[subs$AF >= min_af & subs$AF*subs$DP >= min_cov]
     subs = subs[!duplicated(subs$alt_prot)]
 
@@ -226,7 +227,8 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1) {
 #    stopifnot(pep$peptide == as.character(Biostrings::translate(Biostrings::DNAStringSet(pep$tiled), no.init.codon=TRUE)))
 
     sv = list(
-        `All Variants` = gr2df(res) %>% dplyr::select(-tx_name, -(ref_nuc:alt_prot)) %>% distinct(),
+        `All Variants` = res %>% select(-CDSLOC) %>% gr2df() %>%
+            dplyr::select(-tx_name, -(ref_nuc:alt_prot)) %>% distinct(),
         `Unique Protein-Coding` = gr2df(subs),
         `93 nt Peptides` = pep %>% dplyr::select(var_id:cDNA, n_tiles, Bbs1_replaced, tiled, nt, peptide)
     )
