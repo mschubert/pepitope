@@ -17,6 +17,7 @@ vmatchPattern = Biostrings::vmatchPattern
 #' @return      A GRanges object with annotated variants
 annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
     vr = readVcfAsVRanges(rec$dna$vcf_diff, "GRCh38")
+    vr = vr[grepl(tumor_cov, sampleNames(vr))]
     codv = predictCoding(vr, txdb, asm)
 
 #    codv2 = predictCoding(vcf_tumor, txdb, asm) # 1637 var names @codv, 26k @codv2, 223 common?!
