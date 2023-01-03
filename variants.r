@@ -18,6 +18,11 @@ vmatchPattern = Biostrings::vmatchPattern
 annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
     vr = readVcfAsVRanges(rec$dna$vcf_diff, "GRCh38")
     vr = vr[grepl(tumor_cov, sampleNames(vr))]
+    vr$sampleNames = sampleNames(vr)
+    vr$ref = ref(vr)
+    vr$alt = alt(vr)
+    vr$cov_ref = refDepth(vr)
+    vr$cov_alt = altDepth(vr)
     codv = predictCoding(vr, txdb, asm)
 
 #    codv2 = predictCoding(vcf_tumor, txdb, asm) # 1637 var names @codv, 26k @codv2, 223 common?!
@@ -190,7 +195,7 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1) {
     subs = subs[!mapply(alt_in_ref, a=subs$alt_prot, r=subs$ref_prot)]
     if ("gene_count" %in% colnames(S4Vectors::mcols(subs)))
         subs = subs[!is.na(subs$gene_count) & subs$gene_count > 0] # & subs$gene_tpm > 0]
-    subs = subs[subs$AF >= min_af & subs$AF*subs$DP >= min_cov]
+    subs = subs[subs$cov_alt/subs$cov_ref >= min_af & subs$cov_alt >= min_cov]
     subs = subs[!duplicated(subs$alt_prot)]
 
     # peptide is not contained within another peptide
