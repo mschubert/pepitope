@@ -83,12 +83,13 @@ annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
     }
     codv$silent_start = check_silent(codv$REFAA, codv$VARAA)
     codv$silent_end = check_silent(Biostrings::reverse(codv$REFAA), Biostrings::reverse(codv$VARAA))
+    codv$silent_end[codv$silent_start == nchar(codv$VARAA)] = 0 # eg. AA>A not double
     silent = codv$silent_start + codv$silent_end
 
     codv$CONSEQUENCE = as.character(codv$CONSEQUENCE)
     codv$CONSEQUENCE[IRanges::start(codv$CDSLOC) == 1 & codv$VARCODON != "ATG"] = "nostart"
-    codv$CONSEQUENCE[silent == nchar(codv$REFAA) & nchar(codv$VARAA) > 0] = "insertion"
-    codv$CONSEQUENCE[silent == nchar(codv$VARAA) & nchar(codv$REFAA) > 0] = "deletion"
+    codv$CONSEQUENCE[silent == nchar(codv$REFAA) & nchar(codv$VARAA) > nchar(codv$REFAA)] = "insertion"
+    codv$CONSEQUENCE[silent == nchar(codv$VARAA) & nchar(codv$REFAA) > nchar(codv$VARAA)] = "deletion"
 
     # check if we didn't change the length of any nuc
     stopifnot(with(codv,
