@@ -102,7 +102,7 @@ subset_context = function(codv, ctx_codons=15) {
 
     ctx_start = pmax(1, roi_codon_start - ctx)
     ctx_end_ref = pmin(len_ref, roi_codon_end_ref + ctx)
-    ctx_end_alt = pmin(floor((len_alt-1)/3)*3, roi_codon_end_alt + ctx) #TODO: better to force %%3 for nuc length?
+    ctx_end_alt = pmin(floor(len_alt/3)*3, roi_codon_end_alt + ctx) #TODO: better to force %%3 for nuc length?
     ctx_len_alt = ctx_end_alt - ctx_start + 1
 
     ctx_start_over = pmax(0, ctx + 1 - roi_codon_start)
