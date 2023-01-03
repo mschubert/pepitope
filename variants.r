@@ -4,6 +4,7 @@ import_package("dplyr", attach=TRUE)
 sys = modules::import('sys')
 subseq = Biostrings::subseq
 nchar = Biostrings::nchar
+reverse = Biostrings::reverse
 vcountPattern = Biostrings::vcountPattern
 vmatchPattern = Biostrings::vmatchPattern
 
@@ -82,9 +83,8 @@ annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
         offsets
     }
     codv$silent_start = check_silent(codv$REFAA, codv$VARAA)
-    codv$silent_end = check_silent(Biostrings::reverse(codv$REFAA), Biostrings::reverse(codv$VARAA))
-    codv$silent_end[codv$silent_start == nchar(codv$REFAA) | # eg. A>ASA not double
-                    codv$silent_start == nchar(codv$VARAA)] = 0 # eg. AA>A not double
+    codv$silent_end = check_silent(reverse(subseq(codv$REFAA, codv$silent_start+1)),
+                                   reverse(subseq(codv$VARAA, codv$silent_start+1)))
     silent = codv$silent_start + codv$silent_end
 
     codv$CONSEQUENCE = as.character(codv$CONSEQUENCE)
