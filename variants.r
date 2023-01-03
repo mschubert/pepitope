@@ -228,7 +228,7 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1) {
 #    stopifnot(pep$type[duplicated(pep$tiled)] == "ref")
     pep = pep[!duplicated(pep$tiled),]
 
-    pep$Bbs1_replaced = vcountPattern("GAAGAC", pep$tiled) + vcountPattern("GTCTTC", pep$tiled)
+    pep$BbsI_replaced = vcountPattern("GAAGAC", pep$tiled) + vcountPattern("GTCTTC", pep$tiled)
     pep$tiled = sapply(pep$tiled, remove_cutsite, site="GAAGAC", seed=178529, USE.NAMES=FALSE)
 #    stopifnot(pep$peptide == as.character(Biostrings::translate(Biostrings::DNAStringSet(pep$tiled), no.init.codon=TRUE)))
 
@@ -236,7 +236,7 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1) {
         `All Variants` = res %>% select(-CDSLOC) %>% gr2df() %>%
             dplyr::select(-tx_name, -(ref_nuc:alt_prot)) %>% distinct(),
         `Unique Protein-Coding` = gr2df(subs),
-        `93 nt Peptides` = pep %>% dplyr::select(var_id:cDNA, n_tiles, Bbs1_replaced, tiled, nt, peptide)
+        `93 nt Peptides` = pep %>% dplyr::select(var_id:cDNA, n_tiles, BbsI_replaced, tiled, nt, peptide)
     )
     writexl::write_xlsx(sv, path=fname)
 }
