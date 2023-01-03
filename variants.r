@@ -91,13 +91,31 @@ subset_context = function(codv, ctx_codons=15) {
     stopAA = sapply(vmatchPattern("*", codv$VARAA), function(x) IRanges::start(x)[1]-1) * 3
     len_delta = pmin(nchar(codv$VARCODON), stopAA, na.rm=TRUE) - nchar(codv$REFCODON)
 
-    roi_codon_start = floor((IRanges::start(codv$CDSLOC)-1)/3) * 3 + 1
-    roi_codon_end_ref = ceiling(IRanges::end(codv$CDSLOC)/3) * 3
+    check_silent = function(ref, alt) {
+        offsets = rep(0, length(ref))
+        chk = seq_along(ref)
+        for (i in seq_len(max(nchar(ref)))) {
+            chk = chk[nchar(ref[chk]) >= i & nchar(alt[chk]) >= i]
+            s_mtch = substr(ref[chk],i,i) == substr(alt[chk],i,i)
+            if (! any(s_mtch))
+                break
+            chk = chk[s_mtch]
+            offsets[chk] = offsets[chk] + 1
+        }
+        offsets
+    }
+    silent_start = check_silent(codv$REFAA, codv$VARAA)
+    silent_end = check_silent(Biostrings::reverse(codv$REFAA), Biostrings::reverse(codv$VARAA))
+    codv$silent_start = silent_start
+    codv$silent_end = silent_end
+
+    roi_codon_start = floor((IRanges::start(codv$CDSLOC)-1)/3 + silent_start) * 3 + 1
+    roi_codon_end_ref = ceiling(IRanges::end(codv$CDSLOC)/3 - silent_end) * 3
     len_ref = nchar(codv$ref_nuc) - 3
     len_alt = nchar(codv$alt_nuc) - 3
 
     is_frameshift = abs(len_delta) %% 3 != 0
-    roi_codon_end_alt = pmin(ceiling((IRanges::end(codv$CDSLOC)+len_delta)/3) * 3, len_alt)
+    roi_codon_end_alt = pmin(ceiling((IRanges::end(codv$CDSLOC)+len_delta)/3 - silent_end) * 3, len_alt)
     roi_codon_end_alt[is_frameshift] = nchar(codv$alt_nuc)[is_frameshift] - 3
 
     ctx_start = pmax(1, roi_codon_start - ctx)
