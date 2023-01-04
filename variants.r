@@ -214,7 +214,7 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1) {
     subs = subset_context(res[! res$CONSEQUENCE %in% c("synonymous", "nonsense", "nostart")])
     alt_in_ref = function(a,r) grepl(as.character(a), as.character(r), fixed=TRUE)
     subs = subs[!mapply(alt_in_ref, a=subs$alt_prot, r=subs$ref_prot)]
-    if ("gene_count" %in% colnames(S4Vectors::mcols(subs)))
+    if ("gene_count" %in% colnames(S4Vectors::mcols(subs)) && !all(is.na(subs$gene_count)))
         subs = subs[!is.na(subs$gene_count) & subs$gene_count > 0] # & subs$gene_tpm > 0]
     subs = subs[subs$cov_alt/subs$cov_ref >= min_af & subs$cov_alt >= min_cov]
     subs = subs[!duplicated(subs$alt_prot)]
