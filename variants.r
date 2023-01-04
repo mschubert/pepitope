@@ -19,6 +19,7 @@ vmatchPattern = Biostrings::vmatchPattern
 annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
     vr = readVcfAsVRanges(rec$dna$vcf_diff, "GRCh38")
     vr = vr[grepl(tumor_cov, sampleNames(vr))]
+    vr = vr[apply(softFilterMatrix(vr), 1, all)]
     vr$sampleNames = sampleNames(vr)
     vr$ref = ref(vr)
     vr$alt = alt(vr)
