@@ -89,6 +89,7 @@ annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
 
     codv$CONSEQUENCE = as.character(codv$CONSEQUENCE)
     codv$CONSEQUENCE[IRanges::start(codv$CDSLOC) == 1 & codv$VARCODON != "ATG"] = "nostart"
+    codv$CONSEQUENCE[codv$REFAA == "*" & codv$VARAA != "*"] = "extension"
     codv$CONSEQUENCE[silent == nchar(codv$REFAA) & nchar(codv$VARAA) > nchar(codv$REFAA)] = "insertion"
     codv$CONSEQUENCE[silent == nchar(codv$VARAA) & nchar(codv$REFAA) > nchar(codv$VARAA)] = "deletion"
 
@@ -134,7 +135,7 @@ subset_context = function(codv, ctx_codons=15) {
     add_to_start = pmin(ext_by, ctx_end_over) %>% pmin(ctx_start-1) %>% pmax(0)
     add_to_start[codv$VARAA == "*"] = 0
     stopifnot(add_to_start == 0 | add_to_end == 0,
-              c(add_to_start, add_to_end) %% 3 == 0,
+              codv$CONSEQUENCE == "extension" | (add_to_start %% 3 == 0 & add_to_end %% 3 == 0),
               c(add_to_start, add_to_end) <= ctx+3)
 
     # get nuc and protein sequences incl context
