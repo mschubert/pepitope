@@ -259,7 +259,10 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1, tile_size=93, tile_ov=45
         mutate(pep_id = ifelse(type == "alt", mut_id, sub("([0-9]+)[a-zA-Z]+$", "\\1", mut_id)),
                tiled = unlist(tiled, use.names=FALSE),
                nt = nchar(tiled),
-               peptide = as.character(Biostrings::translate(Biostrings::DNAStringSet(tiled), no.init.codon=TRUE)))
+               peptide = as.character(Biostrings::translate(Biostrings::DNAStringSet(tiled), no.init.codon=TRUE))) %>%
+        group_by(pep_id) %>%
+            mutate(pep_id = ifelse(n()>1, paste(pep_id, seq_along(pep_id), sep="-"), pep_id)) %>%
+        ungroup()
 
 #    stopifnot(pep$type[duplicated(pep$tiled)] == "ref")
     pep = pep[!duplicated(pep$tiled),]
