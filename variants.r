@@ -203,9 +203,12 @@ plot_genomic_context = function(rec, gene_id, res, gene, txdb) {
 
 #' Save results as xlsx sheets (full, filtered, peptides)
 #'
-#' @param res  A full results GRanges object from `annotate_coding()`
-#' @param fname  File name to save results to
-save_xlsx = function(res, fname, min_cov=2, min_af=0.1) {
+#' @param res      A full results GRanges object from `annotate_coding()`
+#' @param fname    File name to save results to
+#' @param min_cov  Minimum number of reads to span the ALT allele
+#' @param min_af   Minimum allele frequency of the ALT allele
+#' @param tile_size  Oligo tiling size
+save_xlsx = function(res, fname, min_cov=2, min_af=0.1, tile_size=93) {
     gr2df = function(gr) as_tibble(as.data.frame(unname(gr))) %>%
         mutate(var_id = names(gr)) %>%
         dplyr::select(var_id, everything()) %>%
@@ -231,11 +234,11 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1) {
     table(nchar(subs$alt_nuc))
     stopifnot(nchar(subs$alt_nuc) %% 3 == 0)
 
-    # tile peptides to have max 93 nt length
+    # tile peptides to have max `tile_size` nt length
     tile_cDNA = function(p) {
-        ntile = ceiling(nchar(p)/93)
-        starts = round(seq(0, nchar(p)-93, length.out=ntile)/3) * 3 + 1
-        lapply(starts, function(s) substr(p, s, s+92))
+        ntile = ceiling(nchar(p)/tile_size)
+        starts = round(seq(0, nchar(p)-tile_size, length.out=ntile)/3) * 3 + 1
+        lapply(starts, function(s) substr(p, s, s+tile_size-1))
     }
     pep = with(subs, tibble(var_id=names(subs), gene_id=subs$GENEID,
                             tx_id=subs$tx_name, ref=as.character(subs$ref_nuc),
