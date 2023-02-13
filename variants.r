@@ -261,7 +261,7 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1, tile_size=93, tile_ov=45
                nt = nchar(tiled),
                peptide = as.character(Biostrings::translate(Biostrings::DNAStringSet(tiled), no.init.codon=TRUE))) %>%
         group_by(pep_id) %>%
-            mutate(pep_id = if(n()>1), paste(pep_id, seq_along(pep_id), sep="-") else pep_id) %>%
+            mutate(pep_id = if(n()>1) paste(pep_id, seq_along(pep_id), sep="-") else pep_id) %>%
         ungroup()
 
 #    stopifnot(pep$type[duplicated(pep$tiled)] == "ref")
