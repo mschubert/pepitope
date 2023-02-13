@@ -208,7 +208,8 @@ plot_genomic_context = function(rec, gene_id, res, gene, txdb) {
 #' @param min_cov  Minimum number of reads to span the ALT allele
 #' @param min_af   Minimum allele frequency of the ALT allele
 #' @param tile_size  Oligo tiling size
-save_xlsx = function(res, fname, min_cov=2, min_af=0.1, tile_size=93) {
+#' @param tile_ov    Oligo tiling overlap
+save_xlsx = function(res, fname, min_cov=2, min_af=0.1, tile_size=93, tile_ov=45) {
     gr2df = function(gr) as_tibble(as.data.frame(unname(gr))) %>%
         mutate(var_id = names(gr)) %>%
         dplyr::select(var_id, everything()) %>%
@@ -236,7 +237,8 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1, tile_size=93) {
 
     # tile peptides to have max `tile_size` nt length
     tile_cDNA = function(p) {
-        ntile = ceiling(nchar(p)/tile_size)
+        ntile_no_ov = ceiling(nchar(p)/tile_size)
+        ntile = ceiling((nchar(p) + (ntile_no_ov-1)*tile_ov) / tile_size)
         starts = round(seq(0, nchar(p)-tile_size, length.out=ntile)/3) * 3 + 1
         lapply(starts, function(s) substr(p, s, s+tile_size-1))
     }
