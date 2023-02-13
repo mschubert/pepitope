@@ -94,6 +94,9 @@ annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
     codv$CONSEQUENCE[silent == nchar(codv$REFAA) & nchar(codv$VARAA) > nchar(codv$REFAA)] = "insertion"
     codv$CONSEQUENCE[silent == nchar(codv$VARAA) & nchar(codv$REFAA) > nchar(codv$VARAA)] = "deletion"
 
+    codv$var_id = sprintf("%s:%i_%s/%s", GenomicRanges::seqnames(codv),
+                          IRanges::start(codv), codv$ref, codv$alt)
+
     # check if we didn't change the length of any nuc
     stopifnot(with(codv,
         nchar(codv$ref_nuc) - nchar(codv$REFCODON) == nchar(codv$alt_nuc) - nchar(codv$VARCODON) |
@@ -210,13 +213,11 @@ plot_genomic_context = function(rec, gene_id, res, gene, txdb) {
 #' @param tile_size  Oligo tiling size
 #' @param tile_ov    Oligo tiling overlap
 save_xlsx = function(res, fname, min_cov=2, min_af=0.1, tile_size=93, tile_ov=45) {
-    gr2df = function(gr) as_tibble(as.data.frame(unname(gr))) %>%
-        mutate(var_id = names(gr)) %>%
+    gr2df = function(gr) as_tibble(as.data.frame(gr)) %>%
         dplyr::select(var_id, everything()) %>%
         arrange(order(gtools::mixedorder(var_id)))
 
     # changes peptide, is unique and is expressed
-    names(res) = sprintf("%s:%i", GenomicRanges::seqnames(res), IRanges::start(res))
     subs = subset_context(res[! res$CONSEQUENCE %in% c("synonymous", "nonsense", "nostart")])
     alt_in_ref = function(a,r) grepl(as.character(a), as.character(r), fixed=TRUE)
     subs = subs[!mapply(alt_in_ref, a=subs$alt_prot, r=subs$ref_prot)]
@@ -232,6 +233,11 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1, tile_size=93, tile_ov=45
     any_con = sapply(seq_along(ac2), contained_in)
     subs = subs[!any_con]
 
+    # name the variants
+    mut_lab = ifelse(subs$CONSEQUENCE == "frameshift", "fs", subs$VARAA)
+    pstarts = unname(sapply(subs$PROTEINLOC, function(p) p[[1]])) + subs$silent_start
+    subs$mut_id = sprintf("%s_%s%i%s", subs$gene_name, subs$REFAA, pstarts, mut_lab)
+
     table(nchar(subs$alt_nuc))
     stopifnot(nchar(subs$alt_nuc) %% 3 == 0)
 
@@ -242,14 +248,16 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1, tile_size=93, tile_ov=45
         starts = round(seq(0, nchar(p)-tile_size, length.out=ntile)/3) * 3 + 1
         lapply(starts, function(s) substr(p, s, s+tile_size-1))
     }
-    pep = with(subs, tibble(var_id=names(subs), gene_id=subs$GENEID,
+    pep = with(subs, tibble(var_id=subs$var_id, mut_id=subs$mut_id,
+                            gene_name=subs$gene_name, gene_id=subs$GENEID,
                             tx_id=subs$tx_name, ref=as.character(subs$ref_nuc),
                             alt=as.character(subs$alt_nuc))) %>%
         tidyr::pivot_longer(c(ref, alt), names_to="type", values_to="cDNA") %>%
         rowwise() %>% mutate(tiled = list(tile_cDNA(cDNA))) %>% ungroup() %>%
         mutate(n_tiles = sapply(tiled, length)) %>%
         tidyr::unnest(tiled) %>%
-        mutate(tiled = unlist(tiled, use.names=FALSE),
+        mutate(pep_id = ifelse(type == "alt", mut_id, sub("([0-9]+)[a-zA-Z]+$", "\\1", mut_id)),
+               tiled = unlist(tiled, use.names=FALSE),
                nt = nchar(tiled),
                peptide = as.character(Biostrings::translate(Biostrings::DNAStringSet(tiled), no.init.codon=TRUE)))
 
@@ -263,8 +271,9 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1, tile_size=93, tile_ov=45
     sv = list(
         `All Variants` = res %>% select(-CDSLOC) %>% gr2df() %>%
             dplyr::select(-tx_name, -(ref_nuc:alt_prot)) %>% distinct(),
-        `Unique Protein-Coding` = gr2df(subs),
-        `93 nt Peptides` = pep %>% dplyr::select(var_id:cDNA, n_tiles, BbsI_replaced, tiled, nt, peptide)
+        `Unique Protein-Coding` = gr2df(subs) %>% select(var_id, mut_id, everything()),
+        `93 nt Peptides` = pep %>% dplyr::select(var_id, mut_id, pep_id,
+            gene_id:cDNA, n_tiles, BbsI_replaced, tiled, nt, peptide)
     )
     writexl::write_xlsx(sv, path=fname)
 }
