@@ -265,6 +265,7 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1, tile_size=93, tile_ov=45
         ungroup()
 
 #    stopifnot(pep$type[duplicated(pep$tiled)] == "ref")
+    stopifnot(!any(duplicated(pep$pep_id)))
     pep = pep[!duplicated(pep$tiled),]
 
     pep$BbsI_replaced = vcountPattern("GAAGAC", pep$tiled) + vcountPattern("GTCTTC", pep$tiled)
