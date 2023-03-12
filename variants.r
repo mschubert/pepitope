@@ -244,8 +244,9 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1, tile_size=93, tile_ov=45
     # tile peptides to have max `tile_size` nt length
     tile_cDNA = function(p) {
         ntile_no_ov = ceiling(nchar(p)/tile_size)
-        ntile = ceiling((nchar(p) + (ntile_no_ov-1)*tile_ov) / tile_size)
+        ntile = ceiling(ntile_no_ov + (ntile_no_ov-1)*tile_ov / tile_size)
         starts = round(seq(0, nchar(p)-tile_size, length.out=ntile)/3) * 3 + 1
+        stopifnot((starts[-length(starts)]+tile_size - starts[-1]) >= tile_ov)
         lapply(starts, function(s) substr(p, s, s+tile_size-1))
     }
     pep = with(subs, tibble(var_id=subs$var_id, mut_id=subs$mut_id,
