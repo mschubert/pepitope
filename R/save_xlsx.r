@@ -7,11 +7,11 @@
 #' @param tile_size  Oligo tiling size
 #' @param tile_ov    Oligo tiling overlap
 #'
-#' @importFrom dplyr `%>%` rowwise mutate
-#' @importFrom Biostrings translate DNAStringSet vcountPattern
+#' @importFrom dplyr `%>%` rowwise mutate select arrange group_by ungroup as_tibble
+#' @importFrom Biostrings nchar translate DNAStringSet vcountPattern
 save_xlsx = function(res, fname, min_cov=2, min_af=0.1, tile_size=93, tile_ov=45) {
     gr2df = function(gr) as_tibble(as.data.frame(gr)) %>%
-        dplyr::select(var_id, everything()) %>%
+        select(var_id, everything()) %>%
         arrange(order(gtools::mixedorder(var_id)))
 
     # changes peptide, is unique and is expressed
@@ -73,7 +73,7 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1, tile_size=93, tile_ov=45
         `All Variants` = res %>% select(-CDSLOC) %>% gr2df() %>%
             dplyr::select(-tx_name, -(ref_nuc:alt_prot)) %>% distinct(),
         `Unique Protein-Coding` = gr2df(subs) %>% select(var_id, mut_id, everything()),
-        `93 nt Peptides` = pep %>% dplyr::select(var_id, mut_id, pep_id,
+        `93 nt Peptides` = pep %>% select(var_id, mut_id, pep_id,
             gene_id:cDNA, n_tiles, BbsI_replaced, tiled, nt, peptide)
     )
     writexl::write_xlsx(sv, path=fname)

@@ -7,9 +7,12 @@
 #' @param tumor_cov  Part of column name to get ref/alt coverage (regex)
 #' @return      A GRanges object with annotated variants
 #'
-#' @importFrom GenomicFeatures transcripts threeUTRsByTranscript cdsBy extractTranscriptSeqs
-#' @importFrom VariantAnnotation readVcfAsVRanges sampleNames ref alt refDepth altDepth predictCoding softFilterMatrix
-#' @importFrom Biostrings subseq nchar reverse translate replaceAt DNAStringSet xscat vcountPattern
+#' @importFrom GenomicFeatures transcripts threeUTRsByTranscript cdsBy
+#'      extractTranscriptSeqs
+#' @importFrom VariantAnnotation readVcfAsVRanges sampleNames ref alt refDepth
+#'      altDepth predictCoding softFilterMatrix
+#' @importFrom Biostrings subseq nchar reverse translate replaceAt DNAStringSet
+#'      xscat vcountPattern
 annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
     vr = readVcfAsVRanges(rec$dna$vcf_diff, "GRCh38")
     vr = vr[grepl(tumor_cov, sampleNames(vr))]

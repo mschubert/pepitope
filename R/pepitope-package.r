@@ -6,4 +6,7 @@
 #' mutated allele, read coverage, amino acid sequence, and other information.
 #' It can also be used to remove restriction sites from cDNA, alongside other
 #' helper functions.
+#'
+#' @name clustermq
+#' @docType package
 NULL

@@ -6,7 +6,8 @@
 #' @return      cDNA with minimal changes to no longer contain the cut site
 #'
 #' @importFrom dplyr `%>%` rowwise
-#' @importFrom Biostrings getGeneticCode DNAString translate replaceAt DNAStringSet reverseComplement
+#' @importFrom Biostrings subseq getGeneticCode DNAString translate replaceAt
+#'      DNAStringSet reverseComplement vmatchPattern vcountPattern
 remove_cutsite = function(nuc, site, seed=NULL) {
     set.seed(seed)
     revtrans = function(aa) {
