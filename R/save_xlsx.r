@@ -6,6 +6,9 @@
 #' @param min_af   Minimum allele frequency of the ALT allele
 #' @param tile_size  Oligo tiling size
 #' @param tile_ov    Oligo tiling overlap
+#'
+#' @importFrom dplyr `%>%` rowwise mutate
+#' @importFrom Biostrings translate DNAStringSet vcountPattern
 save_xlsx = function(res, fname, min_cov=2, min_af=0.1, tile_size=93, tile_ov=45) {
     gr2df = function(gr) as_tibble(as.data.frame(gr)) %>%
         dplyr::select(var_id, everything()) %>%
@@ -53,7 +56,7 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1, tile_size=93, tile_ov=45
         mutate(pep_id = ifelse(type == "alt", mut_id, sub("([0-9]+)[a-zA-Z]+$", "\\1", mut_id)),
                tiled = unlist(tiled, use.names=FALSE),
                nt = nchar(tiled),
-               peptide = as.character(Biostrings::translate(Biostrings::DNAStringSet(tiled), no.init.codon=TRUE))) %>%
+               peptide = as.character(translate(DNAStringSet(tiled), no.init.codon=TRUE))) %>%
         group_by(pep_id) %>%
             mutate(pep_id = if(n()>1) paste(pep_id, seq_along(pep_id), sep="-") else pep_id) %>%
         ungroup()
@@ -64,7 +67,7 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1, tile_size=93, tile_ov=45
 
     pep$BbsI_replaced = vcountPattern("GAAGAC", pep$tiled) + vcountPattern("GTCTTC", pep$tiled)
     pep$tiled = sapply(pep$tiled, remove_cutsite, site="GAAGAC", seed=178529, USE.NAMES=FALSE)
-#    stopifnot(pep$peptide == as.character(Biostrings::translate(Biostrings::DNAStringSet(pep$tiled), no.init.codon=TRUE)))
+#    stopifnot(pep$peptide == as.character(translate(DNAStringSet(pep$tiled), no.init.codon=TRUE)))
 
     sv = list(
         `All Variants` = res %>% select(-CDSLOC) %>% gr2df() %>%

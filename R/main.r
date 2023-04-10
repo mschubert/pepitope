@@ -1,12 +1,13 @@
-main() {
-    sys = modules::import('sys')
-    args = sys$cmd$parse(
-        opt('c', 'config', 'yaml', 'samples.yaml'),
-        opt('a', 'patient', 'identifier', 'M14TIL102'),
-        opt('o', 'outfile', 'rds', 'M14TIL102.rds'),
-        opt('x', 'export', 'xlsx', 'M14TIL102.xlsx')
-#        opt('p', 'plotfile', 'pdf', 'var_M14TIL102.pdf')
-    )
+#' Main function, remove this later
+main = function(args) {
+#    sys = modules::import('sys')
+#    args = sys$cmd$parse(
+#        opt('c', 'config', 'yaml', 'samples.yaml'),
+#        opt('a', 'patient', 'identifier', 'M14TIL102'),
+#        opt('o', 'outfile', 'rds', 'M14TIL102.rds'),
+#        opt('x', 'export', 'xlsx', 'M14TIL102.xlsx')
+##        opt('p', 'plotfile', 'pdf', 'var_M14TIL102.pdf')
+#    )
 
     cfg = yaml::read_yaml(args$config)
     rec = cfg$samples[[args$patient]]

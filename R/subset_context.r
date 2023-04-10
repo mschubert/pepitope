@@ -3,6 +3,9 @@
 #' @param codv  Annotated variants from `annotate_coding()`
 #' @param ctx_codons  How many flanking codons each to include in the context
 #' @return  GRanges object with sequence information of only context
+#'
+#' @importFrom dplyr `%>%`
+#' @importFrom Biostrings vmatchPattern nchar
 subset_context = function(codv, ctx_codons=15) {
     ctx = ctx_codons * 3
     stopAA = sapply(vmatchPattern("*", codv$VARAA), function(x) IRanges::start(x)[1]-1) * 3

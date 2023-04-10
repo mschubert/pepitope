@@ -1,8 +1,10 @@
 #' Genomic track plot for variant + transcripts + RNA-seq
+#'
+#' @importFrom GenomeInfoDb seqnames seqlevelsStyle
+#' @importFrom Gviz GenomeAxisTrack AnnotationTrack GeneRegionTrack AlignmentsTrack plotTracks
 plot_genomic_context = function(rec, gene_id, res, gene, txdb) {
 #    gene_id = "ENSG00000162572"
 
-    library(Gviz)
     options(ucscChromosomeNames=FALSE) # needed by AlignmentsTrack
     seqlevelsStyle(txdb) = "ensembl"
     seqlevelsStyle(gene) = "ensembl"

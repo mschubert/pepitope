@@ -6,6 +6,10 @@
 #' @param tx_coding  Character vector of ENST0000 IDs that are protein coding
 #' @param tumor_cov  Part of column name to get ref/alt coverage (regex)
 #' @return      A GRanges object with annotated variants
+#'
+#' @importFrom GenomicFeatures transcripts threeUTRsByTranscript cdsBy extractTranscriptSeqs
+#' @importFrom VariantAnnotation readVcfAsVRanges sampleNames ref alt refDepth altDepth predictCoding softFilterMatrix
+#' @importFrom Biostrings subseq nchar reverse translate replaceAt DNAStringSet xscat vcountPattern
 annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
     vr = readVcfAsVRanges(rec$dna$vcf_diff, "GRCh38")
     vr = vr[grepl(tumor_cov, sampleNames(vr))]
@@ -26,7 +30,7 @@ annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
     codv = codv[codv$tx_name %in% tx_coding]
     coding_ranges = cdsBy(txdb)[codv$TXID]
     codv$ref_nuc = extractTranscriptSeqs(asm, coding_ranges)
-    codv$ref_prot = Biostrings::translate(codv$ref_nuc)
+    codv$ref_prot = translate(codv$ref_nuc)
 
     # filter for proper ORFs
     has_start = subseq(codv$ref_prot,1,1) == "M"
@@ -37,13 +41,13 @@ annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
     # get coding sequences with updated variants
     upd_seqs = function(i) {
         new = codv$varAllele[[i]]
-        Biostrings::replaceAt(codv$ref_nuc[[i]], codv$CDSLOC[i], new)
+        replaceAt(codv$ref_nuc[[i]], codv$CDSLOC[i], new)
     }
-#    atn = Biostrings::replaceAt(codv$ref_nuc, as(codv$CDSLOC, "IRangesList"), codv$varAllele)
-    codv$alt_nuc = Biostrings::DNAStringSet(lapply(seq_along(codv$ref_nuc), upd_seqs))
+#    atn = replaceAt(codv$ref_nuc, as(codv$CDSLOC, "IRangesList"), codv$varAllele)
+    codv$alt_nuc = DNAStringSet(lapply(seq_along(codv$ref_nuc), upd_seqs))
 
     # get protein sequences and adjust nuc for premature stop
-    codv$alt_prot = Biostrings::translate(codv$alt_nuc)
+    codv$alt_prot = translate(codv$alt_nuc)
     stops = vmatchPattern("*", codv$alt_prot)
     first = sapply(stops, function(s) IRanges::start(s)[1])
     changed = which(is.na(first) | first != nchar(codv$alt_prot))
@@ -52,8 +56,8 @@ annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
             if (! codv$TXID[[i]] %in% names(utr3))
                 next
             nuc_utr3 = getSeq(asm, utr3[[codv$TXID[i]]])
-            codv$alt_nuc[i] = Biostrings::xscat(codv$alt_nuc[i], nuc_utr3)
-            codv$alt_prot[i] = Biostrings::translate(codv$alt_nuc[i])
+            codv$alt_nuc[i] = xscat(codv$alt_nuc[i], nuc_utr3)
+            codv$alt_prot[i] = translate(codv$alt_nuc[i])
             first[i] = IRanges::start(vmatchPattern("*", codv$alt_prot[i])[[1]])[1]
         }
         codv$alt_prot[i] = subseq(codv$alt_prot[i], 1, first[i])
