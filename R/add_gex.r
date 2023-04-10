@@ -1,13 +1,3 @@
-import_package("GenomicFeatures", attach=TRUE)
-import_package("VariantAnnotation", attach=TRUE)
-import_package("dplyr", attach=TRUE)
-sys = modules::import('sys')
-subseq = Biostrings::subseq
-nchar = Biostrings::nchar
-reverse = Biostrings::reverse
-vcountPattern = Biostrings::vcountPattern
-vmatchPattern = Biostrings::vmatchPattern
-
 #' Add gene expression values to variant result
 #'
 #' @param res  Annotated variants from `annotate_coding()`

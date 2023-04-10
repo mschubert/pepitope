@@ -1,13 +1,3 @@
-import_package("GenomicFeatures", attach=TRUE)
-import_package("VariantAnnotation", attach=TRUE)
-import_package("dplyr", attach=TRUE)
-sys = modules::import('sys')
-subseq = Biostrings::subseq
-nchar = Biostrings::nchar
-reverse = Biostrings::reverse
-vcountPattern = Biostrings::vcountPattern
-vmatchPattern = Biostrings::vmatchPattern
-
 #' Genomic track plot for variant + transcripts + RNA-seq
 plot_genomic_context = function(rec, gene_id, res, gene, txdb) {
 #    gene_id = "ENSG00000162572"

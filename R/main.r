@@ -1,12 +1,3 @@
-import_package("GenomicFeatures", attach=TRUE)
-import_package("VariantAnnotation", attach=TRUE)
-import_package("dplyr", attach=TRUE)
-subseq = Biostrings::subseq
-nchar = Biostrings::nchar
-reverse = Biostrings::reverse
-vcountPattern = Biostrings::vcountPattern
-vmatchPattern = Biostrings::vmatchPattern
-
 main() {
     sys = modules::import('sys')
     args = sys$cmd$parse(

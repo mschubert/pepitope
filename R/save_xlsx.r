@@ -1,13 +1,3 @@
-import_package("GenomicFeatures", attach=TRUE)
-import_package("VariantAnnotation", attach=TRUE)
-import_package("dplyr", attach=TRUE)
-sys = modules::import('sys')
-subseq = Biostrings::subseq
-nchar = Biostrings::nchar
-reverse = Biostrings::reverse
-vcountPattern = Biostrings::vcountPattern
-vmatchPattern = Biostrings::vmatchPattern
-
 #' Save results as xlsx sheets (full, filtered, peptides)
 #'
 #' @param res      A full results GRanges object from `annotate_coding()`
