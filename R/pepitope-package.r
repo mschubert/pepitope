@@ -7,6 +7,6 @@
 #' It can also be used to remove restriction sites from cDNA, alongside other
 #' helper functions.
 #'
-#' @name clustermq
+#' @name pepitope
 #' @docType package
 NULL
