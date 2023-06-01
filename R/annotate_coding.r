@@ -32,7 +32,7 @@ annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
     codv$tx_name = tx$tx_name[match(codv$TXID, tx$tx_id)]
     codv = codv[codv$tx_name %in% tx_coding]
     coding_ranges = cdsBy(txdb)[codv$TXID]
-    codv$ref_nuc = extractTranscriptSeqs(asm, coding_ranges)
+    codv$ref_nuc = unname(extractTranscriptSeqs(asm, coding_ranges))
     codv$ref_prot = translate(codv$ref_nuc)
 
     # filter for proper ORFs
@@ -42,12 +42,8 @@ annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
     codv = codv[has_start & has_stop & n_stop==1] #TODO: replace alt init codons by M
 
     # get coding sequences with updated variants
-    upd_seqs = function(i) {
-        new = codv$varAllele[[i]]
-        replaceAt(codv$ref_nuc[[i]], codv$CDSLOC[i], new)
-    }
-#    atn = replaceAt(codv$ref_nuc, as(codv$CDSLOC, "IRangesList"), codv$varAllele)
-    codv$alt_nuc = DNAStringSet(lapply(seq_along(codv$ref_nuc), upd_seqs))
+    codv$alt_nuc = Biostrings::replaceAt(codv$ref_nuc,
+        as(codv$CDSLOC, "IRangesList"), as(codv$varAllele, "DNAStringSetList"))
 
     # get protein sequences and adjust nuc for premature stop
     codv$alt_prot = translate(codv$alt_nuc)
