@@ -1,10 +1,10 @@
 #' Annotate VCF variants with coding changes
 #'
-#' @param rec   A sample record object
+#' @param vr    A VRanges object with SNVs and small indels
 #' @param txdb  Txdb object
 #' @param asm   Genomic sequence BSGenome object
 #' @param tx_coding  Character vector of ENST0000 IDs that are protein coding
-#' @param tumor_cov  Part of column name to get ref/alt coverage (regex)
+#' @param filter_variants  Apply soft filter matrix to the variants
 #' @return      A GRanges object with annotated variants
 #'
 #' @importFrom GenomicFeatures transcripts threeUTRsByTranscript cdsBy
@@ -13,10 +13,9 @@
 #'      altDepth predictCoding softFilterMatrix
 #' @importFrom Biostrings subseq nchar reverse translate replaceAt DNAStringSet
 #'      xscat vcountPattern
-annotate_coding = function(rec, txdb, asm, tx_coding, tumor_cov="tumor_DNA") {
-    vr = readVcfAsVRanges(rec$dna$vcf_diff, "GRCh38")
-    vr = vr[grepl(tumor_cov, sampleNames(vr))]
-    vr = vr[apply(softFilterMatrix(vr), 1, all)]
+annotate_coding = function(vr, txdb, asm, tx_coding, filter_variants=FALSE) {
+    if (filter_variants)
+        vr = vr[apply(softFilterMatrix(vr), 1, all)]
     vr$sampleNames = sampleNames(vr)
     vr$ref = ref(vr)
     vr$alt = alt(vr)

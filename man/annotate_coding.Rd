@@ -4,10 +4,10 @@
 \alias{annotate_coding}
 \title{Annotate VCF variants with coding changes}
 \usage{
-annotate_coding(rec, txdb, asm, tx_coding, tumor_cov = "tumor_DNA")
+annotate_coding(vr, txdb, asm, tx_coding, filter_variants = FALSE)
 }
 \arguments{
-\item{rec}{A sample record object}
+\item{vr}{A VRanges object with SNVs and small indels}
 
 \item{txdb}{Txdb object}
 
@@ -15,7 +15,7 @@ annotate_coding(rec, txdb, asm, tx_coding, tumor_cov = "tumor_DNA")
 
 \item{tx_coding}{Character vector of ENST0000 IDs that are protein coding}
 
-\item{tumor_cov}{Part of column name to get ref/alt coverage (regex)}
+\item{filter_variants}{Apply soft filter matrix to the variants}
 }
 \value{
 A GRanges object with annotated variants
