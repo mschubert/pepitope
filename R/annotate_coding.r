@@ -41,8 +41,8 @@ annotate_coding = function(vr, txdb, asm, tx_coding, filter_variants=FALSE) {
     codv = codv[has_start & has_stop & n_stop==1] #TODO: replace alt init codons by M
 
     # get coding sequences with updated variants
-    codv$alt_nuc = Biostrings::replaceAt(codv$ref_nuc,
-        as(codv$CDSLOC, "IRangesList"), as(codv$varAllele, "DNAStringSetList"))
+    codv$alt_nuc = replaceAt(codv$ref_nuc, as(codv$CDSLOC, "IRangesList"),
+                             as(codv$varAllele, "DNAStringSetList"))
 
     # get protein sequences and adjust nuc for premature stop
     codv$alt_prot = translate(codv$alt_nuc)
