@@ -20,7 +20,7 @@ save_xlsx = function(res, fname, min_cov=2, min_af=0.1, tile_size=93, tile_ov=45
     subs = subs[!mapply(alt_in_ref, a=subs$alt_prot, r=subs$ref_prot)]
     if ("rna_count" %in% colnames(S4Vectors::mcols(subs)) && !all(is.na(subs$rna_count)))
         subs = subs[!is.na(subs$rna_count) & subs$rna_count > 0] # & subs$rna_tpm > 0]
-    subs = subs[subs$cov_alt/subs$cov_ref >= min_af & subs$cov_alt >= min_cov]
+    subs = subs[subs$AF >= min_af & subs$cov_alt >= min_cov]
     subs = subs[!duplicated(subs$alt_prot)]
 
     # peptide is not contained within another peptide
