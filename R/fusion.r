@@ -25,21 +25,16 @@ fusion = function(vr, txdb, asm, tx_coding) {
     g2 = GRanges(sapply(alt_loc, `[`, i=1), sapply(alt_loc, `[`, i=2),
                  sapply(vr$ORIENTATION, `[`, i=2))
 
+    flt = ~ tx_biotype == "protein_coding" & SeqNameFilter(c(1:22,'X','Y'))
     ens106 = AnnotationHub::AnnotationHub()[["AH100643"]]
 #    seqlevelsStyle(ens106) = "UCSC"
-    is_prot = GeneBiotypeFilter("protein_coding")
-    is_chr = SeqNameFilter(c(1:22,'X','Y'))
-    tx = transcripts(ens106, filter=c(is_prot, is_chr))
-    coding_ranges = cdsBy(ens106, filter=c(is_prot, is_chr))
-    ex = exons(ens106, filter=c(is_prot, is_chr))
+    tx = transcripts(ens106, flt)
+    coding_ranges = cdsBy(ens106, filter=flt)
+    asm = BSgenome.Hsapiens.NCBI.GRCh38::BSgenome.Hsapiens.NCBI.GRCh38
 
-#    library(StructuralVariantAnnotation)
-#    gr = breakpointRanges(readVcf(f), inferMissingBreakends=TRUE)
-   asm = BSgenome.Hsapiens.NCBI.GRCh38::BSgenome.Hsapiens.NCBI.GRCh38
-#    extractReferenceSequence(gr, asm, anchoredBases=45)
 
     get_pairs = function(left, right) {
-        t1 = subsetByOverlaps(tx, left)
+        t1 = subsetByOverlaps(tx, left) # exonsByOverlaps, transcriptsByOverlaps?
         e1 = subsetByOverlaps(ex, left)
         exon_end_is_break = ifelse(strand(e1) == "+", end(e1), start(e1)) == start(left)
         if (any(exon_end_is_break))
@@ -61,7 +56,7 @@ fusion = function(vr, txdb, asm, tx_coding) {
 
 
     left1 = tx_pairs[[1]][[1]]
-    left_coord = genomeToTranscript(g1[1], ens106)
+    left_coord = genomeToTranscript(g1[1], ens106) #FIXME: cds, not tx
     stopifnot(length(left_coord) == 1)
     left_break = as(left_coord[[1]][names(left1)], "DataFrame")
     left_break$break_cdsloc = start(left_break$X)
@@ -70,6 +65,27 @@ fusion = function(vr, txdb, asm, tx_coding) {
 
     right1 = tx_pairs[[1]][[2]]
     extractTranscriptSeqs(asm, right1)
+
+
+
+
+    tx_by_break = function(gr, type="left") {
+        exo = exonsByOverlaps(ens106, gr)
+        txo = subsetByOverlaps(coding_ranges, gr) # cdsByOverlaps can not take ens106
+        if (type == "left") {
+            exon_bound_is_break = ifelse(strand(exo) == "+", end(exo), start(exo)) == start(gr)
+        } else if (type == "right") {
+            exon_bound_is_break = ifelse(strand(exo) == "+", start(exo), end(exo)) == start(gr)
+        }
+        if (any(exon_bound_is_break))
+            exo = exo[exon_bound_is_break]
+        re = coding_ranges[intersect(names(coding_ranges), names(txo))]
+        re = re[sapply(re, function(x) any(exo$exon_id %in% x$exon_id))]
+
+        #todo: add DNA coding sequence
+        #todo: add genomic position relative to CDS
+    }
+
 
 
 }
