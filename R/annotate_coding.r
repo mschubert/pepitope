@@ -18,7 +18,7 @@ annotate_coding = function(vr, txdb, asm, tx_coding, filter_variants=FALSE) {
     if (filter_variants)
         vr = vr[apply(softFilterMatrix(vr), 1, all)]
     vr$sampleNames = sampleNames(vr)
-    vr$AF = unlist(VR$AF)
+    vr$AF = unlist(vr$AF)
     vr$ref = ref(vr)
     vr$alt = alt(vr)
     vr$cov_ref = refDepth(vr)
