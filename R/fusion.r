@@ -79,7 +79,8 @@ fusion = function(vr, txdb, asm, tx_coding) {
         colnames(left) = paste0(colnames(left), "_5p")
         colnames(right) = paste0(colnames(right), "_3p")
         idx = expand.grid(l=seq_len(nrow(left)), r=seq_len(nrow(right)))
-        res[[i]] = cbind(fusion=flabs[i], left[idx$l,], right[idx$r,])
+        res[[i]] = cbind(fusion=flabs[i], split_reads=vr$DV[i], split_pairs=vr$RV[i],
+                         FFPM=vr$FFPM[i], left[idx$l,], right[idx$r,])
     }
     res = do.call(rbind, res[sapply(res, length) > 0])
 
