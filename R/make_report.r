@@ -7,8 +7,10 @@
 #' @param tile_size  Oligo tiling size
 #' @param tile_ov    Oligo tiling overlap
 #'
-#' @importFrom dplyr `%>%` rowwise mutate select arrange group_by ungroup as_tibble
+#' @importFrom dplyr `%>%` rowwise mutate select arrange group_by ungroup
+#'     tibble as_tibble n distinct
 #' @importFrom Biostrings nchar translate DNAStringSet vcountPattern
+#' @importFrom plyranges select
 #' @export
 make_report = function(res, fname, min_cov=2, min_af=0.1, tile_size=93, tile_ov=45) {
     gr2df = function(gr) as_tibble(as.data.frame(gr)) %>%
