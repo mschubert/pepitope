@@ -46,11 +46,16 @@ fusion = function(vr, txdb, asm, tx_coding) {
             exo = exo[exon_bound_is_break]
         cdss = coding_ranges[intersect(names(coding_ranges), names(txo))]
         cdss = cdss[sapply(cdss, function(x) any(exo$exon_id %in% x$exon_id))]
-        if (length(cdss) == 0)
-            return(DataFrame())
 
         seqs = extractTranscriptSeqs(asm, cdss)
-        locs = unlist(genomeToTranscript(gr, ens106))[names(cdss)]
+        prot = suppressWarnings(translate(seqs))
+        has_start = subseq(prot,1,1) == "M"
+        has_stop = subseq(IRanges::reverse(prot),1,1) == "*"
+        n_stop = vcountPattern("*", prot)
+        seqs = seqs[has_start & has_stop & n_stop==1] #todo: alt init codons
+        if (length(seqs) == 0)
+            return(DataFrame())
+        locs = unlist(genomeToTranscript(gr, ens106))[names(seqs)]
         locs2 = transcriptToCds(locs, ens106)
 
         re = DataFrame(mcols(locs2)[c("seq_name", "seq_strand", "seq_start", "tx_id")],
@@ -78,5 +83,38 @@ fusion = function(vr, txdb, asm, tx_coding) {
     }
     res = do.call(rbind, res[sapply(res, length) > 0])
 
-    # subset context, annotate frameshifts, and remove context dups
+    # subset context
+    ctx_codons = 15
+    break_codon_start_5p = floor((res$break_cdsloc_5p-1)/3) * 3 + 1
+    ref_starts_5p = break_codon_start_5p - ctx_codons*3
+    ref_ends_5p = break_codon_start_5p + (ctx_codons+1)*3 - 1
+    shift_5p = pmax(0, 1-ref_starts_5p) - pmax(0, ref_ends_5p-nchar(res$ref_nuc_5p))
+    ref_nuc_5p = subseq(res$ref_nuc_5p, pmax(1, ref_starts_5p+shift_5p),
+                        pmin(nchar(res$ref_nuc_5p), ref_ends_5p+shift_5p))
+    #stopifnot all peptides in original translation
+
+    break_codon_start_3p = floor((res$break_cdsloc_3p-1)/3) * 3 + 1
+    ref_starts_3p = break_codon_start_3p - ctx_codons*3
+    ref_ends_3p = break_codon_start_3p + (ctx_codons+1)*3 - 1
+    shift_3p = pmax(0, 1-ref_starts_3p) - pmax(0, ref_ends_3p-nchar(res$ref_nuc_3p))
+    ref_nuc_3p = subseq(res$ref_nuc_3p, pmax(1, ref_starts_3p+shift_3p),
+                        pmin(nchar(res$ref_nuc_3p), ref_ends_3p+shift_3p))
+
+    is_fs = ((res$break_cdsloc_5p-1) %% 3 - (res$break_cdsloc_3p-1) %% 3) == 0
+    concat = xscat(subseq(res$ref_nuc_5p, 1, res$break_cdsloc_5p),
+                   subseq(res$ref_nuc_3p, res$break_cdsloc_3p)) # add UTRs?
+    end_3p = pmin(nchar(concat), ref_starts_5p + (ctx_codons*2+1)*3)
+    stops = suppressWarnings(vmatchPattern("*", translate(concat)))
+    stops = sapply(stops, function(s) (IRanges::start(s)[1]-1)*3 + 1)
+    end_3p[is_fs] = stops[is_fs]
+
+    # fill results, annotate frameshifts and remove context dups
+    res$fusion[is_fs] = paste0(res$fusion[is_fs], "fs")
+    res$ref_nuc_5p = ref_nuc_5p
+    res$ref_nuc_3p = ref_nuc_3p
+    res$alt_shift = pmin(0, end_3p-ref_starts_5p - (ctx_codons*2+1)*3) + pmax(0, shift_5p)
+    res$alt_nuc = subseq(concat, ref_starts_5p+res$alt_shift, end_3p)
+
+    res[!duplicated(res$ref_nuc_5p) | !duplicated(res$ref_nuc_3p) |
+        !duplicated(res$alt_nuc),]
 }
