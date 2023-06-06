@@ -16,7 +16,7 @@ fusion = function(vr, txdb, asm, filter_fusions=FALSE) {
     # RV: discordant mates supporting translocation
     # FFPM: fusion fragments per million RNA fragments
     if (filter_fusions)
-        vr = vr[with(vr, DV >= 1 & RV >= 2 & unlist(TOOL_HITS) >= 2)]
+        vr = vr[vr$DV >= 1 & vr$RV >= 2 & unlist(vr$TOOL_HITS) >= 2]
     flabs = paste(unlist(vr$GENEA), unlist(vr$GENEB), sep="-")
 
     g1 = GRanges(seqnames(vr), ranges(vr), sapply(vr$ORIENTATION, `[`, i=1))
@@ -71,7 +71,7 @@ fusion = function(vr, txdb, asm, filter_fusions=FALSE) {
         left = tx_by_break(g1[i], type="left")
         right = tx_by_break(g2[i], type="right")
         if (nrow(left) == 0 || nrow(right) == 0)
-            return()
+            next
         colnames(left) = paste0(colnames(left), "_5p")
         colnames(right) = paste0(colnames(right), "_3p")
         idx = expand.grid(l=seq_len(nrow(left)), r=seq_len(nrow(right)))
