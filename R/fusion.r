@@ -28,6 +28,7 @@ fusion = function(vr, txdb, asm, tx_coding) {
     flt = ~ tx_biotype == "protein_coding" & SeqNameFilter(c(1:22,'X','Y'))
     ens106 = AnnotationHub::AnnotationHub()[["AH100643"]]
 #    seqlevelsStyle(ens106) = "UCSC"
+    tx = transcripts(ens106, filter=flt)
     coding_ranges = cdsBy(ens106, filter=flt)
     asm = BSgenome.Hsapiens.NCBI.GRCh38::BSgenome.Hsapiens.NCBI.GRCh38
 
@@ -48,10 +49,19 @@ fusion = function(vr, txdb, asm, tx_coding) {
         locs = unlist(genomeToTranscript(gr, ens106))[names(cdss)]
         locs2 = transcriptToCds(locs, ens106)
 
-        DataFrame(mcols(locs2)[c("seq_name", "seq_strand", "seq_start", "tx_id")],
-                  ref_nuc=seqs, break_cdsloc=start(locs2))
-        #return: seqnames, gene_name, gene_id, tx_id, ref_nuc, break_loc, break_cdsloc
+        re = DataFrame(mcols(locs2)[c("seq_name", "seq_strand", "seq_start", "tx_id")],
+                       gene_id=tx$gene_id[match(names(locs2), names(tx))],
+                       ref_nuc=seqs, break_cdsloc=start(locs2))
+        if (type == "left") {
+            re = re[!duplicated(subseq(re$ref_nuc, 1, re$break_cdsloc)),]
+        } else if (type == "right") {
+            re = re[!duplicated(subseq(re$ref_nuc, re$break_cdsloc))]
+        }
+        re
     }
 
+    #todo: fixme
+    left = lapply(seq_len(g1), function(i) tx_by_break(g1[i], type="left"))
+    right = lapply(g1, tx_by_break, type="right")
 
 }
