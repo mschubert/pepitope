@@ -9,6 +9,7 @@
 #'
 #' @importFrom dplyr `%>%` rowwise mutate select arrange group_by ungroup as_tibble
 #' @importFrom Biostrings nchar translate DNAStringSet vcountPattern
+#' @export
 save_xlsx = function(res, fname, min_cov=2, min_af=0.1, tile_size=93, tile_ov=45) {
     gr2df = function(gr) as_tibble(as.data.frame(gr)) %>%
         select(var_id, everything()) %>%

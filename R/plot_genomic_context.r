@@ -2,6 +2,7 @@
 #'
 #' @importFrom GenomeInfoDb seqnames seqlevelsStyle
 #' @importFrom Gviz GenomeAxisTrack AnnotationTrack GeneRegionTrack AlignmentsTrack plotTracks
+#' @export
 plot_genomic_context = function(rec, gene_id, res, gene, txdb) {
 #    gene_id = "ENSG00000162572"
 

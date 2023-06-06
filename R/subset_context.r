@@ -6,6 +6,7 @@
 #'
 #' @importFrom dplyr `%>%`
 #' @importFrom Biostrings vmatchPattern nchar
+#' @export
 subset_context = function(codv, ctx_codons=15) {
     ctx = ctx_codons * 3
     stopAA = sapply(vmatchPattern("*", codv$VARAA), function(x) IRanges::start(x)[1]-1) * 3

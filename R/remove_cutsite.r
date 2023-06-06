@@ -8,6 +8,7 @@
 #' @importFrom dplyr `%>%` rowwise
 #' @importFrom Biostrings subseq getGeneticCode DNAString translate replaceAt
 #'      DNAStringSet reverseComplement vmatchPattern vcountPattern
+#' @export
 remove_cutsite = function(nuc, site, seed=NULL) {
     set.seed(seed)
     revtrans = function(aa) {

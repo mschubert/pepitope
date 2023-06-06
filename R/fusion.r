@@ -1,24 +1,22 @@
 #' Aggregate fusion VCFs into a table
 #'
-#' @param
-#' @return
+#' @param vr    A VRanges object with RNA fusions from readVcfAsRanges
+#' @param txdb  A transcription database, eg. AnnotationHub()[["AH100643"]]
+#' @param filter_fusions  Whether to only consider fusions with 2 tools, 2 reads
+#' @return      A DataFrame objects with fusions
 #'
 #' @importFrom VariantAnnotation readVcfAsVRanges
 #' @importFrom GenomicRanges GRanges
-fusion = function(vr, txdb, asm, tx_coding) {
-    f = "/DATA/m.schubert/nfcore-results/2023-05_CTh-mixed/rnafusion/megafusion/NSCLC_57.vcf"
-    vr = readVcfAsVRanges(f, "GRCh38")
+#' @export
+fusion = function(vr, txdb, asm, filter_fusions=FALSE) {
+    ens106 = txdb
 
     # GT: ref allele/i alt allele (always './1'?)
     # DV: split reads
     # RV: discordant mates supporting translocation
     # FFPM: fusion fragments per million RNA fragments
-
-    # get the pos+orientation for both ends
-    # assemble possible variants same as in annotate_coding
-
-    # filter by at least 2 read support + 1 pairs
-    vr = vr[with(vr, DV >= 1 & RV >= 2 & unlist(TOOL_HITS) >= 2)]
+    if (filter_fusions)
+        vr = vr[with(vr, DV >= 1 & RV >= 2 & unlist(TOOL_HITS) >= 2)]
     flabs = paste(unlist(vr$GENEA), unlist(vr$GENEB), sep="-")
 
     g1 = GRanges(seqnames(vr), ranges(vr), sapply(vr$ORIENTATION, `[`, i=1))
@@ -27,8 +25,6 @@ fusion = function(vr, txdb, asm, tx_coding) {
                  sapply(vr$ORIENTATION, `[`, i=2))
 
     flt = ~ tx_biotype == "protein_coding" & SeqNameFilter(c(1:22,'X','Y'))
-    ens106 = AnnotationHub::AnnotationHub()[["AH100643"]]
-#    seqlevelsStyle(ens106) = "UCSC"
     tx = transcripts(ens106, filter=flt)
     coding_ranges = cdsBy(ens106, filter=flt)
     asm = BSgenome.Hsapiens.NCBI.GRCh38::BSgenome.Hsapiens.NCBI.GRCh38
