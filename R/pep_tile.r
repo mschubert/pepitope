@@ -42,13 +42,3 @@ pep_tile = function(subs, tile_size=93, tile_ov=45) {
 
     pep
 }
-
-#' Merge different sources of tiles to one report
-#'
-#' @param ...  Tile sources
-#'
-#' @export
-report_tiles = function(pep) {
-    list(`93 nt Peptides` = pep %>% select(var_id, mut_id, pep_id,
-        gene_id:cDNA, n_tiles, BbsI_replaced, tiled, nt, peptide))
-}

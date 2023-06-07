@@ -1,7 +1,6 @@
 #' Make results report to save as xlsx sheets (full, filtered, peptides)
 #'
 #' @param res      A full results GRanges object from `annotate_coding()`
-#' @param fname    File name to save results to
 #' @param min_cov  Minimum number of reads to span the ALT allele
 #' @param min_af   Minimum allele frequency of the ALT allele
 #'
@@ -10,11 +9,7 @@
 #' @importFrom Biostrings nchar translate DNAStringSet vcountPattern
 #' @importFrom plyranges select
 #' @export
-report_variants = function(res, fname, min_cov=2, min_af=0.1) {
-    gr2df = function(gr) as_tibble(as.data.frame(gr)) %>%
-        select(var_id, everything()) %>%
-        arrange(order(gtools::mixedorder(var_id)))
-
+variant_filter = function(res, min_cov=2, min_af=0.1) {
     # changes peptide, is unique and is expressed
     subs = subset_context(res[! res$CONSEQUENCE %in% c("synonymous", "nonsense", "nostart")])
     alt_in_ref = function(a,r) grepl(as.character(a), as.character(r), fixed=TRUE)
@@ -38,8 +33,5 @@ report_variants = function(res, fname, min_cov=2, min_af=0.1) {
 
     table(nchar(subs$alt_nuc))
     stopifnot(nchar(subs$alt_nuc) %% 3 == 0)
-
-    list(`All Variants` = res %>% select(-CDSLOC) %>% gr2df() %>%
-            dplyr::select(-tx_name, -(ref_nuc:alt_prot)) %>% distinct(),
-         `Unique Protein-Coding` = gr2df(subs) %>% select(var_id, mut_id, everything()))
+    subs
 }
