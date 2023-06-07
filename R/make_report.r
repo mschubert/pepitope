@@ -16,6 +16,7 @@ make_report = function(vars, subs, fus=DataFrame(), ...) {
         select(var_id, mut_id, gene_name, gene_id=GENEID, tx_id=tx_name,
                ref=ref_nuc, alt=alt_nuc) %>%
         tidyr::pivot_longer(c(ref, alt), names_to="type", values_to="cDNA") %>%
+        mutate(pep_id = ifelse(type == "alt", mut_id, sub("([0-9]+)[a-zA-Z]+$", "\\1", mut_id))) %>%
         pep_tile(...)
 
     if (nrow(fus) > 0) {
@@ -24,14 +25,17 @@ make_report = function(vars, subs, fus=DataFrame(), ...) {
             select(fusion, gene_name, gene_id=gene_id_5p, tx_id=tx_id_5p, cDNA=ref_nuc_5p)
         ref2 = fdf %>% mutate(gene_name=sub(".*-(.*)", "\\1", fusion)) %>%
             select(fusion, gene_name, gene_id=gene_id_3p, tx_id=tx_id_3p, cDNA=ref_nuc_3p)
-        refs = bind_rows(ref1, ref2) %>% mutate(type="ref")
+        refs = bind_rows(ref1, ref2) %>% mutate(type="ref", pep_id=sub("fs$", "", gene_name))
         alt = fdf %>%
             mutate(gene_id = paste(gene_id_5p, gene_id_3p, sep=";"),
                    tx_id = paste(tx_id_5p, tx_id_3p, sep=";"),
                    gene_name = fusion,
-                   type = "alt") %>%
-            select(fusion, gene_id, tx_id, cDNA=alt_nuc)
-        ctx = bind_rows(refs, alt) %>% mutate(var_id=fusion, mut_id=fusion)
+                   type = "alt",
+                   pep_id = gene_name) %>% #TODO: should add position
+            select(fusion, gene_id, tx_id, type, pep_id, cDNA=alt_nuc)
+        ctx = bind_rows(refs, alt) %>%
+            mutate(var_id=fusion, mut_id=fusion) %>%
+            arrange(fusion, type, pep_id)
         pep = bind_rows(pep, pep_tile(ctx, ...))
     }
 

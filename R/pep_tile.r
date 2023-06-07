@@ -22,8 +22,7 @@ pep_tile = function(df, tile_size=93, tile_ov=45) {
         ungroup() %>%
         mutate(n_tiles = sapply(tiled, length)) %>%
         tidyr::unnest(tiled) %>%
-        mutate(pep_id = ifelse(type == "alt", mut_id, sub("([0-9]+)[a-zA-Z]+$", "\\1", mut_id)),
-               tiled = unlist(tiled, use.names=FALSE),
+        mutate(tiled = unlist(tiled, use.names=FALSE),
                nt = nchar(tiled),
                peptide = as.character(translate(DNAStringSet(tiled), no.init.codon=TRUE))) %>%
         group_by(pep_id) %>%
