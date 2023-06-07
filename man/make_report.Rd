@@ -4,10 +4,10 @@
 \alias{make_report}
 \title{Make a variants report as named list of tables}
 \usage{
-make_report(res, subs, fus, ...)
+make_report(vars, subs, fus = DataFrame(), ...)
 }
 \arguments{
-\item{res}{Variant results}
+\item{vars}{Variant results}
 
 \item{subs}{Filtered variant results}
 
