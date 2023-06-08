@@ -5,7 +5,7 @@
 #' @param fus   Fusion results
 #' @param ...   Parameters passed to `pep_tile` (eg. tile_size, tile_ov)
 #'
-#' @importFrom dplyr bind_rows
+#' @importFrom dplyr bind_rows desc
 #' @export
 make_report = function(vars, subs, fus=DataFrame(), ...) {
     gr2df = function(gr) as_tibble(as.data.frame(gr)) %>%
@@ -35,7 +35,7 @@ make_report = function(vars, subs, fus=DataFrame(), ...) {
             select(fusion, gene_id, tx_id, type, pep_id, cDNA=alt_nuc)
         ctx = bind_rows(refs, alt) %>%
             mutate(var_id=fusion, mut_id=fusion) %>%
-            arrange(fusion, type, pep_id)
+            arrange(fusion, desc(type))
         pep = bind_rows(pep, pep_tile(ctx, ...))
     }
 
