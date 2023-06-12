@@ -34,6 +34,7 @@ pep_tile = function(df, tile_size=93, tile_ov=45) {
 
 #    stopifnot(pep$type[duplicated(pep$tiled)] == "ref")
     stopifnot(!any(duplicated(pep$pep_id)))
+    stopifnot(vcountPattern("*", pep$peptide) == 0)
 
     pep$BbsI_replaced = vcountPattern("GAAGAC", pep$tiled) + vcountPattern("GTCTTC", pep$tiled)
     pep$tiled = sapply(pep$tiled, remove_cutsite, site="GAAGAC", seed=178529, USE.NAMES=FALSE)
