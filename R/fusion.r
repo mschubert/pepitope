@@ -88,6 +88,7 @@ fusion = function(vr, txdb, asm, filter_fusions=FALSE) {
     shift_5p = pmax(0, 1-ref_starts_5p) - pmax(0, ref_ends_5p-nchar(res$ref_nuc_5p)+3)
     ref_nuc_5p = subseq(res$ref_nuc_5p, pmax(1, ref_starts_5p+shift_5p),
                         pmin(nchar(res$ref_nuc_5p), ref_ends_5p+shift_5p))
+    stopifnot(shift_5p %% 3 == 0)
     #stopifnot all peptides in original translation
 
     break_codon_start_3p = floor((res$break_cdsloc_3p-1)/3) * 3 + 1
@@ -96,8 +97,9 @@ fusion = function(vr, txdb, asm, filter_fusions=FALSE) {
     shift_3p = pmax(0, 1-ref_starts_3p) - pmax(0, ref_ends_3p-nchar(res$ref_nuc_3p)+3)
     ref_nuc_3p = subseq(res$ref_nuc_3p, pmax(1, ref_starts_3p+shift_3p),
                         pmin(nchar(res$ref_nuc_3p), ref_ends_3p+shift_3p))
+    stopifnot(shift_3p %% 3 == 0)
 
-    is_fs = ((res$break_cdsloc_5p-1) %% 3 - (res$break_cdsloc_3p-1) %% 3) == 0
+    is_fs = ((res$break_cdsloc_5p-1) %% 3 - (res$break_cdsloc_3p-1) %% 3) != 0
     concat = xscat(subseq(res$ref_nuc_5p, 1, res$break_cdsloc_5p),
                    subseq(res$ref_nuc_3p, res$break_cdsloc_3p)) # add UTRs?
     end_3p = pmin(nchar(concat), ref_starts_5p + (ctx_codons*2+1)*3)
@@ -111,6 +113,7 @@ fusion = function(vr, txdb, asm, filter_fusions=FALSE) {
     res$ref_nuc_3p = ref_nuc_3p
     res$alt_shift = pmin(0, end_3p-ref_starts_5p - (ctx_codons*2+1)*3) + pmax(0, shift_5p)
     res$alt_nuc = subseq(concat, ref_starts_5p+res$alt_shift, end_3p)
+    stopifnot(nchar(res$alt_nuc) %% 3 == 0)
 
     res[!duplicated(res$ref_nuc_5p) | !duplicated(res$ref_nuc_3p) |
         !duplicated(res$alt_nuc),]
