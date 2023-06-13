@@ -104,9 +104,9 @@ fusion = function(vr, txdb, asm, filter_fusions=FALSE) {
     concat = xscat(subseq(res$ref_nuc_5p, 1, res$break_cdsloc_5p),
                    subseq(res$ref_nuc_3p, res$break_cdsloc_3p)) # add UTRs?
     end_3p = ref_starts_5p + ctx_len - 1
-    bounded_end_3p = pmin(nchar(concat), end_3p)
+    bounded_end_3p = floor(pmin(nchar(concat), end_3p)/3) * 3
     stops = suppressWarnings(vmatchPattern("*", translate(concat)))
-    stops = sapply(stops, function(s) (IRanges::start(s)[1]-1)*3 + 1)
+    stops = sapply(stops, function(s) (IRanges::start(s)[1]-1)*3)
     bounded_end_3p[is_fs] = stops[is_fs]
 
     # fill results, annotate frameshifts and remove context dups
@@ -115,7 +115,8 @@ fusion = function(vr, txdb, asm, filter_fusions=FALSE) {
     res$ref_nuc_3p = ref_nuc_3p
     res$alt_shift = pmin(0, bounded_end_3p-end_3p) + pmax(0, shift_5p)
     res$alt_nuc = subseq(concat, ref_starts_5p+res$alt_shift, bounded_end_3p)
-    stopifnot(nchar(res$alt_nuc[!is_fs]) %% 3 == 0)
+    stopifnot(res$alt_shift %% 3 == 0)
+    stopifnot(nchar(res$alt_nuc) %% 3 == 0)
 
     res[!duplicated(res$ref_nuc_5p) | !duplicated(res$ref_nuc_3p) |
         !duplicated(res$alt_nuc),]
