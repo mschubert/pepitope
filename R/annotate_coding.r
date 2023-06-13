@@ -13,6 +13,7 @@
 #'      altDepth predictCoding softFilterMatrix
 #' @importFrom Biostrings subseq nchar reverse translate replaceAt DNAStringSet
 #'      xscat vcountPattern
+#' @importFrom BSgenome getSeq
 #' @export
 annotate_coding = function(vr, txdb, asm, tx_coding, filter_variants=FALSE) {
     if (filter_variants)

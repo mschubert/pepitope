@@ -9,4 +9,6 @@
 #'
 #' @name pepitope
 #' @docType package
+#' @importFrom VariantAnnotation readVcfAsVRanges
+#' @export readVcfAsVRanges
 NULL
