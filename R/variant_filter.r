@@ -8,6 +8,7 @@
 #'     tibble as_tibble n distinct
 #' @importFrom Biostrings nchar translate DNAStringSet vcountPattern
 #' @importFrom plyranges select
+#' @importFrom stringi stri_locate_first
 #' @export
 variant_filter = function(res, min_cov=2, min_af=0.1) {
     # changes peptide, is unique and is expressed
@@ -27,7 +28,9 @@ variant_filter = function(res, min_cov=2, min_af=0.1) {
     subs = subs[!any_con]
 
     # name the variants
-    mut_lab = ifelse(subs$CONSEQUENCE == "frameshift", "fs", subs$VARAA)
+    var_stop = stri_locate_first(subs$VARAA, fixed="*")[,1]
+    vlabs = ifelse(is.na(var_stop), nchar(subs$VARAA), var_stop)
+    mut_lab = ifelse(subs$CONSEQUENCE == "frameshift", "fs", substr(subs$VARAA, 1, vlabs))
     pstarts = unname(sapply(subs$PROTEINLOC, function(p) p[[1]])) + subs$silent_start
     subs$mut_id = sprintf("%s_%s%i%s", subs$gene_name, subs$REFAA, pstarts, mut_lab)
 
