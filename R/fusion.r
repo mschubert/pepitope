@@ -99,21 +99,23 @@ fusion = function(vr, txdb, asm, filter_fusions=FALSE) {
                         pmin(nchar(res$ref_nuc_3p), ref_ends_3p+shift_3p))
     stopifnot(shift_3p %% 3 == 0)
 
+    ctx_len = (ctx_codons*2 + 1) * 3
     is_fs = (res$break_cdsloc_5p %% 3 - (res$break_cdsloc_3p-1) %% 3) != 0
     concat = xscat(subseq(res$ref_nuc_5p, 1, res$break_cdsloc_5p),
                    subseq(res$ref_nuc_3p, res$break_cdsloc_3p)) # add UTRs?
-    end_3p = pmin(nchar(concat), ref_starts_5p + (ctx_codons*2+1)*3)
+    end_3p = ref_starts_5p + ctx_len - 1
+    bounded_end_3p = pmin(nchar(concat), end_3p)
     stops = suppressWarnings(vmatchPattern("*", translate(concat)))
     stops = sapply(stops, function(s) (IRanges::start(s)[1]-1)*3 + 1)
-    end_3p[is_fs] = stops[is_fs]
+    bounded_end_3p[is_fs] = stops[is_fs]
 
     # fill results, annotate frameshifts and remove context dups
     res$fusion[is_fs] = paste0(res$fusion[is_fs], "fs")
     res$ref_nuc_5p = ref_nuc_5p
     res$ref_nuc_3p = ref_nuc_3p
-    res$alt_shift = pmin(0, end_3p-ref_starts_5p - (ctx_codons*2+1)*3) + pmax(0, shift_5p)
-    res$alt_nuc = subseq(concat, ref_starts_5p+res$alt_shift, end_3p)
-    stopifnot(nchar(res$alt_nuc) %% 3 == 0)
+    res$alt_shift = pmin(0, bounded_end_3p-end_3p) + pmax(0, shift_5p)
+    res$alt_nuc = subseq(concat, ref_starts_5p+res$alt_shift, bounded_end_3p)
+    stopifnot(nchar(res$alt_nuc[!is_fs]) %% 3 == 0)
 
     res[!duplicated(res$ref_nuc_5p) | !duplicated(res$ref_nuc_3p) |
         !duplicated(res$alt_nuc),]
