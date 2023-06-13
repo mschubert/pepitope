@@ -114,7 +114,7 @@ fusion = function(vr, txdb, asm, filter_fusions=FALSE) {
     res$ref_nuc_5p = ref_nuc_5p
     res$ref_nuc_3p = ref_nuc_3p
     res$alt_shift = pmin(0, bounded_end_3p-end_3p) + pmax(0, shift_5p)
-    res$alt_nuc = subseq(concat, ref_starts_5p+res$alt_shift, bounded_end_3p)
+    res$alt_nuc = subseq(concat, pmax(1, ref_starts_5p+res$alt_shift), bounded_end_3p)
     stopifnot(res$alt_shift %% 3 == 0)
     stopifnot(nchar(res$alt_nuc) %% 3 == 0)
 
