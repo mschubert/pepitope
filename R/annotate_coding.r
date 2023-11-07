@@ -1,7 +1,7 @@
 #' Annotate VCF variants with coding changes
 #'
 #' @param vr    A VRanges object with SNVs and small indels
-#' @param txdb  Txdb object
+#' @param txdb  TxDb or EnsDb object
 #' @param asm   Genomic sequence BSGenome object
 #' @param tx_coding  Character vector of ENST0000 IDs that are protein coding
 #' @param filter_variants  Apply soft filter matrix to the variants
