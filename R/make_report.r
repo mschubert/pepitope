@@ -12,6 +12,22 @@ make_report = function(vars, subs, fus=DataFrame(), ...) {
         select(var_id, everything()) %>%
         arrange(order(gtools::mixedorder(var_id)))
 
+    # changes peptide, is unique and is expressed
+    subs = subs[! subs$CONSEQUENCE %in% c("synonymous", "nonsense", "nostart")]
+    alt_in_ref = function(a,r) grepl(as.character(a), as.character(r), fixed=TRUE)
+    subs = subs[!mapply(alt_in_ref, a=subs$alt_prot, r=subs$ref_prot)]
+    if ("rna_count" %in% colnames(S4Vectors::mcols(subs)) && !all(is.na(subs$rna_count)))
+        subs = subs[!is.na(subs$rna_count) & subs$rna_count > 0] # & subs$rna_tpm > 0]
+    subs = subs[subs$AF >= min_af & subs$cov_alt >= min_cov]
+    subs = subs[!duplicated(subs$alt_prot)]
+
+    # peptide is not contained within another peptide
+    contained_in = function(i) any(grepl(ac2[i], ac2[-i], fixed=TRUE))
+    ac = as.character(subs$alt_prot)
+    ac2 = substr(ac, pmax(1, 1-subs$alt_shift/3), nchar(ac)-pmax(0, subs$alt_shift/3))
+    any_con = sapply(seq_along(ac2), contained_in)
+    subs = subs[!any_con]
+
     pep = as.data.frame(subs) %>%
         select(var_id, mut_id, gene_name, gene_id=GENEID, tx_id=tx_name,
                ref=ref_nuc, alt=alt_nuc) %>%
