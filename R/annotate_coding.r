@@ -3,7 +3,6 @@
 #' @param vr    A VRanges object with SNVs and small indels
 #' @param txdb  TxDb or EnsDb object
 #' @param asm   Genomic sequence BSGenome object
-#' @param filter_variants  Apply soft filter matrix to the variants
 #' @return      A GRanges object with annotated variants
 #'
 #' @importFrom GenomicFeatures transcripts threeUTRsByTranscript cdsBy
@@ -13,10 +12,9 @@
 #' @importFrom Biostrings subseq nchar reverse translate replaceAt DNAStringSet
 #'      xscat vcountPattern
 #' @importFrom BSgenome getSeq
+#' @importFrom stringi stri_locate_first
 #' @export
-annotate_coding = function(vr, txdb, asm, filter_variants=FALSE) {
-    if (filter_variants)
-        vr = vr[apply(softFilterMatrix(vr), 1, all)]
+annotate_coding = function(vr, txdb, asm) {
     vr$sampleNames = sampleNames(vr)
     vr$AF = unlist(vr$AF)
     vr$ref = ref(vr)
@@ -24,6 +22,9 @@ annotate_coding = function(vr, txdb, asm, filter_variants=FALSE) {
     vr$cov_ref = refDepth(vr)
     vr$cov_alt = altDepth(vr)
     codv = predictCoding(vr, txdb, asm)
+
+    gnames = genes(txdb)
+    codv$gene_name = gnames$gene_name[match(codv$GENEID, gnames$gene_id)]
 
 #    codv2 = predictCoding(vcf_tumor, txdb, asm) # 1637 var names @codv, 26k @codv2, 223 common?!
 #    splice = locateVariants(vcf_diff, txdb, SpliceSiteVariants())
@@ -91,8 +92,14 @@ annotate_coding = function(vr, txdb, asm, filter_variants=FALSE) {
     codv$CONSEQUENCE[silent == nchar(codv$REFAA) & nchar(codv$VARAA) > nchar(codv$REFAA)] = "insertion"
     codv$CONSEQUENCE[silent == nchar(codv$VARAA) & nchar(codv$REFAA) > nchar(codv$VARAA)] = "deletion"
 
+    # name the variants
     codv$var_id = sprintf("%s:%i_%s/%s", GenomicRanges::seqnames(codv),
                           IRanges::start(codv), codv$ref, codv$alt)
+    var_stop = stri_locate_first(codv$VARAA, fixed="*")[,1]
+    vlabs = ifelse(is.na(var_stop), nchar(codv$VARAA), var_stop)
+    mut_lab = ifelse(codv$CONSEQUENCE == "frameshift", "fs", substr(codv$VARAA, 1, vlabs))
+    pstarts = unname(sapply(codv$PROTEINLOC, function(p) p[[1]])) + codv$silent_start
+    codv$mut_id = sprintf("%s_%s%i%s", codv$gene_name, codv$REFAA, pstarts, mut_lab)
 
     # check if we didn't change the length of any nuc
     stopifnot(with(codv,

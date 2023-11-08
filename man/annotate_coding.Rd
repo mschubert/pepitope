@@ -4,7 +4,7 @@
 \alias{annotate_coding}
 \title{Annotate VCF variants with coding changes}
 \usage{
-annotate_coding(vr, txdb, asm, filter_variants = FALSE)
+annotate_coding(vr, txdb, asm)
 }
 \arguments{
 \item{vr}{A VRanges object with SNVs and small indels}
@@ -12,8 +12,6 @@ annotate_coding(vr, txdb, asm, filter_variants = FALSE)
 \item{txdb}{TxDb or EnsDb object}
 
 \item{asm}{Genomic sequence BSGenome object}
-
-\item{filter_variants}{Apply soft filter matrix to the variants}
 }
 \value{
 A GRanges object with annotated variants
