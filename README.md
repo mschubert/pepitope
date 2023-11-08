@@ -44,5 +44,5 @@ ann = annotate_coding(vr, ens106, asm)
 subs = subset_context(ann, ctx_codons=15)
 
 report = make_report(ann, subs)
-save_xlsx(report, "my_variants.xlsx")
+# writexl::write_xlsx(report, "my_variants.xlsx")
 ```
