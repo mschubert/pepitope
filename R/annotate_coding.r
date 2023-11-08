@@ -3,7 +3,6 @@
 #' @param vr    A VRanges object with SNVs and small indels
 #' @param txdb  TxDb or EnsDb object
 #' @param asm   Genomic sequence BSGenome object
-#' @param tx_coding  Character vector of ENST0000 IDs that are protein coding
 #' @param filter_variants  Apply soft filter matrix to the variants
 #' @return      A GRanges object with annotated variants
 #'
@@ -15,7 +14,7 @@
 #'      xscat vcountPattern
 #' @importFrom BSgenome getSeq
 #' @export
-annotate_coding = function(vr, txdb, asm, tx_coding, filter_variants=FALSE) {
+annotate_coding = function(vr, txdb, asm, filter_variants=FALSE) {
     if (filter_variants)
         vr = vr[apply(softFilterMatrix(vr), 1, all)]
     vr$sampleNames = sampleNames(vr)
@@ -32,7 +31,10 @@ annotate_coding = function(vr, txdb, asm, tx_coding, filter_variants=FALSE) {
     tx = transcripts(txdb)
     utr3 = threeUTRsByTranscript(txdb)
     codv$tx_name = tx$tx_name[match(codv$TXID, tx$tx_id)]
-    codv = codv[codv$tx_name %in% tx_coding]
+    if ("tx_biotype" %in% names(tx)) {
+        tx_coding = names(tx)[tx$tx_biotype=="protein_coding"]
+        codv = codv[codv$tx_name %in% tx_coding]
+    }
     coding_ranges = cdsBy(txdb)[codv$TXID]
     codv$ref_nuc = unname(extractTranscriptSeqs(asm, coding_ranges))
     codv$ref_prot = translate(codv$ref_nuc)

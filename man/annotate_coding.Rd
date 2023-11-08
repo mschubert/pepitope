@@ -4,16 +4,14 @@
 \alias{annotate_coding}
 \title{Annotate VCF variants with coding changes}
 \usage{
-annotate_coding(vr, txdb, asm, tx_coding, filter_variants = FALSE)
+annotate_coding(vr, txdb, asm, filter_variants = FALSE)
 }
 \arguments{
 \item{vr}{A VRanges object with SNVs and small indels}
 
-\item{txdb}{Txdb object}
+\item{txdb}{TxDb or EnsDb object}
 
 \item{asm}{Genomic sequence BSGenome object}
-
-\item{tx_coding}{Character vector of ENST0000 IDs that are protein coding}
 
 \item{filter_variants}{Apply soft filter matrix to the variants}
 }

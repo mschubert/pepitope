@@ -15,8 +15,6 @@ replaceProt = function(what, where, to) {
 
 ens106 = AnnotationHub::AnnotationHub()[["AH100643"]]
 asm = BSgenome.Hsapiens.NCBI.GRCh38::BSgenome.Hsapiens.NCBI.GRCh38
-tx = transcripts(ens106, filter=SeqNameFilter("1"))
-tx_coding = names(tx)[tx$tx_biotype=="protein_coding"]
 
 vr = unlist(GRangesList(
     SYN = make_vr("1", c(5969221, 10647824, 18885617), "G", "A"),
@@ -26,7 +24,7 @@ vr = unlist(GRangesList(
     DEL = make_vr("1", c(1708855, 51840391, 201386873), c("TTCCTCCTCC", "ATCT", "CCCA"), c("T", "A", "C")),
     FS = make_vr("1", c(153810271, 33013400, 159062696), c("TG", "G", "GT"), c("T", "GATGTC", "G"))
 ))
-ann = suppressWarnings(annotate_coding(vr, ens106, asm, tx_coding))
+ann = suppressWarnings(annotate_coding(vr, ens106, asm))
 
 test_that("synonymous", {
     syn = ann[names(ann) == "SYN"]
