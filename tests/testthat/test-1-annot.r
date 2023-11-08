@@ -7,32 +7,39 @@ tx_coding = names(tx)[tx$tx_biotype=="protein_coding"]
 
 make_vr = function(chr, starts, ref, alt) {
     ends = starts + nchar(ref) - 1
-    VRanges(seqnames=chr, ranges=IRanges(starts, ends), ref=ref, alt=alt)
+    VariantAnnotation::VRanges(seqnames=chr, ranges=IRanges(starts, ends), ref=ref, alt=alt)
+}
+
+replaceDNA = function(what, where, to) {
+    replaceAt(what, as(where, "IRangesList"), as(to, "DNAStringSetList"))
+}
+
+replaceProt = function(what, where, to) {
+    replaceAt(what, as(unname(where), "IRangesList"), as(to, "AAStringSetList"))
 }
 
 test_that("synonymous", {
     vr = make_vr("1", c(5969221, 10647824, 18885617), "G", "A")
 
     ann = annotate_coding(vr, ens106, asm, tx_coding)
-    with(ann, expect_equal(unique(CONSEQUENCE), "synonymous"))
-    with(ann, expect_true(all(ref_prot == alt_prot)))
-    with(ann, expect_true(all(ref_nuc != alt_nuc)))
-    with(ann, expect_equal(nchar(ref_nuc), nchar(alt_nuc)))
-    with(ann, expect_equal(alt_nuc,
-        replaceAt(ref_nuc, as(CDSLOC, "IRangesList"), as(varAllele, "DNAStringSetList"))))
-    with(ann, expect_equal(REFAA, VARAA))
-    with(ann, expect_equal(unique(silent_start), 1))
-    with(ann, expect_equal(unique(silent_end), 0))
+    expect_equal(unique(ann$CONSEQUENCE), "synonymous")
+    expect_true(all(ann$ref_prot == ann$alt_prot))
+    expect_true(all(ann$ref_nuc != ann$alt_nuc))
+    expect_equal(nchar(ann$ref_nuc), nchar(ann$alt_nuc))
+    expect_equal(ann$alt_nuc, replaceDNA(ann$ref_nuc, ann$CDSLOC, ann$varAllele))
+    expect_equal(ann$REFAA, ann$VARAA)
+    expect_true(all(ann$silent_start == 1))
+    expect_true(all(ann$silent_end == 0))
 
     ctx = subset_context(ann, ctx_codons=15)
-    with(ctx, expect_true(all(ref_prot == alt_prot)))
-    with(ctx, expect_true(all(ref_nuc != alt_nuc)))
-    with(ctx, expect_equal(unique(nchar(ref_nuc)), 90))
-    with(ctx, expect_equal(unique(nchar(alt_nuc)), 90))
-    with(ctx, expect_equal(translate(ref_nuc), alt_prot))
-    with(ctx, expect_equal(translate(alt_nuc), ref_prot))
-    with(ctx, expect_equal(unique(nchar(ref_prot)), 30))
-    with(ctx, expect_equal(unique(nchar(alt_prot)), 30))
+    expect_true(all(ctx$ref_prot == ctx$alt_prot))
+    expect_true(all(ctx$ref_nuc != ctx$alt_nuc))
+    expect_true(all(nchar(ctx$ref_nuc) == 90))
+    expect_true(all(nchar(ctx$alt_nuc) == 90))
+    expect_equal(translate(ctx$ref_nuc), ctx$alt_prot)
+    expect_equal(translate(ctx$alt_nuc), ctx$ref_prot)
+    expect_true(all(nchar(ctx$ref_prot)), 30)
+    expect_true(all(nchar(ctx$alt_prot)), 30)
 })
 
 test_that("SNPs", {
@@ -40,29 +47,27 @@ test_that("SNPs", {
                  c("C", "G", "T"), c("T", "A", "C"))
 
     ann = annotate_coding(vr, ens106, asm, tx_coding)
-    with(ann, expect_equal(unique(CONSEQUENCE), "nonsynonymous"))
-    with(ann, expect_true(all(ref_prot != alt_prot)))
-    with(ann, expect_true(all(ref_nuc != alt_nuc)))
-    with(ann, expect_equal(nchar(ref_nuc), nchar(alt_nuc)))
-    with(ann[strand(ann) == "+"], expect_equal(alt, as.character(varAllele)))
-    with(ann[strand(ann) == "-"], expect_equal(alt, as.character(complement(varAllele))))
-    with(ann, expect_equal(alt_nuc,
-        replaceAt(ref_nuc, as(CDSLOC, "IRangesList"), as(varAllele, "DNAStringSetList"))))
-    with(ann, expect_true(all(REFAA != VARAA)))
-    with(ann, expect_equal(alt_prot,
-        replaceAt(ref_prot, as(PROTEINLOC, "IRangesList"), as(VARAA, "AAStringSetList"))))
-    with(ann, expect_equal(unique(silent_start), 0))
-    with(ann, expect_equal(unique(silent_end), 0))
+    expect_true(all(ann$CONSEQUENCE == "nonsynonymous"))
+    expect_true(all(ann$ref_prot != ann$alt_prot))
+    expect_true(all(ann$ref_nuc != ann$alt_nuc))
+    expect_equal(nchar(ann$ref_nuc), nchar(ann$alt_nuc))
+    expect_equal(ann[strand(ann) == "+"]$alt, as.character(ann[strand(ann) == "+"]$varAllele))
+    expect_equal(ann[strand(ann) == "-"]$alt, as.character(Biostrings::complement(ann[strand(ann) == "-"]$varAllele)))
+    expect_equal(ann$alt_nuc, replaceDNA(ann$ref_nuc, ann$CDSLOC, ann$varAllele))
+    expect_true(all(ann$REFAA != ann$VARAA))
+    expect_equal(ann$alt_prot, replaceProt(ann$ref_prot, ann$PROTEINLOC, ann$VARAA))
+    expect_true(all(ann$silent_start == 0))
+    expect_true(all(ann$silent_end == 0))
 
     ctx = subset_context(ann, ctx_codons=15)
-    with(ctx, expect_true(all(ref_prot != alt_prot)))
-    with(ctx, expect_true(all(ref_nuc != alt_nuc)))
-    with(ctx, expect_equal(unique(nchar(ref_nuc)), 93))
-    with(ctx, expect_equal(unique(nchar(alt_nuc)), 93))
-    with(ctx, expect_equal(translate(ref_nuc), ref_prot))
-    with(ctx, expect_equal(translate(alt_nuc), alt_prot))
-    with(ctx, expect_equal(unique(nchar(ref_prot)), 31))
-    with(ctx, expect_equal(unique(nchar(alt_prot)), 31))
+    expect_true(all(ctx$ref_prot != ctx$alt_prot))
+    expect_true(all(ctx$ref_nuc != ctx$alt_nuc))
+    expect_true(all(nchar(ctx$ref_nuc) == 93))
+    expect_true(all(nchar(ctx$alt_nuc) == 93))
+    expect_equal(translate(ctx$ref_nuc), ctx$ref_prot)
+    expect_equal(translate(ctx$alt_nuc), ctx$alt_prot)
+    expect_true(all(nchar(ctx$ref_prot) == 31))
+    expect_true(all(nchar(ctx$alt_prot) == 31))
 })
 
 test_that("nonsense", {
@@ -70,16 +75,16 @@ test_that("nonsense", {
                  c("C", "A", "C"), c("T", "T", "A"))
 
     ann = annotate_coding(vr, ens106, asm, tx_coding)
-    with(ann, expect_equal(unique(CONSEQUENCE), "nonsense"))
-    with(ann, expect_equal(unique(as.character(VARAA)), "*"))
-    with(ann, expect_true(all(nchar(alt_prot) < nchar(ref_prot))))
+    expect_true(all(ann$CONSEQUENCE == "nonsense"))
+    expect_true(all(as.character(ann$VARAA) == "*"))
+    expect_true(all(nchar(ann$alt_prot) < nchar(ann$ref_prot)))
 
     ctx = subset_context(ann, ctx_codons=15)
-    with(ctx, expect_equal(unique(nchar(ref_nuc)), 93))
-    with(ctx, expect_equal(unique(nchar(alt_nuc)), 45))
-    with(ctx, expect_equal(unique(nchar(ref_prot)), 31))
-    with(ctx, expect_equal(unique(nchar(alt_prot)), 15))
-    with(ctx, expect_equal(as.character(subseq(ref_prot, 1, 15)), as.character(alt_prot)))
+    expect_true(all(nchar(ctx$ref_nuc) == 93))
+    expect_true(all(nchar(ctx$alt_nuc) == 45))
+    expect_true(all(nchar(ctx$ref_prot) == 31))
+    expect_true(all(nchar(ctx$alt_prot) == 15))
+    expect_equal(as.character(subseq(ctx$ref_prot, 1, 15)), as.character(ctx$alt_prot))
 })
 
 test_that("in-frame insertion", {
@@ -87,12 +92,12 @@ test_that("in-frame insertion", {
                  c("A", "T", "A"), c("AGGATGT", "TGCC", "AGAAGAC"))
 
     ann = annotate_coding(vr, ens106, asm, tx_coding)
-    with(ann, expect_equal(unique(CONSEQUENCE), "insertion"))
-    with(ann, expect_true(all(nchar(alt_prot) > nchar(ref_prot))))
+    expect_true(all(ann$CONSEQUENCE == "insertion"))
+    expect_true(all(nchar(ann$alt_prot) > nchar(ann$ref_prot)))
 
     ctx = subset_context(ann, ctx_codons=15)
-    with(ctx, expect_true(all(nchar(alt_prot) > nchar(ref_prot))))
-    with(ctx, expect_true(all(REFAA == "*" | silent_start > 0)))
+    expect_true(all(nchar(ctx$alt_prot) > nchar(ctx$ref_prot)))
+    expect_true(all(ctx$REFAA == "*" | ctx$silent_start > 0))
 })
 
 test_that("in-frame deletion", {
@@ -100,12 +105,12 @@ test_that("in-frame deletion", {
                  c("TTCCTCCTCC", "ATCT", "CCCA"), c("T", "A", "C"))
 
     ann = annotate_coding(vr, ens106, asm, tx_coding)
-    with(ann, expect_equal(unique(CONSEQUENCE), "deletion"))
-    with(ann, expect_true(all(nchar(alt_prot) < nchar(ref_prot))))
+    expect_true(all(ann$CONSEQUENCE == "deletion"))
+    expect_true(all(nchar(ann$alt_prot) < nchar(ann$ref_prot)))
 
     ctx = subset_context(ann, ctx_codons=15)
-    with(ctx, expect_equal(nchar(ref_nuc), 90+width(vr[QUERYID])-1))
-    with(ctx, expect_equal(unique(nchar(alt_nuc)), 90))
+    expect_equal(nchar(ctx$ref_nuc), 90+width(vr[ctx$QUERYID])-1)
+    expect_true(all(nchar(ctx$alt_nuc) == 90))
 })
 
 test_that("frameshift", {
@@ -113,11 +118,11 @@ test_that("frameshift", {
                  c("TG", "G", "GT"), c("T", "GATGTC", "G"))
 
     ann = annotate_coding(vr, ens106, asm, tx_coding)
-    with(ann, expect_equal(unique(CONSEQUENCE), "frameshift"))
+    expect_true(all(ann$CONSEQUENCE == "frameshift"))
 
     ctx = subset_context(ann, ctx_codons=15)
-    with(ctx, expect_equal(unique(nchar(ref_nuc) %% 3), 0))
-    with(ctx, expect_equal(unique(nchar(alt_nuc) %% 3), 0))
-    with(ctx, expect_equal(unique(nchar(alt_nuc)), 93))
-    with(ctx, expect_equal(unique(nchar(alt_prot)), 31))
+    expect_true(all(nchar(ctx$ref_nuc) %% 3 == 0))
+    expect_true(all(nchar(ctx$alt_nuc) %% 3 == 0))
+    expect_true(all(nchar(ctx$alt_nuc) == 93))
+    expect_true(all(nchar(ctx$alt_prot) == 31))
 })
