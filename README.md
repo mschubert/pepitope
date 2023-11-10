@@ -4,7 +4,10 @@ pepitope: extract *pep*tide ep*itope*s
 R package to extract the peptide context (flanking region around mutations)
 from reference genome and variant (VCF) file.
 
+The peptide context is defined as up- and downstream around the following:
 
+* For SNPs, insertions, and deletions: all codons affected
+* For frameshifts: the codon of the frameshift until the first stop codon
 
 Installation
 ------------
@@ -24,7 +27,7 @@ The _pepitope_ workflow usually consists of:
 * Loading a genome and annotation, usually GRCh38 and Ensembl
 * Loading a VCF variants file as `VRanges` object
 * Annotate the protein-coding mutations
-* Save a report as _xlsx_ file
+* Make a report of variants, coding changes, and tiled peptides
 
 In code, this looks like the following:
 
@@ -35,8 +38,8 @@ library(pepitope)
 ens106 = AnnotationHub::AnnotationHub()[["AH100643"]]
 asm = BSgenome.Hsapiens.NCBI.GRCh38::BSgenome.Hsapiens.NCBI.GRCh38
 
-# example VCF file from the VariantAnnotation package
-vr = readVcfAsVRanges("my.vcf.gz") |>
+# read variants from VCF file and apply filters
+vr = readVcfAsVRanges("my_variants.vcf.gz") |>
     filter_variants(min_cov=2, min_af=0.05, pass=TRUE)
 
 # annotate and create report
