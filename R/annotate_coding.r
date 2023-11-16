@@ -12,6 +12,7 @@
 #' @importFrom Biostrings subseq nchar reverse translate replaceAt DNAStringSet
 #'      xscat vcountPattern
 #' @importFrom BSgenome getSeq
+#' @importFrom GenomeInfoDb seqinfo seqinfo<-
 #' @importFrom stringi stri_locate_first
 #' @export
 annotate_coding = function(vr, txdb, asm) {
@@ -108,5 +109,7 @@ annotate_coding = function(vr, txdb, asm) {
         vcountPattern("*", codv$REFAA) > 0 | # transcript extension
         vcountPattern("*", codv$VARAA) > 0 # "missense"+nonsense
     ))
+
+    seqinfo(codv) = seqinfo(gnames)
     codv
 }
