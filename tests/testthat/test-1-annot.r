@@ -117,3 +117,27 @@ test_that("frameshift", {
     expect_true(all(nchar(ctx$alt_nuc) == 93))
     expect_true(all(nchar(ctx$alt_prot) == 31))
 })
+
+test_that("context shifts", {
+    ctx = subset_context(ann, ctx_codons=15)
+    expect_equal(ctx[ctx$tx_name == "ENST00000368655"]$alt_shift, -6)
+    expect_equal(ctx[ctx$tx_name == "ENST00000672715"]$alt_shift, -27)
+    expect_equal(ctx[ctx$tx_name == "ENST00000368130"]$alt_shift, -9)
+
+    ctx = subset_context(ann, ctx_codons=16)
+    expect_equal(ctx[ctx$tx_name == "ENST00000368655"]$alt_shift, -9)
+    expect_equal(ctx[ctx$tx_name == "ENST00000672715"]$alt_shift, -30)
+    expect_equal(ctx[ctx$tx_name == "ENST00000368130"]$alt_shift, -12)
+
+    ctx = subset_context(ann, ctx_codons=12)
+    expect_equal(ctx[ctx$tx_name == "ENST00000368655"]$alt_shift, 0)
+    expect_equal(ctx[ctx$tx_name == "ENST00000672715"]$alt_shift, -18)
+    expect_equal(ctx[ctx$tx_name == "ENST00000368130"]$alt_shift, 0)
+
+    ctx = subset_context(ann, ctx_codons=120)
+    expect_equal(ctx[ctx$tx_name == "ENST00000378156"]$alt_shift, 42)
+    expect_equal(ctx[ctx$tx_name == "ENST00000375341"]$alt_shift, 51)
+    expect_equal(ctx[ctx$tx_name == "ENST00000368655"]$alt_shift, -321)
+    expect_equal(ctx[ctx$tx_name == "ENST00000672715"]$alt_shift, -138)
+    expect_equal(ctx[ctx$tx_name == "ENST00000368130"]$alt_shift, -324)
+})
