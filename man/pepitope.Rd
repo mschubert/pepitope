@@ -2,6 +2,7 @@
 % Please edit documentation in R/pepitope-package.r
 \docType{package}
 \name{pepitope}
+\alias{pepitope-package}
 \alias{pepitope}
 \title{Pepitope: peptide epitopes from reference genome and variant (VCF) file}
 \description{
@@ -11,4 +12,16 @@ summary report for protein-coding variants including the reference and
 mutated allele, read coverage, amino acid sequence, and other information.
 It can also be used to remove restriction sites from cDNA, alongside other
 helper functions.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/mschubert/pepitope}
+  \item Report bugs at \url{https://github.com/mschubert/pepitope/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Michael Schubert \email{mschu.dev@gmail.com} (\href{https://orcid.org/0000-0002-6862-5221}{ORCID})
+
 }
