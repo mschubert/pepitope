@@ -8,7 +8,7 @@
 #' @importFrom GenomicFeatures transcripts threeUTRsByTranscript cdsBy
 #'      extractTranscriptSeqs
 #' @importFrom VariantAnnotation readVcfAsVRanges sampleNames ref alt refDepth
-#'      altDepth predictCoding softFilterMatrix
+#'      altDepth predictCoding
 #' @importFrom Biostrings subseq nchar reverse translate replaceAt DNAStringSet
 #'      xscat vcountPattern
 #' @importFrom BSgenome getSeq

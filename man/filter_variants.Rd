@@ -4,7 +4,14 @@
 \alias{filter_variants}
 \title{Make results report to save as xlsx sheets (full, filtered, peptides)}
 \usage{
-filter_variants(vr, min_cov = 2, min_af = 0.05, pass = TRUE)
+filter_variants(
+  vr,
+  min_cov = 2,
+  min_af = 0.05,
+  pass = TRUE,
+  sample = NULL,
+  chrs = NULL
+)
 }
 \arguments{
 \item{vr}{A VRanges object from `readVcfAsVRanges`}
@@ -14,6 +21,10 @@ filter_variants(vr, min_cov = 2, min_af = 0.05, pass = TRUE)
 \item{min_af}{Minimum allele frequency of the ALT allele}
 
 \item{pass}{Whether to only include softFilterMatrix PASS}
+
+\item{sample}{Only include if in `sampleNames(vr)`}
+
+\item{chrs}{Either "default" or a character vector of chromosome names}
 }
 \description{
 Make results report to save as xlsx sheets (full, filtered, peptides)
