@@ -5,7 +5,8 @@
 #' @param fus   Fusion results
 #' @param ...   Parameters passed to `pep_tile` (eg. tile_size, tile_ov)
 #'
-#' @importFrom dplyr bind_rows desc
+#' @importFrom dplyr mutate bind_rows desc distinct arrange as_tibble
+#' @importFrom plyranges select
 #' @export
 make_report = function(vars, subs, fus=DataFrame(), ...) {
     gr2df = function(gr) as_tibble(as.data.frame(gr)) %>%
@@ -55,7 +56,7 @@ make_report = function(vars, subs, fus=DataFrame(), ...) {
     }
 
     list(`All Variants` = vars %>% select(-CDSLOC) %>% gr2df() %>%
-            dplyr::select(-tx_name, -(ref_nuc:alt_prot)) %>% distinct(),
+            select(-tx_name, -(ref_nuc:alt_prot)) %>% distinct(),
          `Unique Protein-Coding` = gr2df(subs) %>% select(var_id, mut_id, everything()),
          `RNA Fusions` = as.data.frame(fus),
          `93 nt Peptides` = pep %>% select(var_id, mut_id, pep_id,
