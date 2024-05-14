@@ -1,6 +1,7 @@
 #' Make results report to save as xlsx sheets (full, filtered, peptides)
 #'
 #' @param vr       A VRanges object from `readVcfAsVRanges`
+#' @param ...      Force filters by name (ignored)
 #' @param min_cov  Minimum number of reads to span the ALT allele
 #' @param min_af   Minimum allele frequency of the ALT allele
 #' @param pass     Whether to only include softFilterMatrix PASS
@@ -12,7 +13,11 @@
 #' @importFrom GenomicRanges seqnames
 #' @importFrom GenomeInfoDb keepStandardChromosomes
 #' @export
-filter_variants = function(vr, min_cov=2, min_af=0.05, pass=TRUE, sample=NULL, chrs=NULL) {
+filter_variants = function(vr, ..., min_cov=2, min_af=0.05, pass=TRUE, sample=NULL, chrs=NULL) {
+    args = list(...)
+    if (length(args) > 0)
+        stop("Unknown filter arguments: ", paste(sQuote(args), collapse=", "))
+
     if (!is.null(pass)) {
         passes = apply(softFilterMatrix(vr), 1, all)
         NAs = is.na(passes)

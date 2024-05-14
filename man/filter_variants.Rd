@@ -6,6 +6,7 @@
 \usage{
 filter_variants(
   vr,
+  ...,
   min_cov = 2,
   min_af = 0.05,
   pass = TRUE,
@@ -15,6 +16,8 @@ filter_variants(
 }
 \arguments{
 \item{vr}{A VRanges object from `readVcfAsVRanges`}
+
+\item{...}{Force filters by name (ignored)}
 
 \item{min_cov}{Minimum number of reads to span the ALT allele}
 
