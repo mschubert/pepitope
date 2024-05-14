@@ -12,7 +12,8 @@
 #' @importFrom Biostrings subseq nchar reverse translate replaceAt DNAStringSet
 #'      xscat vcountPattern
 #' @importFrom BSgenome getSeq
-#' @importFrom GenomeInfoDb seqinfo seqinfo<-
+#' @importFrom GenomeInfoDb seqnames seqnames<- genome genome<-
+#'      isCircular isCircular<- seqinfo seqinfo<-
 #' @importFrom stringi stri_locate_first
 #' @export
 annotate_coding = function(vr, txdb, asm) {
@@ -94,8 +95,7 @@ annotate_coding = function(vr, txdb, asm) {
     codv$CONSEQUENCE[silent == nchar(codv$VARAA) & nchar(codv$REFAA) > nchar(codv$VARAA)] = "deletion"
 
     # name the variants
-    codv$var_id = sprintf("%s:%i_%s/%s", GenomicRanges::seqnames(codv),
-                          IRanges::start(codv), codv$ref, codv$alt)
+    codv$var_id = sprintf("%s:%i_%s/%s", seqnames(codv), IRanges::start(codv), codv$ref, codv$alt)
     var_stop = stri_locate_first(codv$VARAA, fixed="*")[,1]
     vlabs = ifelse(is.na(var_stop), nchar(codv$VARAA), var_stop)
     mut_lab = ifelse(codv$CONSEQUENCE == "frameshift", "fs", substr(codv$VARAA, 1, vlabs))
@@ -110,6 +110,9 @@ annotate_coding = function(vr, txdb, asm) {
         vcountPattern("*", codv$VARAA) > 0 # "missense"+nonsense
     ))
 
-    seqinfo(codv) = seqinfo(gnames)
+    infomap = match(seqnames(seqinfo(codv)), seqnames(seqinfo(gnames)))
+    genome(codv) = genome(gnames)[infomap]
+    isCircular(codv) = isCircular(gnames)[infomap]
+
     codv
 }
