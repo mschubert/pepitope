@@ -2,21 +2,27 @@
 #'
 #' @param vr    A VRanges object with RNA fusions from readVcfAsRanges
 #' @param txdb  A transcription database, eg. AnnotationHub()[["AH100643"]]
-#' @param filter_fusions  Whether to only consider fusions with 2 tools, 2 reads
+#' @param min_reads  The minimum number of split read support for a fusion
+#' @param min_mates  The minimum number of linked read support for a fusion
+#' @param min_tools  The minimum number of tools that identify a fusion
 #' @return      A DataFrame objects with fusions
 #'
 #' @importFrom VariantAnnotation readVcfAsVRanges
 #' @importFrom GenomicRanges GRanges
 #' @export
-fusion = function(vr, txdb, asm, filter_fusions=FALSE) {
+fusion = function(vr, txdb, asm, min_reads=NULL, min_mates=NULL, min_tools=NULL) {
     ens106 = txdb
 
     # GT: ref allele/i alt allele (always './1'?)
     # DV: split reads
     # RV: discordant mates supporting translocation
     # FFPM: fusion fragments per million RNA fragments
-    if (filter_fusions)
-        vr = vr[vr$DV >= 1 & vr$RV >= 2 & unlist(vr$TOOL_HITS) >= 2]
+    if (!is.null(min_reads))
+        vr = vr[vr$DV >= min_reads]
+    if (!is.null(min_mates))
+        vr = vr[vr$RV >= min_mates]
+    if (!is.null(min_tools))
+        vr = vr[unlist(vr$TOOL_HITS) >= min_tools]
     flabs = paste(unlist(vr$GENEA), unlist(vr$GENEB), sep="-")
 
     g1 = GRanges(seqnames(vr), ranges(vr), sapply(vr$ORIENTATION, `[`, i=1))

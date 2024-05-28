@@ -4,14 +4,18 @@
 \alias{fusion}
 \title{Aggregate fusion VCFs into a table}
 \usage{
-fusion(vr, txdb, asm, filter_fusions = FALSE)
+fusion(vr, txdb, asm, min_reads = NULL, min_mates = NULL, min_tools = NULL)
 }
 \arguments{
 \item{vr}{A VRanges object with RNA fusions from readVcfAsRanges}
 
 \item{txdb}{A transcription database, eg. AnnotationHub()[["AH100643"]]}
 
-\item{filter_fusions}{Whether to only consider fusions with 2 tools, 2 reads}
+\item{min_reads}{The minimum number of split read support for a fusion}
+
+\item{min_mates}{The minimum number of linked read support for a fusion}
+
+\item{min_tools}{The minimum number of tools that identify a fusion}
 }
 \value{
 A DataFrame objects with fusions
