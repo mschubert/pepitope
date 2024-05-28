@@ -32,9 +32,8 @@ fusion = function(vr, txdb, asm, min_reads=NULL, min_pairs=NULL, min_tools=NULL)
                  sapply(vr$ORIENTATION, `[`, i=2))
     seqlevelsStyle(g2) = seqlevelsStyle(g1)
 
-    flt = ~ tx_biotype == "protein_coding" & SeqNameFilter(c(1:22,'X','Y'))
-    tx = transcripts(txdb, filter=flt)
-    coding_ranges = cdsBy(txdb, filter=flt)
+    tx = transcripts(txdb)
+    coding_ranges = cdsBy(txdb)
 
     # from genomic break, get transcripts left and right + their coords
     tx_by_break = function(gr, type="left") {
