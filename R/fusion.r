@@ -3,42 +3,43 @@
 #' @param vr    A VRanges object with RNA fusions from readVcfAsRanges
 #' @param txdb  A transcription database, eg. AnnotationHub()[["AH100643"]]
 #' @param min_reads  The minimum number of split read support for a fusion
-#' @param min_mates  The minimum number of linked read support for a fusion
+#' @param min_pairs  The minimum number of linked read support for a fusion
 #' @param min_tools  The minimum number of tools that identify a fusion
 #' @return      A DataFrame objects with fusions
 #'
 #' @importFrom VariantAnnotation readVcfAsVRanges
 #' @importFrom GenomicRanges GRanges
 #' @export
-fusion = function(vr, txdb, asm, min_reads=NULL, min_mates=NULL, min_tools=NULL) {
-    ens106 = txdb
-
+fusion = function(vr, txdb, asm, min_reads=NULL, min_pairs=NULL, min_tools=NULL) {
     # GT: ref allele/i alt allele (always './1'?)
     # DV: split reads
     # RV: discordant mates supporting translocation
     # FFPM: fusion fragments per million RNA fragments
     if (!is.null(min_reads))
         vr = vr[vr$DV >= min_reads]
-    if (!is.null(min_mates))
-        vr = vr[vr$RV >= min_mates]
+    if (!is.null(min_pairs))
+        vr = vr[vr$DV + vr$RV >= min_reads + min_pairs]
     if (!is.null(min_tools))
         vr = vr[unlist(vr$TOOL_HITS) >= min_tools]
     flabs = paste(unlist(vr$GENEA), unlist(vr$GENEB), sep="-")
+
+    if (length(vr) == 0)
+        return(DataFrame())
 
     g1 = GRanges(seqnames(vr), ranges(vr), sapply(vr$ORIENTATION, `[`, i=1))
     alt_loc = strsplit(gsub("\\[|\\]|N", "", alt(vr)), ":")
     g2 = GRanges(sapply(alt_loc, `[`, i=1), sapply(alt_loc, `[`, i=2),
                  sapply(vr$ORIENTATION, `[`, i=2))
+    seqlevelsStyle(g2) = seqlevelsStyle(g1)
 
     flt = ~ tx_biotype == "protein_coding" & SeqNameFilter(c(1:22,'X','Y'))
-    tx = transcripts(ens106, filter=flt)
-    coding_ranges = cdsBy(ens106, filter=flt)
-    asm = BSgenome.Hsapiens.NCBI.GRCh38::BSgenome.Hsapiens.NCBI.GRCh38
+    tx = transcripts(txdb, filter=flt)
+    coding_ranges = cdsBy(txdb, filter=flt)
 
     # from genomic break, get transcripts left and right + their coords
     tx_by_break = function(gr, type="left") {
-        exo = exonsByOverlaps(ens106, gr)
-        txo = subsetByOverlaps(coding_ranges, gr) # cdsByOverlaps can not take ens106
+        exo = exonsByOverlaps(txdb, gr)
+        txo = subsetByOverlaps(coding_ranges, gr) # cdsByOverlaps can not take txdb
         if (type == "left") {
             exon_bound_is_break = ifelse(strand(exo) == "+", end(exo), start(exo)) == start(gr)
         } else if (type == "right") {
@@ -57,8 +58,8 @@ fusion = function(vr, txdb, asm, min_reads=NULL, min_mates=NULL, min_tools=NULL)
         seqs = seqs[has_start & has_stop & n_stop==1] #todo: alt init codons
         if (length(seqs) == 0)
             return(DataFrame())
-        locs = unlist(genomeToTranscript(gr, ens106))[names(seqs)]
-        locs2 = transcriptToCds(locs, ens106)
+        locs = unlist(genomeToTranscript(gr, txdb))[names(seqs)]
+        locs2 = transcriptToCds(locs, txdb)
 
         re = DataFrame(mcols(locs2)[c("seq_name", "seq_strand", "seq_start", "tx_id")],
                        gene_id=tx$gene_id[match(names(locs2), names(tx))],
