@@ -120,12 +120,14 @@ fusion = function(vr, txdb, asm, min_reads=NULL, min_pairs=NULL, min_tools=NULL,
     nostop = which(is.na(stops))
     utr3 = threeUTRsByTranscript(txdb)
     for (i in nostop) {
-        if (!res$tx_id_3p[i] %in% names(utr3))
-            next
-        nuc_utr3 = getSeq(asm, utr3[[res$tx_id_3p[i]]])
-        concat[i] = xscat(concat[i], nuc_utr3)
-        pstop = suppressWarnings(vmatchPattern("*", translate(concat[i])))[[1]]
-        stops[i] = (IRanges::start(pstop)[1]-1) * 3
+        if (res$tx_id_3p[i] %in% names(utr3)) {
+            nuc_utr3 = getSeq(asm, utr3[[res$tx_id_3p[i]]])
+            concat[i] = xscat(concat[i], nuc_utr3)
+            pstop = suppressWarnings(vmatchPattern("*", translate(concat[i])))[[1]]
+            stops[i] = (IRanges::start(pstop)[1]-1) * 3
+        }
+        if (is.na(stops[i]))
+            stops[i] = floor(nchar(concat[i])/3) * 3
     }
     bounded_end_3p[is_fs] = stops[is_fs]
 
