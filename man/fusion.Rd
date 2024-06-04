@@ -19,6 +19,8 @@ fusion(
 
 \item{txdb}{A transcription database, eg. AnnotationHub()[["AH100643"]]}
 
+\item{asm}{A Genome sequence package object, eg. ::BSgenome.Hsapiens.NCBI.GRCh38}
+
 \item{min_reads}{The minimum number of split read support for a fusion}
 
 \item{min_pairs}{The minimum number of linked read support for a fusion}

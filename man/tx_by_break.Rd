@@ -4,7 +4,7 @@
 \alias{tx_by_break}
 \title{Get transcript incl coords left or right of break}
 \usage{
-tx_by_break(txdb, tx, coding_ranges, gr, type = "left")
+tx_by_break(asm, txdb, tx, coding_ranges, gr, type = "left")
 }
 \arguments{
 \item{txdb}{A transcription database, eg. AnnotationHub()[["AH100643"]]}
@@ -12,6 +12,10 @@ tx_by_break(txdb, tx, coding_ranges, gr, type = "left")
 \item{tx}{A list of transcripts obtained from `transcripts(txdb)`}
 
 \item{coding_ranges}{A list of exon coordinates by gene from `cdsBy(txdb)`}
+
+\item{gr}{GenomicRanges object of break location}
+
+\item{type}{Whether we want info for the 'left' or 'right' side of the break}
 }
 \value{
 A DataFrame with sequence information
