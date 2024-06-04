@@ -23,7 +23,6 @@ fusion = function(vr, txdb, asm, min_reads=NULL, min_pairs=NULL, min_tools=NULL,
     if (!is.null(min_tools))
         vr = vr[unlist(vr$TOOL_HITS) >= min_tools]
     flabs = paste(unlist(vr$GENEA), unlist(vr$GENEB), sep="-")
-
     if (length(vr) == 0)
         return(DataFrame())
 
@@ -33,50 +32,13 @@ fusion = function(vr, txdb, asm, min_reads=NULL, min_pairs=NULL, min_tools=NULL,
                  sapply(vr$ORIENTATION, `[`, i=2))
     seqlevelsStyle(g2) = seqlevelsStyle(g1)
 
+    # each possible combination of left and right transcripts from break
     tx = transcripts(txdb)
     coding_ranges = cdsBy(txdb)
-
-    # from genomic break, get transcripts left and right + their coords
-    tx_by_break = function(gr, type="left") {
-        exo = exonsByOverlaps(txdb, gr)
-        txo = subsetByOverlaps(coding_ranges, gr) # cdsByOverlaps can not take txdb
-        if (type == "left") {
-            exon_bound_is_break = ifelse(strand(exo) == "+", end(exo), start(exo)) == start(gr)
-        } else if (type == "right") {
-            exon_bound_is_break = ifelse(strand(exo) == "+", start(exo), end(exo)) == start(gr)
-        }
-        if (any(exon_bound_is_break))
-            exo = exo[exon_bound_is_break]
-        cdss = coding_ranges[intersect(names(coding_ranges), names(txo))]
-        cdss = cdss[sapply(cdss, function(x) any(exo$exon_id %in% x$exon_id))]
-
-        seqs = extractTranscriptSeqs(asm, cdss)
-        prot = suppressWarnings(translate(seqs))
-        has_start = subseq(prot,1,1) == "M"
-        has_stop = subseq(IRanges::reverse(prot),1,1) == "*"
-        n_stop = vcountPattern("*", prot)
-        seqs = seqs[has_start & has_stop & n_stop==1] #todo: alt init codons
-        if (length(seqs) == 0)
-            return(DataFrame())
-        locs = unlist(genomeToTranscript(gr, txdb))[names(seqs)]
-        locs2 = transcriptToCds(locs, txdb)
-
-        re = DataFrame(mcols(locs2)[c("seq_name", "seq_strand", "seq_start", "tx_id")],
-                       gene_id=tx$gene_id[match(names(locs2), names(tx))],
-                       ref_nuc=seqs, break_cdsloc=start(locs2))
-        if (type == "left") {
-            re = re[!duplicated(subseq(re$ref_nuc, 1, re$break_cdsloc)),]
-        } else if (type == "right") {
-            re = re[!duplicated(subseq(re$ref_nuc, re$break_cdsloc)),]
-        }
-        re
-    }
-
-    # each possible combination of left and right transcripts from break
     res = rep(list(list()), length(g1))
     for (i in seq_along(g1)) {
-        left = tx_by_break(g1[i], type="left")
-        right = tx_by_break(g2[i], type="right")
+        left = tx_by_break(txdb, tx, coding_ranges, g1[i], type="left")
+        right = tx_by_break(txdb, tx, coding_ranges, g2[i], type="right")
         if (nrow(left) == 0 || nrow(right) == 0)
             next
         colnames(left) = paste0(colnames(left), "_5p")
@@ -142,4 +104,46 @@ fusion = function(vr, txdb, asm, min_reads=NULL, min_pairs=NULL, min_tools=NULL,
 
     res[!duplicated(res$ref_nuc_5p) | !duplicated(res$ref_nuc_3p) |
         !duplicated(res$alt_nuc),]
+}
+
+#' Get transcript incl coords left or right of break
+#'
+#' @param txdb  A transcription database, eg. AnnotationHub()[["AH100643"]]
+#' @param tx    A list of transcripts obtained from `transcripts(txdb)`
+#' @param coding_ranges  A list of exon coordinates by gene from `cdsBy(txdb)`
+#' @return      A DataFrame with sequence information
+#' @keywords internal
+tx_by_break = function(txdb, tx, coding_ranges, gr, type="left") {
+    exo = exonsByOverlaps(txdb, gr)
+    txo = subsetByOverlaps(coding_ranges, gr) # cdsByOverlaps can not take txdb
+    if (type == "left") {
+        exon_bound_is_break = ifelse(strand(exo) == "+", end(exo), start(exo)) == start(gr)
+    } else if (type == "right") {
+        exon_bound_is_break = ifelse(strand(exo) == "+", start(exo), end(exo)) == start(gr)
+    }
+    if (any(exon_bound_is_break))
+        exo = exo[exon_bound_is_break]
+    cdss = coding_ranges[intersect(names(coding_ranges), names(txo))]
+    cdss = cdss[sapply(cdss, function(x) any(exo$exon_id %in% x$exon_id))]
+
+    seqs = extractTranscriptSeqs(asm, cdss)
+    prot = suppressWarnings(translate(seqs))
+    has_start = subseq(prot,1,1) == "M"
+    has_stop = subseq(IRanges::reverse(prot),1,1) == "*"
+    n_stop = vcountPattern("*", prot)
+    seqs = seqs[has_start & has_stop & n_stop==1] #todo: alt init codons
+    if (length(seqs) == 0)
+        return(DataFrame())
+    locs = unlist(genomeToTranscript(gr, txdb))[names(seqs)]
+    locs2 = transcriptToCds(locs, txdb)
+
+    re = DataFrame(mcols(locs2)[c("seq_name", "seq_strand", "seq_start", "tx_id")],
+                   gene_id=tx$gene_id[match(names(locs2), names(tx))],
+                   ref_nuc=seqs, break_cdsloc=start(locs2))
+    if (type == "left") {
+        re = re[!duplicated(subseq(re$ref_nuc, 1, re$break_cdsloc)),]
+    } else if (type == "right") {
+        re = re[!duplicated(subseq(re$ref_nuc, re$break_cdsloc)),]
+    }
+    re
 }
