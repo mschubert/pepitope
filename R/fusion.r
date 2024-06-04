@@ -93,18 +93,18 @@ fusion = function(vr, txdb, asm, min_reads=NULL, min_pairs=NULL, min_tools=NULL,
     break_codon_start_5p = floor((res$break_cdsloc_5p-1)/3) * 3 + 1
     ref_starts_5p = break_codon_start_5p - ctx_codons*3
     ref_ends_5p = break_codon_start_5p + (ctx_codons+1)*3 - 1
-    shift_5p = pmax(0, 1-ref_starts_5p) - pmax(0, ref_ends_5p-nchar(res$ref_nuc_5p)+3)
+    shift_5p = pmax(0, 1-ref_starts_5p) - pmax(0, ref_ends_5p-nchar(res$ref_nuc_5p))
     ref_nuc_5p = subseq(res$ref_nuc_5p, pmax(1, ref_starts_5p+shift_5p),
-                        pmin(nchar(res$ref_nuc_5p), ref_ends_5p+shift_5p))
+                        pmin(nchar(res$ref_nuc_5p)-3, ref_ends_5p+shift_5p))
     stopifnot(shift_5p %% 3 == 0)
     #stopifnot all peptides in original translation
 
     break_codon_start_3p = floor((res$break_cdsloc_3p-1)/3) * 3 + 1
     ref_starts_3p = break_codon_start_3p - ctx_codons*3
     ref_ends_3p = break_codon_start_3p + (ctx_codons+1)*3 - 1
-    shift_3p = pmax(0, 1-ref_starts_3p) - pmax(0, ref_ends_3p-nchar(res$ref_nuc_3p)+3)
+    shift_3p = pmax(0, 1-ref_starts_3p) - pmax(0, ref_ends_3p-nchar(res$ref_nuc_3p))
     ref_nuc_3p = subseq(res$ref_nuc_3p, pmax(1, ref_starts_3p+shift_3p),
-                        pmin(nchar(res$ref_nuc_3p), ref_ends_3p+shift_3p))
+                        pmin(nchar(res$ref_nuc_3p)-3, ref_ends_3p+shift_3p))
     stopifnot(shift_3p %% 3 == 0)
 
     ctx_len = (ctx_codons*2 + 1) * 3
