@@ -44,8 +44,7 @@ vr = readVcfAsVRanges("my_variants.vcf.gz") |>
 
 # annotate and create report
 ann = annotate_coding(vr, ens106, asm)
-subs = subset_context(ann, ctx_codons=15)
 
-report = make_report(ann, subs)
+report = make_report(ann, ctx_codons=15)
 # writexl::write_xlsx(report, "my_variants.xlsx")
 ```

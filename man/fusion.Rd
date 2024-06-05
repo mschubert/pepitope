@@ -4,7 +4,14 @@
 \alias{fusion}
 \title{Aggregate fusion VCFs into a table}
 \usage{
-fusion(vr, txdb, asm, min_reads = NULL, min_pairs = NULL, min_tools = NULL)
+fusion(
+  vr,
+  txdb,
+  asm,
+  min_reads = NULL,
+  min_split_reads = NULL,
+  min_tools = NULL
+)
 }
 \arguments{
 \item{vr}{A VRanges object with RNA fusions from readVcfAsRanges}
@@ -13,9 +20,9 @@ fusion(vr, txdb, asm, min_reads = NULL, min_pairs = NULL, min_tools = NULL)
 
 \item{asm}{A Genome sequence package object, eg. ::BSgenome.Hsapiens.NCBI.GRCh38}
 
-\item{min_reads}{The minimum number of split read support for a fusion}
+\item{min_reads}{The minimum number of linked read support for a fusion}
 
-\item{min_pairs}{The minimum number of linked read support for a fusion}
+\item{min_split_reads}{The minimum number of split read support for a fusion}
 
 \item{min_tools}{The minimum number of tools that identify a fusion}
 }
