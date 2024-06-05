@@ -53,20 +53,6 @@ annotate_coding = function(vr, txdb, asm) {
                   as(codv$varAllele, "DNAStringSetList"))
     )
     codv$alt_prot = translate(codv$alt_nuc)
-
-    check_silent = function(ref, alt) {
-        offsets = rep(0, length(ref))
-        chk = seq_along(ref)
-        for (i in seq_len(max(nchar(ref)))) {
-            chk = chk[nchar(ref[chk]) >= i & nchar(alt[chk]) >= i]
-            s_mtch = substr(ref[chk],i,i) == substr(alt[chk],i,i)
-            if (! any(s_mtch))
-                break
-            chk = chk[s_mtch]
-            offsets[chk] = offsets[chk] + 1
-        }
-        offsets
-    }
     codv$silent_start = check_silent(codv$REFAA, codv$VARAA)
     codv$silent_end = check_silent(reverse(subseq(codv$REFAA, codv$silent_start+1)),
                                    reverse(subseq(codv$VARAA, codv$silent_start+1)))
@@ -98,4 +84,25 @@ annotate_coding = function(vr, txdb, asm) {
     genome(codv) = genome(gnames)[infomap]
     isCircular(codv) = isCircular(gnames)[infomap]
     codv
+}
+
+#' Adjust offsets for variants that start/end silently (no AA change)
+#'
+#' @param ref  Reference amino acid sequence
+#' @param alt  Alternative amino acid sequence
+#' @return     An integer vector of offsets
+#'
+#' @keywords internal
+check_silent = function(ref, alt) {
+    offsets = rep(0, length(ref))
+    chk = seq_along(ref)
+    for (i in seq_len(max(nchar(ref)))) {
+        chk = chk[nchar(ref[chk]) >= i & nchar(alt[chk]) >= i]
+        s_mtch = substr(ref[chk],i,i) == substr(alt[chk],i,i)
+        if (! any(s_mtch))
+            break
+        chk = chk[s_mtch]
+        offsets[chk] = offsets[chk] + 1
+    }
+    offsets
 }
