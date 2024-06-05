@@ -48,7 +48,7 @@ annotate_coding = function(vr, txdb, asm) {
     codv = codv[has_start & has_stop & n_stop==1] #TODO: replace alt init codons by M
 
     # get coding sequences with updated variants
-    codv$alt_nuc = get_coding_seq(txdb,
+    codv$alt_nuc = get_coding_seq(asm, txdb,
         replaceAt(codv$ref_nuc, as(codv$CDSLOC, "IRangesList"),
                   as(codv$varAllele, "DNAStringSetList"))
     )

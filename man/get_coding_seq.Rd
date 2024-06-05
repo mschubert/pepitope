@@ -4,9 +4,11 @@
 \alias{get_coding_seq}
 \title{Get the alternative coding sequence of a variant or gene fusion}
 \usage{
-get_coding_seq(txdb, ..., include_stop = TRUE)
+get_coding_seq(asm, txdb, ..., include_stop = TRUE)
 }
 \arguments{
+\item{asm}{Genomic sequence BSGenome object}
+
 \item{txdb}{A transcription database, eg. AnnotationHub()[["AH100643"]]}
 
 \item{...}{A named DNAStringSet objects where each row is translated consecutively}

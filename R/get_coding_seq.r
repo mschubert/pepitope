@@ -3,6 +3,7 @@
 #' This takes into account any (newly introduced) STOP codons and UTR
 #' readthroughs
 #'
+#' @param asm   Genomic sequence BSGenome object
 #' @param txdb  A transcription database, eg. AnnotationHub()[["AH100643"]]
 #' @param ...   A named DNAStringSet objects where each row is translated consecutively
 #' @param include_stop  Whether to include the STOP codon
@@ -12,7 +13,7 @@
 #' @importFrom GenomicFeatures threeUTRsByTranscript
 #' @importFrom BSgenome getSeq
 #' @keywords internal
-get_coding_seq = function(txdb, ..., include_stop=TRUE) {
+get_coding_seq = function(asm, txdb, ..., include_stop=TRUE) {
     concat = xscat(...)
     stops = suppressWarnings(vmatchPattern("*", translate(concat)))
     stop_offset = as.integer(!include_stop)
