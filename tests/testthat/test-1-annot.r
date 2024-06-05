@@ -32,7 +32,7 @@ test_that("synonymous", {
     expect_true(all(syn$ref_prot == syn$alt_prot))
     expect_true(all(syn$ref_nuc != syn$alt_nuc))
     expect_equal(nchar(syn$ref_nuc), nchar(syn$alt_nuc))
-    expect_equal(syn$alt_nuc, replaceDNA(syn$ref_nuc, syn$CDSLOC, syn$varAllele))
+    expect_equal(syn$alt_nuc, unname(replaceDNA(syn$ref_nuc, syn$CDSLOC, syn$varAllele)))
     expect_equal(syn$REFAA, syn$VARAA)
     expect_true(all(syn$silent_start == 1))
     expect_true(all(syn$silent_end == 0))
@@ -42,8 +42,8 @@ test_that("synonymous", {
     expect_true(all(ctx$ref_nuc != ctx$alt_nuc))
     expect_true(all(nchar(ctx$ref_nuc) == 90))
     expect_true(all(nchar(ctx$alt_nuc) == 90))
-    expect_equal(translate(ctx$ref_nuc), ctx$alt_prot)
-    expect_equal(translate(ctx$alt_nuc), ctx$ref_prot)
+    expect_equal(unname(translate(ctx$ref_nuc)), ctx$alt_prot)
+    expect_equal(translate(ctx$alt_nuc), unname(ctx$ref_prot))
     expect_true(all(nchar(ctx$ref_prot)), 30)
     expect_true(all(nchar(ctx$alt_prot)), 30)
 })
@@ -84,7 +84,7 @@ test_that("nonsense", {
     expect_true(all(nchar(ctx$alt_nuc) == 45))
     expect_true(all(nchar(ctx$ref_prot) == 31))
     expect_true(all(nchar(ctx$alt_prot) == 15))
-    expect_equal(as.character(subseq(ctx$ref_prot, 1, 15)), as.character(ctx$alt_prot))
+    expect_equal(as.character(unname(subseq(ctx$ref_prot, 1, 15))), as.character(ctx$alt_prot))
 })
 
 test_that("in-frame insertion", {

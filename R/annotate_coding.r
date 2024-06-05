@@ -74,7 +74,7 @@ annotate_coding = function(vr, txdb, asm) {
 
     # check if we didn't change the length of any nuc
     stopifnot(with(codv,
-        nchar(codv$ref_nuc) - nchar(codv$REFCODON) == nchar(codv$alt_nuc) - nchar(codv$VARCODON) + 3 |
+        nchar(codv$ref_nuc) - nchar(codv$REFCODON) == nchar(codv$alt_nuc) - nchar(codv$VARCODON) |
         codv$CONSEQUENCE %in% c("frameshift", "nonsense", "nostart") |
         vcountPattern("*", codv$REFAA) > 0 | # transcript extension
         vcountPattern("*", codv$VARAA) > 0 # "missense"+nonsense

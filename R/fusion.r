@@ -31,7 +31,8 @@ fusion = function(vr, txdb, asm, min_reads=NULL, min_pairs=NULL, min_tools=NULL,
 
     concat = get_coding_seq(txdb,
         subseq(res$ref_nuc_5p, 1, res$break_cdsloc_5p),
-        subseq(res$ref_nuc_3p, res$break_cdsloc_3p)
+        subseq(res$ref_nuc_3p, res$break_cdsloc_3p),
+        include_stop = FALSE
     )
 
     # subset context

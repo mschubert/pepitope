@@ -4,12 +4,14 @@
 \alias{get_coding_seq}
 \title{Get the alternative coding sequence of a variant or gene fusion}
 \usage{
-get_coding_seq(txdb, ...)
+get_coding_seq(txdb, ..., include_stop = TRUE)
 }
 \arguments{
 \item{txdb}{A transcription database, eg. AnnotationHub()[["AH100643"]]}
 
 \item{...}{A named DNAStringSet objects where each row is translated consecutively}
+
+\item{include_stop}{Whether to include the STOP codon}
 }
 \value{
 A merged DNAStringSet object with the translated nucleotides

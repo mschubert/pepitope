@@ -5,16 +5,18 @@
 #'
 #' @param txdb  A transcription database, eg. AnnotationHub()[["AH100643"]]
 #' @param ...   A named DNAStringSet objects where each row is translated consecutively
+#' @param include_stop  Whether to include the STOP codon
 #' @return      A merged DNAStringSet object with the translated nucleotides
 #'
 #' @importFrom Biostrings xscat vmatchPattern translate
 #' @importFrom GenomicFeatures threeUTRsByTranscript
 #' @importFrom BSgenome getSeq
 #' @keywords internal
-get_coding_seq = function(txdb, ...) {
+get_coding_seq = function(txdb, ..., include_stop=TRUE) {
     concat = xscat(...)
     stops = suppressWarnings(vmatchPattern("*", translate(concat)))
-    stops = sapply(stops, function(s) (IRanges::start(s)[1]-1)*3)
+    stop_offset = as.integer(!include_stop)
+    stops = sapply(stops, function(s) (IRanges::start(s)[1]-stop_offset)*3)
     nostop = which(is.na(stops))
 
     # extend readthroughs to 3' UTR
@@ -28,7 +30,7 @@ get_coding_seq = function(txdb, ...) {
             nuc_utr3 = getSeq(asm, utr3[[tx_id_3p[i]]])
             concat[i] = xscat(concat[i], nuc_utr3)
             pstop = suppressWarnings(vmatchPattern("*", translate(concat[i])))[[1]]
-            stops[i] = (IRanges::start(pstop)[1]-1) * 3
+            stops[i] = (IRanges::start(pstop)[1]-stop_offset) * 3
         }
         if (is.na(stops[i]))
             stops[i] = floor(nchar(concat[i])/3) * 3
