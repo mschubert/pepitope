@@ -29,25 +29,10 @@ fusion = function(vr, txdb, asm, min_reads=NULL, min_pairs=NULL, min_tools=NULL,
     if (is.null(res))
         return(DataFrame())
 
-    # get sequences
-    concat = xscat(subseq(res$ref_nuc_5p, 1, res$break_cdsloc_5p),
-                   subseq(res$ref_nuc_3p, res$break_cdsloc_3p))
-
-    # extend transcripts w/o stops to UTRs
-    stops = suppressWarnings(vmatchPattern("*", translate(concat)))
-    stops = sapply(stops, function(s) (IRanges::start(s)[1]-1)*3)
-    nostop = which(is.na(stops))
-    utr3 = threeUTRsByTranscript(txdb)
-    for (i in nostop) {
-        if (res$tx_id_3p[i] %in% names(utr3)) {
-            nuc_utr3 = getSeq(asm, utr3[[res$tx_id_3p[i]]])
-            concat[i] = xscat(concat[i], nuc_utr3)
-            pstop = suppressWarnings(vmatchPattern("*", translate(concat[i])))[[1]]
-            stops[i] = (IRanges::start(pstop)[1]-1) * 3
-        }
-        if (is.na(stops[i]))
-            stops[i] = floor(nchar(concat[i])/3) * 3
-    }
+    concat = get_coding_seq(txdb,
+        subseq(res$ref_nuc_5p, 1, res$break_cdsloc_5p),
+        subseq(res$ref_nuc_3p, res$break_cdsloc_3p)
+    )
 
     # subset context
     break_codon_start_5p = floor((res$break_cdsloc_5p-1)/3) * 3 + 1
@@ -67,18 +52,15 @@ fusion = function(vr, txdb, asm, min_reads=NULL, min_pairs=NULL, min_tools=NULL,
                         pmin(nchar(res$ref_nuc_3p)-3, ref_ends_3p+shift_3p))
     stopifnot(shift_3p %% 3 == 0)
 
-    ctx_len = (ctx_codons*2 + 1) * 3
-    is_fs = (res$break_cdsloc_5p %% 3 - (res$break_cdsloc_3p-1) %% 3) != 0
-    end_3p = ref_starts_5p + ctx_len - 1
-    bounded_end_3p = floor(pmin(nchar(concat), end_3p)/3) * 3
-    bounded_end_3p[is_fs] = stops[is_fs]
-
     # fill results, annotate frameshifts and remove context dups
+    ctx_len = (ctx_codons*2 + 1) * 3
+    end_3p = ref_starts_5p + ctx_len - 1
+    is_fs = (res$break_cdsloc_5p %% 3 - (res$break_cdsloc_3p-1) %% 3) != 0
     res$fusion[is_fs] = paste0(res$fusion[is_fs], "fs")
     res$ref_nuc_5p = ref_nuc_5p
     res$ref_nuc_3p = ref_nuc_3p
-    res$alt_shift = pmin(0, bounded_end_3p-end_3p) + pmax(0, shift_5p)
-    res$alt_nuc = subseq(concat, pmax(1, ref_starts_5p+res$alt_shift), bounded_end_3p)
+    res$alt_shift = pmin(0, nchar(concat)-end_3p) + pmax(0, shift_5p)
+    res$alt_nuc = subseq(concat, pmax(1, ref_starts_5p+res$alt_shift), nchar(concat))
     stopifnot(res$alt_shift %% 3 == 0)
     stopifnot(nchar(res$alt_nuc) %% 3 == 0)
 

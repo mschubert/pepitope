@@ -32,14 +32,13 @@ annotate_coding = function(vr, txdb, asm) {
 #    splice = locateVariants(vcf_diff, txdb, SpliceSiteVariants())
 
     tx = transcripts(txdb)
-    utr3 = threeUTRsByTranscript(txdb)
     codv$tx_name = tx$tx_name[match(codv$TXID, tx$tx_id)]
     if ("tx_biotype" %in% names(tx)) {
         tx_coding = names(tx)[tx$tx_biotype=="protein_coding"]
         codv = codv[codv$tx_name %in% tx_coding]
     }
     coding_ranges = cdsBy(txdb)[codv$TXID]
-    codv$ref_nuc = unname(extractTranscriptSeqs(asm, coding_ranges))
+    codv$ref_nuc = extractTranscriptSeqs(asm, coding_ranges)
     codv$ref_prot = translate(codv$ref_nuc)
 
     # filter for proper ORFs
@@ -49,26 +48,11 @@ annotate_coding = function(vr, txdb, asm) {
     codv = codv[has_start & has_stop & n_stop==1] #TODO: replace alt init codons by M
 
     # get coding sequences with updated variants
-    codv$alt_nuc = replaceAt(codv$ref_nuc, as(codv$CDSLOC, "IRangesList"),
-                             as(codv$varAllele, "DNAStringSetList"))
-
-    # get protein sequences and adjust nuc for premature stop
+    codv$alt_nuc = get_coding_seq(txdb,
+        replaceAt(codv$ref_nuc, as(codv$CDSLOC, "IRangesList"),
+                  as(codv$varAllele, "DNAStringSetList"))
+    )
     codv$alt_prot = translate(codv$alt_nuc)
-    stops = vmatchPattern("*", codv$alt_prot)
-    first = sapply(stops, function(s) IRanges::start(s)[1])
-    changed = which(is.na(first) | first != nchar(codv$alt_prot))
-    for (i in changed) {
-        if (is.na(first[i])) {
-            if (! codv$TXID[[i]] %in% names(utr3))
-                next
-            nuc_utr3 = getSeq(asm, utr3[[codv$TXID[i]]])
-            codv$alt_nuc[i] = xscat(codv$alt_nuc[i], nuc_utr3)
-            codv$alt_prot[i] = translate(codv$alt_nuc[i])
-            first[i] = IRanges::start(vmatchPattern("*", codv$alt_prot[i])[[1]])[1]
-        }
-        codv$alt_prot[i] = subseq(codv$alt_prot[i], 1, first[i])
-        codv$alt_nuc[i] = subseq(codv$alt_nuc[i], 1, first[i]*3)
-    }
 
     check_silent = function(ref, alt) {
         offsets = rep(0, length(ref))
@@ -104,7 +88,7 @@ annotate_coding = function(vr, txdb, asm) {
 
     # check if we didn't change the length of any nuc
     stopifnot(with(codv,
-        nchar(codv$ref_nuc) - nchar(codv$REFCODON) == nchar(codv$alt_nuc) - nchar(codv$VARCODON) |
+        nchar(codv$ref_nuc) - nchar(codv$REFCODON) == nchar(codv$alt_nuc) - nchar(codv$VARCODON) + 3 |
         codv$CONSEQUENCE %in% c("frameshift", "nonsense", "nostart") |
         vcountPattern("*", codv$REFAA) > 0 | # transcript extension
         vcountPattern("*", codv$VARAA) > 0 # "missense"+nonsense
@@ -113,6 +97,5 @@ annotate_coding = function(vr, txdb, asm) {
     infomap = match(seqnames(seqinfo(codv)), seqnames(seqinfo(gnames)))
     genome(codv) = genome(gnames)[infomap]
     isCircular(codv) = isCircular(gnames)[infomap]
-
     codv
 }
