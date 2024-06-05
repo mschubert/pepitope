@@ -4,16 +4,16 @@
 \alias{make_report}
 \title{Make a variants report as named list of tables}
 \usage{
-make_report(vars, subs, fus = DataFrame(), ...)
+make_report(vars, fus = DataFrame(), ..., ctx_codons)
 }
 \arguments{
 \item{vars}{Variant results}
 
-\item{subs}{Filtered variant results}
-
 \item{fus}{Fusion results}
 
 \item{...}{Parameters passed to `pep_tile` (eg. tile_size, tile_ov)}
+
+\item{ctx_codons}{Number of codonds for sequence context}
 }
 \description{
 Make a variants report as named list of tables

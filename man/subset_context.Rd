@@ -4,7 +4,7 @@
 \alias{subset_context}
 \title{Subset nucleotide/protein sequences to codon +/- 45 bp context}
 \usage{
-subset_context(codv, ctx_codons = 15)
+subset_context(codv, ctx_codons)
 }
 \arguments{
 \item{codv}{Annotated variants from `annotate_coding()`}

@@ -1,19 +1,20 @@
 #' Make a variants report as named list of tables
 #'
 #' @param vars   Variant results
-#' @param subs  Filtered variant results
 #' @param fus   Fusion results
 #' @param ...   Parameters passed to `pep_tile` (eg. tile_size, tile_ov)
+#' @param ctx_codons  Number of codonds for sequence context
 #'
 #' @importFrom dplyr mutate bind_rows desc distinct arrange as_tibble
 #' @importFrom plyranges select
 #' @export
-make_report = function(vars, subs, fus=DataFrame(), ...) {
+make_report = function(vars, fus=DataFrame(), ..., ctx_codons) {
     gr2df = function(gr) as_tibble(as.data.frame(gr)) %>%
         select(var_id, everything()) %>%
         arrange(order(gtools::mixedorder(var_id)))
 
     # changes peptide, is unique and is expressed
+    subs = subset_context(vars, ctx_codons)
     subs = subs[! subs$CONSEQUENCE %in% c("synonymous", "nonsense", "nostart")]
     alt_in_ref = function(a,r) grepl(as.character(a), as.character(r), fixed=TRUE)
     subs = subs[!mapply(alt_in_ref, a=subs$alt_prot, r=subs$ref_prot)]
@@ -36,7 +37,7 @@ make_report = function(vars, subs, fus=DataFrame(), ...) {
         pep_tile(...)
 
     if (nrow(fus) > 0) {
-        fdf = as_tibble(as.data.frame(fus))
+        fdf = as_tibble(as.data.frame(subset_context_fusion(fus, ctx_codons)))
         ref1 = fdf %>% mutate(gene_name=sub("(.*)-.*", "\\1", fusion)) %>%
             select(fusion, gene_name, gene_id=gene_id_5p, tx_id=tx_id_5p, cDNA=ref_nuc_5p)
         ref2 = fdf %>% mutate(gene_name=sub(".*-(.*)", "\\1", fusion)) %>%

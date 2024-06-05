@@ -4,15 +4,7 @@
 \alias{fusion}
 \title{Aggregate fusion VCFs into a table}
 \usage{
-fusion(
-  vr,
-  txdb,
-  asm,
-  min_reads = NULL,
-  min_pairs = NULL,
-  min_tools = NULL,
-  ctx_codons = 15
-)
+fusion(vr, txdb, asm, min_reads = NULL, min_pairs = NULL, min_tools = NULL)
 }
 \arguments{
 \item{vr}{A VRanges object with RNA fusions from readVcfAsRanges}
@@ -26,8 +18,6 @@ fusion(
 \item{min_pairs}{The minimum number of linked read support for a fusion}
 
 \item{min_tools}{The minimum number of tools that identify a fusion}
-
-\item{ctx_codons}{Number of codonds for sequence context}
 }
 \value{
 A DataFrame objects with fusions
