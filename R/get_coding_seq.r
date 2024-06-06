@@ -28,7 +28,8 @@ get_coding_seq = function(asm, txdb, ..., include_stop=TRUE) {
 
     for (i in nostop) {
         if (tx_id_3p[i] %in% names(utr3)) {
-            nuc_utr3 = getSeq(asm, utr3[[tx_id_3p[i]]])
+            exons_utr3 = getSeq(asm, utr3[[tx_id_3p[i]]])
+            nuc_utr3 = do.call(xscat, as.list(exons_utr3))
             concat[i] = xscat(concat[i], nuc_utr3)
             pstop = suppressWarnings(vmatchPattern("*", translate(concat[i])))[[1]]
             stops[i] = (IRanges::start(pstop)[1]-stop_offset) * 3
