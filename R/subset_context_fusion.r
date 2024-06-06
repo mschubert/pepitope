@@ -25,11 +25,13 @@ subset_context_fusion = function(res, ctx_codons) {
     # fill results, annotate frameshifts and remove context dups
     concat = res$alt_nuc
     ctx_len = (ctx_codons*2 + 1) * 3
+    is_fs = (res$break_cdsloc_5p %% 3 - (res$break_cdsloc_3p-1) %% 3) != 0
     end_3p = ref_starts_5p + ctx_len - 1
+    res$alt_shift = pmin(0, nchar(concat)-end_3p) + pmax(0, shift_5p)
+    end_3p[is_fs] = nchar(concat[is_fs])
     res$ref_nuc_5p = ref_nuc_5p
     res$ref_nuc_3p = ref_nuc_3p
-    res$alt_shift = pmin(0, nchar(concat)-end_3p) + pmax(0, shift_5p)
-    res$alt_nuc = subseq(concat, pmax(1, ref_starts_5p+res$alt_shift), nchar(concat))
+    res$alt_nuc = subseq(concat, pmax(1, ref_starts_5p + res$alt_shift), end_3p)
     stopifnot(res$alt_shift %% 3 == 0)
     stopifnot(nchar(res$alt_nuc) %% 3 == 0)
 
