@@ -37,7 +37,8 @@ make_report = function(vars, fus=DataFrame(), ..., ctx_codons) {
         pep_tile(...)
 
     if (nrow(fus) > 0) {
-        fdf = as_tibble(as.data.frame(subset_context_fusion(fus, ctx_codons)))
+        fus = subset_context_fusion(fus, ctx_codons)
+        fdf = as_tibble(as.data.frame(fus))
         ref1 = fdf %>% mutate(gene_name=sub("(.*)-.*", "\\1", fusion)) %>%
             select(fusion, gene_name, gene_id=gene_id_5p, tx_id=tx_id_5p, cDNA=ref_nuc_5p)
         ref2 = fdf %>% mutate(gene_name=sub(".*-(.*)", "\\1", fusion)) %>%
