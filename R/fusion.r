@@ -24,7 +24,7 @@ fusion = function(vr, txdb, asm, min_reads=NULL, min_split_reads=NULL, min_tools
         return(DataFrame())
 
     # each possible combination of left and right transcripts from break
-    res = tx_combine_break(txdb, vr)
+    res = tx_combine_break(asm, txdb, vr)
     if (is.null(res))
         return(DataFrame())
 
@@ -43,6 +43,7 @@ fusion = function(vr, txdb, asm, min_reads=NULL, min_split_reads=NULL, min_tools
 
 #' Combine break info from each possible left and right side transcript
 #'
+#' @param asm   A Genome sequence package object, eg. ::BSgenome.Hsapiens.NCBI.GRCh38
 #' @param txdb  A transcription database, eg. `AnnotationHub()[["AH100643"]]`
 #' @param vr    A VRanges object with RNA fusions from `readVcfAsVRanges`
 #' @return      A DataFrame with fusion coordinates and sequence information
@@ -51,7 +52,7 @@ fusion = function(vr, txdb, asm, min_reads=NULL, min_split_reads=NULL, min_tools
 #' @importFrom GenomeInfoDb seqnames seqlevelsStyle
 #' @importFrom GenomicFeatures transcripts cdsBy
 #' @keywords internal
-tx_combine_break = function(txdb, vr) {
+tx_combine_break = function(asm, txdb, vr) {
     flabs = paste(unlist(vr$GENEA), unlist(vr$GENEB), sep="-")
     g1 = GRanges(seqnames(vr), ranges(vr), sapply(vr$ORIENTATION, `[`, i=1))
     alt_loc = strsplit(gsub("\\[|\\]|N", "", alt(vr)), ":")
@@ -78,6 +79,7 @@ tx_combine_break = function(txdb, vr) {
 
 #' Get transcript incl coords left or right of break
 #'
+#' @param asm   A Genome sequence package object, eg. ::BSgenome.Hsapiens.NCBI.GRCh38
 #' @param txdb  A transcription database, eg. AnnotationHub()[["AH100643"]]
 #' @param tx    A list of transcripts obtained from `transcripts(txdb)`
 #' @param coding_ranges  A list of exon coordinates by gene from `cdsBy(txdb)`

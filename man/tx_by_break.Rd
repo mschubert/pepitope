@@ -7,6 +7,8 @@
 tx_by_break(asm, txdb, tx, coding_ranges, gr, type = "left")
 }
 \arguments{
+\item{asm}{A Genome sequence package object, eg. ::BSgenome.Hsapiens.NCBI.GRCh38}
+
 \item{txdb}{A transcription database, eg. AnnotationHub()[["AH100643"]]}
 
 \item{tx}{A list of transcripts obtained from `transcripts(txdb)`}

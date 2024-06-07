@@ -4,9 +4,11 @@
 \alias{tx_combine_break}
 \title{Combine break info from each possible left and right side transcript}
 \usage{
-tx_combine_break(txdb, vr)
+tx_combine_break(asm, txdb, vr)
 }
 \arguments{
+\item{asm}{A Genome sequence package object, eg. ::BSgenome.Hsapiens.NCBI.GRCh38}
+
 \item{txdb}{A transcription database, eg. `AnnotationHub()[["AH100643"]]`}
 
 \item{vr}{A VRanges object with RNA fusions from `readVcfAsVRanges`}
