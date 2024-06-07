@@ -55,9 +55,7 @@ fusion = function(vr, txdb, asm, min_reads=NULL, min_split_reads=NULL, min_tools
 tx_combine_break = function(asm, txdb, vr) {
     flabs = paste(unlist(vr$GENEA), unlist(vr$GENEB), sep="-")
     g1 = GRanges(seqnames(vr), ranges(vr), sapply(vr$ORIENTATION, `[`, i=1))
-    alt_loc = strsplit(gsub("\\[|\\]|N", "", alt(vr)), ":")
-    g2 = GRanges(sapply(alt_loc, `[`, i=1), sapply(alt_loc, `[`, i=2),
-                 sapply(vr$ORIENTATION, `[`, i=2))
+    g2 = GRanges(gsub("\\[|\\]|N", "", alt(vr)), strand=sapply(vr$ORIENTATION, `[`, i=2))
     seqlevelsStyle(g2) = seqlevelsStyle(g1)
 
     tx = transcripts(txdb)
