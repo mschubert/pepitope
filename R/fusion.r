@@ -28,11 +28,9 @@ fusion = function(vr, txdb, asm, min_reads=NULL, min_split_reads=NULL, min_tools
     if (is.null(res))
         return(DataFrame())
 
-    res$alt_nuc = get_coding_seq(asm, txdb,
-        subseq(res$ref_nuc_5p, 1, res$break_cdsloc_5p),
-        subseq(res$ref_nuc_3p, res$break_cdsloc_3p),
-        include_stop = FALSE
-    )
+    nuc_5p = subseq(res$ref_nuc_5p, 1, res$break_cdsloc_5p)
+    nuc_3p = subseq(res$ref_nuc_3p, res$break_cdsloc_3p)
+    res$alt_nuc = get_coding_seq(asm, txdb, nuc_5p, nuc_3p, include_stop=FALSE)
 
     is_fs = (res$break_cdsloc_5p %% 3 - (res$break_cdsloc_3p-1) %% 3) != 0
     res$fusion[is_fs] = paste0(res$fusion[is_fs], "fs")
