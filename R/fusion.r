@@ -108,7 +108,10 @@ cds_by_break = function(gr, txdb, cds, type="left") {
     if (any(exon_bound_is_break))
         exo = exo[exon_bound_is_break]
 
-    cds[sapply(cds, function(x) any(exo$exon_id %in% x$exon_id))]
+    # filtering exons directly in cds is too expensive
+    txo = subsetByOverlaps(cds, gr)
+    cds_break = cds[intersect(names(cds), names(txo))]
+    cds_break[sapply(cds_break, function(x) any(exo$exon_id %in% x$exon_id))]
 }
 
 #' Adds sequence information to break transcripts
