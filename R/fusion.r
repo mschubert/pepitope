@@ -26,12 +26,10 @@ fusion = function(vr, txdb, asm, min_reads=NULL, min_split_reads=NULL, min_tools
 
     # each possible combination of left and right transcripts from break
     tx = transcripts(txdb)
-    coding_ranges = cdsBy(txdb)
+    cds = cdsBy(txdb)
     fr = extract_fusion_ranges(vr)
-    left = lapply(fr$left, tx_by_break, asm=asm, txdb=txdb, tx=tx,
-                  coding_ranges=coding_ranges, type="left")
-    right = lapply(fr$right, tx_by_break, asm=asm, txdb=txdb, tx=tx,
-                   coding_ranges=coding_ranges, type="right")
+    left = lapply(fr$left, tx_by_break, asm=asm, txdb=txdb, tx=tx, cds=cds, type="left")
+    right = lapply(fr$right, tx_by_break, asm=asm, txdb=txdb, tx=tx, cds=cds, type="right")
     res = tx_combine_breaks(vr, left, right)
     if (is.null(res))
         return(DataFrame())
@@ -93,14 +91,14 @@ tx_combine_breaks = function(vr, left, right) {
 #' @param asm   A Genome sequence package object, eg. ::BSgenome.Hsapiens.NCBI.GRCh38
 #' @param txdb  A transcription database, eg. AnnotationHub()[["AH100643"]]
 #' @param tx    A list of transcripts obtained from `transcripts(txdb)`
-#' @param coding_ranges  A list of exon coordinates by gene from `cdsBy(txdb)`
+#' @param cds   A list of exon coordinates by gene from `cdsBy(txdb)`
 #' @param type  Whether we want info for the 'left' or 'right' side of the break
 #' @return      A DataFrame with sequence information
 #'
 #' @keywords internal
-tx_by_break = function(gr, asm, txdb, tx, coding_ranges, type="left") {
+tx_by_break = function(gr, asm, txdb, tx, cds, type="left") {
     exo = exonsByOverlaps(txdb, gr)
-    txo = subsetByOverlaps(coding_ranges, gr) # cdsByOverlaps can not take txdb
+    txo = subsetByOverlaps(cds, gr) # cdsByOverlaps can not take txdb
     if (type == "left") {
         exon_bound_is_break = ifelse(strand(exo) == "+", end(exo), start(exo)) == start(gr)
     } else if (type == "right") {
@@ -108,7 +106,7 @@ tx_by_break = function(gr, asm, txdb, tx, coding_ranges, type="left") {
     }
     if (any(exon_bound_is_break))
         exo = exo[exon_bound_is_break]
-    cdss = coding_ranges[intersect(names(coding_ranges), names(txo))]
+    cdss = cds[intersect(names(cds), names(txo))]
     cdss = cdss[sapply(cdss, function(x) any(exo$exon_id %in% x$exon_id))]
 
     seqs = extractTranscriptSeqs(asm, cdss)
