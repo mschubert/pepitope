@@ -28,9 +28,13 @@ fusion = function(vr, txdb, asm, min_reads=NULL, min_split_reads=NULL, min_tools
     tx = suppressWarnings(transcripts(txdb))
     cds = suppressWarnings(cdsBy(txdb))
     fr = extract_fusion_ranges(vr)
-    left = lapply(fr$left, tx_by_break, asm=asm, txdb=txdb, tx=tx, cds=cds, type="left")
-    right = lapply(fr$right, tx_by_break, asm=asm, txdb=txdb, tx=tx, cds=cds, type="right")
-    res = tx_combine_breaks(vr, left, right)
+    get_cds = function(x, type) {
+        coords = cds_by_break(x, txdb, cds, type)
+        add_seq_info(x, coords, asm, tx)
+    }
+    cds_left = lapply(fr$left, get_cds, type="left")
+    cds_right = lapply(fr$right, get_cds, type="right")
+    res = tx_combine_breaks(vr, cds_left, cds_right)
     if (is.null(res))
         return(DataFrame())
 
@@ -85,18 +89,16 @@ tx_combine_breaks = function(vr, left, right) {
     do.call(rbind, res[sapply(res, length) > 0])
 }
 
-#' Get transcript incl coords left or right of break
+#' Get a list of transcripts with their CDS exons overlapping the break
 #'
 #' @param gr    GenomicRanges object of break location
-#' @param asm   A Genome sequence package object, eg. ::BSgenome.Hsapiens.NCBI.GRCh38
 #' @param txdb  A transcription database, eg. AnnotationHub()[["AH100643"]]
-#' @param tx    A list of transcripts obtained from `transcripts(txdb)`
 #' @param cds   A list of exon coordinates by gene from `cdsBy(txdb)`
 #' @param type  Whether we want info for the 'left' or 'right' side of the break
-#' @return      A DataFrame with sequence information
+#' @return      A named list of transcript GRanges objects with CDS exons
 #'
 #' @keywords internal
-tx_by_break = function(gr, asm, txdb, tx, cds, type="left") {
+cds_by_break = function(gr, txdb, cds, type="left") {
     exo = exonsByOverlaps(txdb, gr)
     if (type == "left") {
         exon_bound_is_break = ifelse(strand(exo) == "+", end(exo), start(exo)) == start(gr)
@@ -107,9 +109,21 @@ tx_by_break = function(gr, asm, txdb, tx, cds, type="left") {
         exo = exo[exon_bound_is_break]
 
     txo = subsetByOverlaps(cds, gr) # cdsByOverlaps can not take txdb
-    cdss = cds[intersect(names(cds), names(txo))]
-    cdss = cdss[sapply(cdss, function(x) any(exo$exon_id %in% x$exon_id))]
-    seqs = filter_proper_orf(extractTranscriptSeqs(asm, cdss))
+    cds_break = cds[intersect(names(cds), names(txo))]
+    cds_break[sapply(cds_break, function(x) any(exo$exon_id %in% x$exon_id))]
+}
+
+#' Adds sequence information to break transcripts
+#'
+#' @param gr    GenomicRanges object of break location
+#' @param cds_break  A list of transcripts overlapping break from `cds_by_break`
+#' @param asm   A Genome sequence package object, eg. ::BSgenome.Hsapiens.NCBI.GRCh38
+#' @param tx    A list of transcripts obtained from `transcripts(txdb)`
+#' @return      A DataFrame with sequence information
+#'
+#' @keywords internal
+add_seq_info = function(gr, cds_break, asm, tx) {
+    seqs = filter_proper_orf(extractTranscriptSeqs(asm, cds_break))
     if (length(seqs) == 0)
         return(DataFrame())
     locs = unlist(genomeToTranscript(gr, txdb))[names(seqs)]
