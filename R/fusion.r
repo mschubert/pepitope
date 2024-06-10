@@ -30,7 +30,7 @@ fusion = function(vr, txdb, asm, min_reads=NULL, min_split_reads=NULL, min_tools
     fr = extract_fusion_ranges(vr)
     get_cds = function(x, type) {
         coords = cds_by_break(x, txdb, cds, type)
-        add_seq_info(x, coords, asm, tx)
+        add_seq_info(x, coords, asm, txdb, tx)
     }
     cds_left = lapply(fr$left, get_cds, type="left")
     cds_right = lapply(fr$right, get_cds, type="right")
@@ -116,11 +116,12 @@ cds_by_break = function(gr, txdb, cds, type="left") {
 #' @param gr    GenomicRanges object of break location
 #' @param cds_break  A list of transcripts overlapping break from `cds_by_break`
 #' @param asm   A Genome sequence package object, eg. ::BSgenome.Hsapiens.NCBI.GRCh38
+#' @param txdb  A transcription database, eg. AnnotationHub()[["AH100643"]]
 #' @param tx    A list of transcripts obtained from `transcripts(txdb)`
 #' @return      A DataFrame with sequence information
 #'
 #' @keywords internal
-add_seq_info = function(gr, cds_break, asm, tx) {
+add_seq_info = function(gr, cds_break, asm, txdb, tx) {
     seqs = filter_proper_orf(extractTranscriptSeqs(asm, cds_break))
     if (length(seqs) == 0)
         return(DataFrame())
