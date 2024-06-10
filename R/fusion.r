@@ -34,10 +34,10 @@ fusion = function(vr, txdb, asm, min_reads=NULL, min_split_reads=NULL, min_tools
     if (is.null(res))
         return(DataFrame())
 
+    # extract fused coding sequence incl. possible STOP and 3'UTR extension
     nuc_5p = subseq(res$ref_nuc_5p, 1, res$break_cdsloc_5p)
     nuc_3p = subseq(res$ref_nuc_3p, res$break_cdsloc_3p)
     res$alt_nuc = get_coding_seq(asm, txdb, nuc_5p, nuc_3p, include_stop=FALSE)
-
     is_fs = (res$break_cdsloc_5p %% 3 - (res$break_cdsloc_3p-1) %% 3) != 0
     res$fusion[is_fs] = paste0(res$fusion[is_fs], "fs")
 
@@ -81,7 +81,7 @@ tx_combine_breaks = function(vr, left, right) {
         cbind(fusion=lab, split_reads=vr$DV, split_pairs=vr$RV,
               FFPM=vr$FFPM, left[idx$l,], right[idx$r,])
     }
-    res = mapply(combine_one, vr=splitAsList(vr), left=left, right=right, SIMPLIFY=FALSE)
+    res = mapply(combine_one, splitAsList(vr), left, right, SIMPLIFY=FALSE)
     do.call(rbind, res[sapply(res, length) > 0])
 }
 
@@ -98,7 +98,6 @@ tx_combine_breaks = function(vr, left, right) {
 #' @keywords internal
 tx_by_break = function(gr, asm, txdb, tx, cds, type="left") {
     exo = exonsByOverlaps(txdb, gr)
-    txo = subsetByOverlaps(cds, gr) # cdsByOverlaps can not take txdb
     if (type == "left") {
         exon_bound_is_break = ifelse(strand(exo) == "+", end(exo), start(exo)) == start(gr)
     } else if (type == "right") {
@@ -106,9 +105,10 @@ tx_by_break = function(gr, asm, txdb, tx, cds, type="left") {
     }
     if (any(exon_bound_is_break))
         exo = exo[exon_bound_is_break]
+
+    txo = subsetByOverlaps(cds, gr) # cdsByOverlaps can not take txdb
     cdss = cds[intersect(names(cds), names(txo))]
     cdss = cdss[sapply(cdss, function(x) any(exo$exon_id %in% x$exon_id))]
-
     seqs = filter_proper_orf(extractTranscriptSeqs(asm, cdss))
     if (length(seqs) == 0)
         return(DataFrame())
