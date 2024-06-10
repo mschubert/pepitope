@@ -109,12 +109,7 @@ tx_by_break = function(gr, asm, txdb, tx, cds, type="left") {
     cdss = cds[intersect(names(cds), names(txo))]
     cdss = cdss[sapply(cdss, function(x) any(exo$exon_id %in% x$exon_id))]
 
-    seqs = extractTranscriptSeqs(asm, cdss)
-    prot = suppressWarnings(translate(seqs))
-    has_start = subseq(prot,1,1) == "M"
-    has_stop = subseq(IRanges::reverse(prot),1,1) == "*"
-    n_stop = vcountPattern("*", prot)
-    seqs = seqs[has_start & has_stop & n_stop==1] #todo: alt init codons
+    seqs = filter_proper_orf(extractTranscriptSeqs(asm, cdss))
     if (length(seqs) == 0)
         return(DataFrame())
     locs = unlist(genomeToTranscript(gr, txdb))[names(seqs)]

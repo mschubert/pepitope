@@ -40,12 +40,7 @@ annotate_coding = function(vr, txdb, asm) {
     coding_ranges = cdsBy(txdb)[codv$TXID]
     codv$ref_nuc = extractTranscriptSeqs(asm, coding_ranges)
     codv$ref_prot = translate(codv$ref_nuc)
-
-    # filter for proper ORFs
-    has_start = subseq(codv$ref_prot,1,1) == "M"
-    has_stop = subseq(IRanges::reverse(codv$ref_prot),1,1) == "*"
-    n_stop = vcountPattern("*", codv$ref_prot)
-    codv = codv[has_start & has_stop & n_stop==1] #TODO: replace alt init codons by M
+    codv = codv[is_proper_orf(codv$ref_prot)]
 
     # get coding sequences with updated variants
     codv$alt_nuc = get_coding_seq(asm, txdb,
