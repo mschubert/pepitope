@@ -25,8 +25,8 @@ fusion = function(vr, txdb, asm, min_reads=NULL, min_split_reads=NULL, min_tools
         return(DataFrame())
 
     # each possible combination of left and right transcripts from break
-    tx = transcripts(txdb)
-    cds = cdsBy(txdb)
+    tx = suppressWarnings(transcripts(txdb))
+    cds = suppressWarnings(cdsBy(txdb))
     fr = extract_fusion_ranges(vr)
     left = lapply(fr$left, tx_by_break, asm=asm, txdb=txdb, tx=tx, cds=cds, type="left")
     right = lapply(fr$right, tx_by_break, asm=asm, txdb=txdb, tx=tx, cds=cds, type="right")
