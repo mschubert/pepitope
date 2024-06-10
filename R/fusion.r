@@ -108,13 +108,7 @@ tx_by_break = function(asm, txdb, tx, coding_ranges, gr, type="left") {
     locs = unlist(genomeToTranscript(gr, txdb))[names(seqs)]
     locs2 = transcriptToCds(locs, txdb)
 
-    re = DataFrame(mcols(locs2)[c("seq_name", "seq_strand", "seq_start", "tx_id")],
-                   gene_id=tx$gene_id[match(names(locs2), names(tx))],
-                   ref_nuc=seqs, break_cdsloc=start(locs2))
-    if (type == "left") {
-        re = re[!duplicated(subseq(re$ref_nuc, 1, re$break_cdsloc)),]
-    } else if (type == "right") {
-        re = re[!duplicated(subseq(re$ref_nuc, re$break_cdsloc)),]
-    }
-    re
+    DataFrame(mcols(locs2)[c("seq_name", "seq_strand", "seq_start", "tx_id")],
+              gene_id=tx$gene_id[match(names(locs2), names(tx))],
+              ref_nuc=seqs, break_cdsloc=start(locs2))
 }
