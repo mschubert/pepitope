@@ -8,6 +8,7 @@
 #' @param min_tools  The minimum number of tools that identify a fusion
 #' @return      A DataFrame objects with fusions
 #'
+#' @importFrom GenomicFeatures transcripts cdsBy
 #' @export
 fusion = function(vr, txdb, asm, min_reads=NULL, min_split_reads=NULL, min_tools=NULL) {
     # GT: ref allele/i alt allele (always './1'?)
@@ -24,7 +25,14 @@ fusion = function(vr, txdb, asm, min_reads=NULL, min_split_reads=NULL, min_tools
         return(DataFrame())
 
     # each possible combination of left and right transcripts from break
-    res = tx_combine_break(asm, txdb, vr)
+    tx = transcripts(txdb)
+    coding_ranges = cdsBy(txdb)
+    fr = extract_fusion_ranges(vr)
+    left = lapply(fr$left, tx_by_break, asm=asm, txdb=txdb, tx=tx,
+                  coding_ranges=coding_ranges, type="left")
+    right = lapply(fr$right, tx_by_break, asm=asm, txdb=txdb, tx=tx,
+                   coding_ranges=coding_ranges, type="right")
+    res = tx_combine_breaks(vr, left, right)
     if (is.null(res))
         return(DataFrame())
 
@@ -39,52 +47,58 @@ fusion = function(vr, txdb, asm, min_reads=NULL, min_split_reads=NULL, min_tools
         !duplicated(res$alt_nuc),]
 }
 
-#' Combine break info from each possible left and right side transcript
+#' Convert a fusion VRanges object to left (5') and right (3') GRanges objects
 #'
-#' @param asm   A Genome sequence package object, eg. ::BSgenome.Hsapiens.NCBI.GRCh38
-#' @param txdb  A transcription database, eg. `AnnotationHub()[["AH100643"]]`
-#' @param vr    A VRanges object with RNA fusions from `readVcfAsVRanges`
-#' @return      A DataFrame with fusion coordinates and sequence information
+#' @param vr  A VRanges object with RNA fusions from `readVcfAsVRanges`
+#' @return    A list of the 5' and 3' GRanges objects
 #'
+#' @importFrom S4Vectors splitAsList
 #' @importFrom GenomicRanges GRanges
 #' @importFrom GenomeInfoDb seqnames seqlevelsStyle
-#' @importFrom GenomicFeatures transcripts cdsBy
 #' @keywords internal
-tx_combine_break = function(asm, txdb, vr) {
-    flabs = paste(unlist(vr$GENEA), unlist(vr$GENEB), sep="-")
+extract_fusion_ranges = function(vr) {
     g1 = GRanges(seqnames(vr), ranges(vr), sapply(vr$ORIENTATION, `[`, i=1))
     g2 = GRanges(gsub("\\[|\\]|N", "", alt(vr)), strand=sapply(vr$ORIENTATION, `[`, i=2))
     seqlevelsStyle(g2) = seqlevelsStyle(g1)
+    list(left=splitAsList(g1), right=splitAsList(g2))
+}
 
-    tx = transcripts(txdb)
-    coding_ranges = cdsBy(txdb)
-    res = rep(list(list()), length(g1))
-    for (i in seq_along(g1)) {
-        left = tx_by_break(asm, txdb, tx, coding_ranges, g1[i], type="left")
-        right = tx_by_break(asm, txdb, tx, coding_ranges, g2[i], type="right")
+#' Combine break info from each possible left and right side transcript
+#'
+#' @param vr    A VRanges object with RNA fusions from `readVcfAsVRanges`
+#' @param left  List of DataFrame objects containing the 5' of the fusion
+#' @param right List of DataFrame objects containing the 3' of the fusion
+#' @return      A DataFrame with fusion coordinates and sequence information
+#'
+#' @importFrom S4Vectors splitAsList
+#' @keywords internal
+tx_combine_breaks = function(vr, left, right) {
+    combine_one = function(vr, left, right) {
         if (nrow(left) == 0 || nrow(right) == 0)
-            next
+            return(DataFrame())
+        lab = paste(vr$GENEA, vr$GENEB, sep="-")
         colnames(left) = paste0(colnames(left), "_5p")
         colnames(right) = paste0(colnames(right), "_3p")
         idx = expand.grid(l=seq_len(nrow(left)), r=seq_len(nrow(right)))
-        res[[i]] = cbind(fusion=flabs[i], split_reads=vr$DV[i], split_pairs=vr$RV[i],
-                         FFPM=vr$FFPM[i], left[idx$l,], right[idx$r,])
+        cbind(fusion=lab, split_reads=vr$DV, split_pairs=vr$RV,
+              FFPM=vr$FFPM, left[idx$l,], right[idx$r,])
     }
+    res = mapply(combine_one, vr=splitAsList(vr), left=left, right=right, SIMPLIFY=FALSE)
     do.call(rbind, res[sapply(res, length) > 0])
 }
 
 #' Get transcript incl coords left or right of break
 #'
+#' @param gr    GenomicRanges object of break location
 #' @param asm   A Genome sequence package object, eg. ::BSgenome.Hsapiens.NCBI.GRCh38
 #' @param txdb  A transcription database, eg. AnnotationHub()[["AH100643"]]
 #' @param tx    A list of transcripts obtained from `transcripts(txdb)`
 #' @param coding_ranges  A list of exon coordinates by gene from `cdsBy(txdb)`
-#' @param gr    GenomicRanges object of break location
 #' @param type  Whether we want info for the 'left' or 'right' side of the break
 #' @return      A DataFrame with sequence information
 #'
 #' @keywords internal
-tx_by_break = function(asm, txdb, tx, coding_ranges, gr, type="left") {
+tx_by_break = function(gr, asm, txdb, tx, coding_ranges, type="left") {
     exo = exonsByOverlaps(txdb, gr)
     txo = subsetByOverlaps(coding_ranges, gr) # cdsByOverlaps can not take txdb
     if (type == "left") {
