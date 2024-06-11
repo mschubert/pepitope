@@ -2,6 +2,7 @@ context("fusions")
 
 ens106 = AnnotationHub::AnnotationHub()[["AH100643"]]
 asm = BSgenome.Hsapiens.NCBI.GRCh38::BSgenome.Hsapiens.NCBI.GRCh38
+tx = suppressWarnings(transcripts(ens106))
 cds = suppressWarnings(cdsBy(ens106))
 
 # fusions from Mitelman database: EIF2AK2-STRN, NAIP-OCLN, AGO2-PTK2, DNM2-ILF3
@@ -27,14 +28,14 @@ left = lapply(ex$left, cds_by_break, txdb=ens106, cds=cds, type="left")
 right = lapply(ex$right, cds_by_break, txdb=ens106, cds=cds, type="right")
 
 test_that("ranges are extracted correctly", {
-    left = unlist(ex$left)
-    right = unlist(ex$right)
+    v_left = unlist(ex$left)
+    v_right = unlist(ex$right)
     expect_equal(as.character(seqnames(ex$left)), chr)
     expect_equal(as.character(seqnames(ex$right)), chr)
-    expect_equal(IRanges::start(left), from)
-    expect_equal(IRanges::start(right), to)
-    expect_equal(as.character(GenomicRanges::strand(left)), dir1)
-    expect_equal(as.character(GenomicRanges::strand(right)), dir2)
+    expect_equal(IRanges::start(v_left), from)
+    expect_equal(IRanges::start(v_right), to)
+    expect_equal(as.character(GenomicRanges::strand(v_left)), dir1)
+    expect_equal(as.character(GenomicRanges::strand(v_right)), dir2)
 })
 
 test_that("extracted transcripts all overlap break site", {
@@ -61,11 +62,26 @@ test_that("extracted transcripts belong to known genes", {
     expect_equal(gname2, geneB)
 })
 
+test_that("NAIP-OCLN fusion breakpoint is correctly assembled", {
+    seq1 = add_seq_info(ex$left[[2]], left[[2]]['ENST00000194097'], asm, ens106, tx)
+    seq2 = add_seq_info(ex$right[[2]], right[[2]]['ENST00000355237'], asm, ens106, tx)
+    res = tx_combine_breaks(vr[2], list(seq1), list(seq2))
+    expect_equal(nrow(res), 1)
+
+    nuc_5p = subseq(res$ref_nuc_5p, 1, res$break_cdsloc_5p)
+    nuc_3p = subseq(res$ref_nuc_3p, res$break_cdsloc_3p)
+    alt_nuc = get_coding_seq(asm, ens106, nuc_5p, nuc_3p, include_stop=FALSE)
+
+    read_support = "CACCCTGCCTTCCCTGGAATCTCTTGAAGTCTCAGGGACAATCCAGTCACAAGGT"
+    expect_false(grepl(read_support, res$ref_nuc_5p))
+    expect_false(grepl(read_support, res$ref_nuc_3p))
+    expect_true(grepl(read_support, alt_nuc))
+})
+
 test_that("integrated fusion run", {
     res = annotate_fusions(vr, ens106, asm)
     cds_match = cds[names(cds) %in% c(res$tx_id_5p, res$tx_id_3p)]
-    tx_match = transcripts(ens106)[names(cds_match)]
-    expect_true(all(tx_match$tx_biotype == "protein_coding"))
+    expect_true(all(tx[names(cds_match)]$tx_biotype == "protein_coding"))
 
     tx_seq = extractTranscriptSeqs(asm, cds_match)
     expect_true(all(tx_seq[res$tx_id_5p] == res$ref_nuc_5p))
