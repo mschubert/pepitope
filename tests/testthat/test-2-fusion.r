@@ -39,18 +39,16 @@ test_that("ranges are extracted correctly", {
 
 test_that("extracted transcripts all overlap break site", {
     tx1 = lapply(ex$left, transcriptsByOverlaps, x=ens106)
-    tx_left = lapply(left, names)
-    expect_true(all(tx_left[[1]] %in% names(tx1[[1]])))
-    expect_true(all(tx_left[[2]] %in% names(tx1[[2]])))
-    expect_true(all(tx_left[[3]] %in% names(tx1[[3]])))
-    expect_true(all(tx_left[[4]] %in% names(tx1[[4]])))
+    expect_true(all(names(left[[1]]) %in% names(tx1[[1]])))
+    expect_true(all(names(left[[2]]) %in% names(tx1[[2]])))
+    expect_true(all(names(left[[3]]) %in% names(tx1[[3]])))
+    expect_true(all(names(left[[4]]) %in% names(tx1[[4]])))
 
     tx2 = lapply(ex$right, transcriptsByOverlaps, x=ens106)
-    tx_right = lapply(right, names)
-    expect_true(all(tx_right[[1]] %in% names(tx2[[1]])))
-    expect_true(all(tx_right[[2]] %in% names(tx2[[2]])))
-    expect_true(all(tx_right[[3]] %in% names(tx2[[3]])))
-    expect_true(all(tx_right[[4]] %in% names(tx2[[4]])))
+    expect_true(all(names(right[[1]]) %in% names(tx2[[1]])))
+    expect_true(all(names(right[[2]]) %in% names(tx2[[2]])))
+    expect_true(all(names(right[[3]]) %in% names(tx2[[3]])))
+    expect_true(all(names(right[[4]]) %in% names(tx2[[4]])))
 })
 
 test_that("extracted transcripts belong to known genes", {
