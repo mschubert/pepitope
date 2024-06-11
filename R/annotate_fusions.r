@@ -50,7 +50,7 @@ annotate_fusions = function(vr, txdb, asm) {
 extract_fusion_ranges = function(vr) {
     g1 = GRanges(seqnames(vr), ranges(vr), sapply(vr$ORIENTATION, `[`, i=1))
     g2 = GRanges(gsub("\\[|\\]|N", "", alt(vr)), strand=sapply(vr$ORIENTATION, `[`, i=2))
-    seqlevelsStyle(g2) = seqlevelsStyle(g1)
+    suppressWarnings({ seqlevelsStyle(g2) = seqlevelsStyle(g1) })
     list(left=splitAsList(g1), right=splitAsList(g2))
 }
 
