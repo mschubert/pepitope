@@ -42,8 +42,9 @@ annotate_fusions = function(vr, txdb, asm) {
 #' @return    A list of the 5' and 3' GRanges objects
 #'
 #' @importFrom S4Vectors splitAsList
+#' @importFrom IRanges ranges
 #' @importFrom GenomicRanges GRanges
-#' @importFrom GenomeInfoDb seqnames seqlevelsStyle
+#' @importFrom GenomeInfoDb seqnames seqlevelsStyle seqlevelsStyle<-
 #' @keywords internal
 extract_fusion_ranges = function(vr) {
     g1 = GRanges(seqnames(vr), ranges(vr), sapply(vr$ORIENTATION, `[`, i=1))
@@ -62,15 +63,16 @@ extract_fusion_ranges = function(vr) {
 #' @importFrom S4Vectors splitAsList
 #' @keywords internal
 tx_combine_breaks = function(vr, left, right) {
+    na = function(x) if (is.null(x)) NA else x
     combine_one = function(vr, left, right) {
         if (nrow(left) == 0 || nrow(right) == 0)
             return(DataFrame())
-        lab = paste(vr$GENEA, vr$GENEB, sep="-")
+        lab = paste(na(vr$GENEA), na(vr$GENEB), sep="-")
         colnames(left) = paste0(colnames(left), "_5p")
         colnames(right) = paste0(colnames(right), "_3p")
         idx = expand.grid(l=seq_len(nrow(left)), r=seq_len(nrow(right)))
-        cbind(fusion=lab, split_reads=vr$DV, split_pairs=vr$RV,
-              FFPM=vr$FFPM, left[idx$l,], right[idx$r,])
+        cbind(fusion=lab, split_reads=na(vr$DV), split_pairs=na(vr$RV),
+              FFPM=na(vr$FFPM), left[idx$l,], right[idx$r,])
     }
     res = mapply(combine_one, splitAsList(vr), left, right, SIMPLIFY=FALSE)
     do.call(rbind, res[sapply(res, length) > 0])
