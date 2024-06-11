@@ -70,12 +70,16 @@ test_that("NAIP-OCLN fusion breakpoint is correctly assembled", {
 
     nuc_5p = subseq(res$ref_nuc_5p, 1, res$break_cdsloc_5p)
     nuc_3p = subseq(res$ref_nuc_3p, res$break_cdsloc_3p)
-    alt_nuc = get_coding_seq(asm, ens106, nuc_5p, nuc_3p, include_stop=FALSE)
+    res$alt_nuc = get_coding_seq(asm, ens106, nuc_5p, nuc_3p, include_stop=FALSE)
 
-    read_support = "CACCCTGCCTTCCCTGGAATCTCTTGAAGTCTCAGGGACAATCCAGTCACAAGGT"
+    # adds only a glycine from OCLN and then STOP (not included)
+    read_support = "ACCCTGCCTTCCCTGGAATCTCTTGAAGTCTCAGGGACAATCCAGTCACAAGGT"
     expect_false(grepl(read_support, res$ref_nuc_5p))
     expect_false(grepl(read_support, res$ref_nuc_3p))
-    expect_true(grepl(read_support, alt_nuc))
+    expect_true(grepl(read_support, res$alt_nuc))
+
+    subs = subset_context_fusion(res, 15)
+    expect_equal(subs$alt_shift, -45)
 })
 
 test_that("integrated fusion run", {
