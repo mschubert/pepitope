@@ -39,11 +39,11 @@ make_report = function(vars, fus=DataFrame(), ..., ctx_codons) {
     if (nrow(fus) > 0) {
         fus = subset_context_fusion(fus, ctx_codons)
         fdf = as_tibble(as.data.frame(fus))
-        ref1 = fdf %>% mutate(gene_name=sub("(.*)-.*", "\\1", fusion)) %>%
+        ref1 = fdf %>% mutate(gene_name=sub("(.*)--.*", "\\1", fusion)) %>%
             select(fusion, gene_name, gene_id=gene_id_5p, tx_id=tx_id_5p, cDNA=ref_nuc_5p)
-        ref2 = fdf %>% mutate(gene_name=sub(".*-(.*)", "\\1", fusion)) %>%
+        ref2 = fdf %>% mutate(gene_name=sub(".*--(.*)", "\\1", fusion)) %>%
             select(fusion, gene_name, gene_id=gene_id_3p, tx_id=tx_id_3p, cDNA=ref_nuc_3p)
-        refs = bind_rows(ref1, ref2) %>% mutate(type="ref", pep_id=sub("fs$", "", gene_name))
+        refs = bind_rows(ref1, ref2) %>% mutate(type="ref", pep_id=sub("\\.fs$", "", gene_name))
         alt = fdf %>%
             mutate(gene_id = paste(gene_id_5p, gene_id_3p, sep=";"),
                    tx_id = paste(tx_id_5p, tx_id_3p, sep=";"),
