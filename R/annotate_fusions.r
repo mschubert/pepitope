@@ -68,7 +68,7 @@ tx_combine_breaks = function(vr, left, right) {
     combine_one = function(vr, left, right) {
         if (nrow(left) == 0 || nrow(right) == 0)
             return(DataFrame())
-        lab = paste(na(vr$GENEA), na(vr$GENEB), sep="-")
+        lab = paste(na(vr$GENEA), na(vr$GENEB), sep="--")
         colnames(left) = paste0(colnames(left), "_5p")
         colnames(right) = paste0(colnames(right), "_3p")
         idx = expand.grid(l=seq_len(nrow(left)), r=seq_len(nrow(right)))
