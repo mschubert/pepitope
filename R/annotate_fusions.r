@@ -12,8 +12,9 @@ annotate_fusions = function(vr, txdb, asm) {
         return(DataFrame())
 
     # each possible combination of left and right transcripts from break
-    tx = suppressWarnings(transcripts(txdb))
-    cds = suppressWarnings(cdsBy(txdb))
+    flt = ~ tx_biotype == "protein_coding" #& SeqNameFilter(c(1:22,'X','Y'))
+    tx = suppressWarnings(transcripts(txdb, filter=flt))
+    cds = suppressWarnings(cdsBy(txdb, filter=flt))
     fr = extract_fusion_ranges(vr)
     get_cds = function(x, type) {
         coords = cds_by_break(x, txdb, cds, type)
