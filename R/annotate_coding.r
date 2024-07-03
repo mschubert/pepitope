@@ -25,6 +25,10 @@ annotate_coding = function(vr, txdb, asm) {
     vr$cov_alt = altDepth(vr)
     codv = predictCoding(vr, txdb, asm)
 
+    # workaround to remove variants at intron/exon boundaries:
+    # https://github.com/mschubert/pepitope/issues/5
+    codv = codv[width(codv) == width(codv$CDSLOC)]
+
     gnames = genes(txdb)
     codv$gene_name = gnames$gene_name[match(codv$GENEID, gnames$gene_id)]
 
