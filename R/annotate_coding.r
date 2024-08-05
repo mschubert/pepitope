@@ -45,6 +45,8 @@ annotate_coding = function(vr, txdb, asm) {
     codv$ref_nuc = extractTranscriptSeqs(asm, coding_ranges)
     codv$ref_prot = translate(codv$ref_nuc)
     codv = codv[is_proper_orf(codv$ref_prot)]
+    if (length(codv) == 0)
+        return(codv)
 
     # get coding sequences with updated variants
     codv$alt_nuc = get_coding_seq(asm, txdb,

@@ -17,6 +17,7 @@ ens106 = AnnotationHub::AnnotationHub()[["AH100643"]]
 asm = BSgenome.Hsapiens.NCBI.GRCh38::BSgenome.Hsapiens.NCBI.GRCh38
 
 vr = unlist(GRangesList(
+    nongenic = make_vr("1", c(1, 100, 200), "A", "T"),
     SYN = make_vr("1", c(5969221, 10647824, 18885617), "G", "A"),
     SNP = make_vr("1", c(1285573, 3763346, 43406323), c("C", "G", "T"), c("T", "A", "C")),
     STOP = make_vr("1", c(17119295, 39284153, 43312467), c("C", "A", "C"), c("T", "T", "A")),
@@ -25,6 +26,16 @@ vr = unlist(GRangesList(
     FS = make_vr("1", c(153810271, 33013400, 159062696), c("TG", "G", "GT"), c("T", "GATGTC", "G"))
 ))
 ann = suppressWarnings(annotate_coding(vr, ens106, asm))
+
+test_that("non-genic variants are dropped", {
+    expect_true(all(names(ann) != "nongenic"))
+})
+
+test_that("only variant is non-genic returns empty result", {
+    only = make_vr("1", c(100), "G", "A")
+    empty = suppressWarnings(annotate_coding(only, ens106, asm))
+    expect_equal(length(empty), 0)
+})
 
 test_that("synonymous", {
     syn = ann[names(ann) == "SYN"]
