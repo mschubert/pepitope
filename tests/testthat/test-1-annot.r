@@ -28,7 +28,7 @@ vr = unlist(GRangesList(
 ann = suppressWarnings(annotate_coding(vr, ens106, asm))
 
 test_that("non-genic variants are dropped", {
-    expect_true(all(names(ann) != "nongenic"))
+    expect_true(sum(names(ann) == "nongenic") == 0)
 })
 
 test_that("only variant is non-genic returns empty result", {
