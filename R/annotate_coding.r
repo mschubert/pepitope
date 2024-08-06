@@ -45,8 +45,6 @@ annotate_coding = function(vr, txdb, asm) {
     codv$ref_nuc = extractTranscriptSeqs(asm, coding_ranges)
     codv$ref_prot = translate(codv$ref_nuc)
     codv = codv[is_proper_orf(codv$ref_prot)]
-    if (length(codv) == 0)
-        return(codv)
 
     # get coding sequences with updated variants
     codv$alt_nuc = get_coding_seq(asm, txdb,
@@ -70,7 +68,7 @@ annotate_coding = function(vr, txdb, asm) {
     var_stop = stri_locate_first(codv$VARAA, fixed="*")[,1]
     vlabs = ifelse(is.na(var_stop), nchar(codv$VARAA), var_stop)
     mut_lab = ifelse(codv$CONSEQUENCE == "frameshift", "fs", substr(codv$VARAA, 1, vlabs))
-    pstarts = unname(sapply(codv$PROTEINLOC, function(p) p[[1]])) + codv$silent_start
+    pstarts = unlist(lapply(codv$PROTEINLOC, function(p) p[[1]]), use.names=FALSE) + codv$silent_start
     codv$mut_id = sprintf("%s_%s%i%s", codv$gene_name, codv$REFAA, pstarts, mut_lab)
 
     # check if we didn't change the length of any nuc
@@ -97,7 +95,7 @@ annotate_coding = function(vr, txdb, asm) {
 check_silent = function(ref, alt) {
     offsets = rep(0, length(ref))
     chk = seq_along(ref)
-    for (i in seq_len(max(nchar(ref)))) {
+    for (i in seq_len(max(c(0, nchar(ref))))) {
         chk = chk[nchar(ref[chk]) >= i & nchar(alt[chk]) >= i]
         s_mtch = substr(ref[chk],i,i) == substr(alt[chk],i,i)
         if (! any(s_mtch))

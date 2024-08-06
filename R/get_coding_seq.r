@@ -15,6 +15,8 @@
 #' @keywords internal
 get_coding_seq = function(asm, txdb, ..., include_stop=TRUE) {
     concat = xscat(...)
+    if (length(concat) == 0)
+        return(DNAStringSet())
     stops = suppressWarnings(vmatchPattern("*", translate(concat)))
     stop_offset = as.integer(!include_stop)
     stops = sapply(stops, function(s) (IRanges::start(s)[1]-stop_offset)*3)
