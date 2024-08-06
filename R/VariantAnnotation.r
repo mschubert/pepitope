@@ -1,9 +1,16 @@
 # from: https://github.com/Bioconductor/VariantAnnotation/blob/devel/R/methods-predictCoding.R
 # solves: https://github.com/Bioconductor/VariantAnnotation/pull/74
+# solves: https://github.com/Bioconductor/VariantAnnotation/issues/86
 
-### =========================================================================
-### predictCoding methods 
-### =========================================================================
+#' @importFrom GenomicFeatures mapToTranscripts
+#' @importFrom Biostrings AAStringSet DNAStringSetList GENETIC_CODE
+#' @importFrom XVector subseq subseq<-
+#' @importFrom S4Vectors %in%
+setGeneric("predictCoding",
+    signature=c("query", "subject", "seqSource", "varAllele"),
+    function(query, subject, seqSource, varAllele, ...)
+        standardGeneric("predictCoding")
+)
 
 setMethod("predictCoding", c("IntegerRanges", "ANY", "ANY", "DNAStringSet"),
     function(query, subject, seqSource, varAllele, ..., ignore.strand=FALSE)
@@ -104,8 +111,6 @@ setMethod("predictCoding", c("VRanges", "ANY", "ANY", "missing"),
     ## variant location in cds region
     mcols(query) <- append(mcols(query), DataFrame(varAllele=varAllele))
     txlocal <- .localCoordinates(query, cdsbytx, ignore.strand=FALSE, ...)
-    if (length(txlocal) == 0)
-        return(txlocal)
 
     ## reverse complement "-" strand
     valid <- rep(TRUE, length(txlocal))
@@ -189,7 +194,7 @@ setMethod("predictCoding", c("VRanges", "ANY", "ANY", "missing"),
     consequence <- factor(consequence) 
  
     mcols(txlocal) <- append(mcols(txlocal), 
-        DataFrame(GENEID=NA_character_, 
+        DataFrame(GENEID=rep(NA_character_, nrow(mcols(txlocal))),
                   CONSEQUENCE=consequence, 
                   REFCODON=refCodon, 
                   VARCODON=varCodon, 
@@ -207,4 +212,61 @@ setMethod("predictCoding", c("VRanges", "ANY", "ANY", "missing"),
     txord <- match(mcols(txlocal)$TXID, names(cdsbytx))
     txseqs <- extractTranscriptSeqs(seqSource, cdsbytx[txord])
     DNAStringSet(substring(txseqs, cstart, cend))
+}
+
+.localCoordinates <- function(from, to, ignore.strand, ...)
+{
+    ## 'to' is a GRangesList of cds by transcript
+    map <- mapToTranscripts(unname(from), to, ignore.strand=ignore.strand, ...)
+    if (length(map) == 0) {
+        res <- GRanges()
+        mcols(res) <- DataFrame(REF=DNAStringSet(), ALT=DNAStringSetList(),
+                                varAllele=DNAStringSet(), CDSLOC=IRanges(),
+                                PROTEINLOC=IntegerList(), QUERYID=integer(),
+                                TXID=character(), CDSID=IntegerList())
+        return(res)
+    }
+
+    xHits <- map$xHits
+    txHits <- map$transcriptsHits
+    flat_to <- unlist(to) ## names needed for mapping
+
+    ## FIXME: cdsid is expensive
+    cdsid <- IntegerList(integer(0))
+    map2 <- mapToTranscripts(unname(from)[xHits], flat_to,
+                             ignore.strand=ignore.strand)
+    cds <- mcols(flat_to)$cds_id[map2$transcriptsHits]
+    ## CodingVariants() must fall within a coding region.
+    ## mapToTranscripts() will map ranges that span intron 
+    ## junctions and overlap multiple exons/cds regions. Because 
+    ## of this, it's possible for 'map' to return a hit for a 
+    ## query that 'map2' will not. (The subject in
+    ## 'map' is a GRangesList and in 'map2' it's unlisted.)
+    ## Only ranges identified by 'map' and 'map2' are kept.
+    ## Ranges identified by 'map' only are discarded.
+    if (length(cds)) {
+        cdsid <- unique(splitAsList(cds, map2$xHits))
+        keep <- logical(length(xHits))
+        keep[unique(map2$xHits)] <- TRUE
+        if (any(!keep)) {
+            map <- map[keep]
+            txHits <- map$transcriptsHits
+            xHits <- map$xHits
+        }
+    }
+    if (is.null(txid <- names(to)[txHits]))
+        txid <- NA_integer_
+
+    ## protein coordinates
+    pends <- c(ceiling(start(map)/3), ceiling(end(map)/3))
+    plocs <- unique(IntegerList(split(pends, rep(seq_len(length(pends)/2)), 2)))
+
+    res <- from[xHits]
+    strand(res) <- strand(map)
+    mcols(res) <- append(values(res), 
+        DataFrame(CDSLOC=ranges(map), 
+                  PROTEINLOC=plocs, 
+                  QUERYID=xHits, 
+                  TXID=txid, CDSID=cdsid))
+    res 
 }
