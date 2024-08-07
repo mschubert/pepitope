@@ -33,7 +33,7 @@ make_report = function(vars, fus=DataFrame(), ..., ctx_codons) {
         select(var_id, mut_id, gene_name, gene_id=GENEID, tx_id=tx_name,
                ref=ref_nuc, alt=alt_nuc) %>%
         tidyr::pivot_longer(c(ref, alt), names_to="type", values_to="cDNA") %>%
-        mutate(pep_id = ifelse(type == "alt", mut_id, sub("([0-9]+)[a-zA-Z]+$", "\\1", mut_id))) %>%
+        mutate(pep_id = ifelse(type == "alt", mut_id, sub("([0-9]+)[a-zA-Z*]+$", "\\1", mut_id))) %>%
         pep_tile(...)
 
     if (nrow(fus) > 0) {
