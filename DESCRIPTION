@@ -18,18 +18,25 @@ BugReports: https://github.com/mschubert/pepitope/issues
 Depends:
     R (>= 4.2.0)
 Imports:
+    Biobase,
+    Biostrings,
+    BSgenome,
     dplyr,
-    readr,
-    writexl,
-    tidyr,
-    purrr,
-    stringdist,
-    IRanges,
     GenomeInfoDb,
     GenomicFeatures,
+    GenomicRanges,
+    Gviz,
+    IRanges,
+    plyranges,
+    purrr,
+    readr,
+    S4Vectors,
+    stringdist,
+    stringi,
+    tidyr,
     VariantAnnotation,
-    Biostrings,
-    Gviz
+    writexl,
+    XVector
 License: GPL-3
 Encoding: UTF-8
 Suggests:
@@ -39,4 +46,4 @@ Suggests:
     BiocCheck
 biocViews: DNASeq, VariantAnnotation, ImmunoOncology
 VignetteBuilder: knitr
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
