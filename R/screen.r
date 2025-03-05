@@ -3,7 +3,6 @@ library(ggplot2)
 library(DESeq2)
 library(ggrepel)
 library(patchwork)
-sys = import('sys')
 
 calc_de = function(eset, cfg) {
     if (!is.null(cfg$patient))
@@ -69,31 +68,3 @@ make_clean = function(res, sample, cap_fc=3) {
         filter(bc_type %in% c(sub("+TAA", "", sample, fixed=TRUE), "shared", "TAA")) |>
         mutate(log2FoldChange = sign(log2FoldChange) * pmin(cap_fc, abs(log2FoldChange)))
 }
-
-sys$run({
-    args = sys$cmd$parse(
-        opt('c', 'config', 'yaml', '2022-02_YWE.yaml'),
-        opt('p', 'plotfile', 'pdf', '2022-02_YWE.pdf'),
-        opt('x', 'export', 'xlsx', '2022-02_YWE.xlsx')
-    )
-
-    cfg = yaml::read_yaml(args$config)
-    eset = file.path("../potency_data_variants", cfg$data) |>
-        lapply(readRDS) |>
-        do.call(cbind, args=_)
-
-    diff_expr = calc_de(eset, cfg)
-    res = tibble(sample=names(diff_expr), data=diff_expr) |>
-        rowwise() |>
-        mutate(plot = list(
-                    plot_one(data, cfg$patient) + labs(title=sample, subtitle="all") |
-                    plot_one(make_clean(data, cfg$patient), cfg$patient) + labs(subtitle="clean")
-               ))
-
-    writexl::write_xlsx(setNames(res$data, res$sample), path=args$export)
-
-    pdf(args$plotfile, 14, 6)
-    for (p in res$plot)
-        print(p + plot_layout(guides="collect"))
-    dev.off()
-})

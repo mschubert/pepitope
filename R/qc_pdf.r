@@ -1,34 +1,6 @@
 library(dplyr)
 library(ggplot2)
 library(patchwork)
-plt = import('plot')
-sys = import('sys')
-
-plot_pca = function(eset, bcs, assemble=TRUE) {
-    if (ncol(eset) == 1) {
-        re = plt$text("Only one sample, can not compute PCA")
-        if (assemble) return(re) else return(list(re))
-    }
-    pca_one = function(es)
-        plt$pca(es, aes(x=PC1, y=PC2, color=patient, shape=origin), ntop=Inf) +
-            geom_point(size=3, alpha=0.6) +
-            scale_color_brewer(palette="Dark2", drop=FALSE) +
-            ggrepel::geom_text_repel(aes(label=short), size=3, color="black", segment.alpha=0.3)
-
-    eset$origin = sub("^([^ ]+).*", "\\1", eset$origin)
-    comb = pca_one(eset) + ggtitle("PCA all samples")
-    per_pat = table(eset$patient)
-    sep = lapply(names(per_pat)[per_pat > 2], function(p)
-        pca_one(eset[,eset$patient == p]) + ggtitle(paste("patient", p)))
-    if (assemble) {
-        if (length(sep) > 0)
-            comb / wrap_plots(sep) + plot_layout(guides="collect")
-        else
-            comb
-    } else {
-        c(list(comb), sep)
-    }
-}
 
 calc_representation = function(lib_counts, bcs, meta) {
     reshape2::melt(lib_counts) |> as_tibble() |>
@@ -154,46 +126,3 @@ load_dset = function(args) {
                label = sprintf("%s (%s)", short, sample_id))
     list(meta=meta, counts=counts[,meta$sample_id, drop=FALSE])
 }
-
-sys$run({
-    args = sys$cmd$parse(
-        opt('x', 'xid', 'chr', '2022-02_YWE'),
-        opt('m', 'meta_tsv', 'tsv', '2022-02_YWE.tsv'),
-        opt('c', 'counts_tsv', 'tsv', '2022-02_YWE.counts.txt'),
-        opt('s', 'stats_tsv', 'tsv', '2022-02_YWE.stats.txt'),
-        opt('o', 'outfile', 'rds', '2022-02_YWE.rds'),
-        opt('p', 'plotfile', 'pdf', '2022-02_YWE.pdf')
-    )
-
-    dset = load_dset(args)
-    libinfo = yaml::read_yaml("samples.yaml")$libinfo[[args$xid]] |>
-        sprintf("../potency_data_libinfo/libinfo_%s.rds", x=_)
-    bcs = lapply(libinfo, readRDS) |>
-        dplyr::bind_rows() |>
-        select(oligo_id, gene_name, mut_id, pep_id, pep_type, bc_type)
-    bcs = left_join(tibble(oligo_id=rownames(dset$counts)), bcs) |>
-        mutate(bc_type = ifelse(is.na(bc_type), "unused", bc_type))
-    stopifnot(rownames(dset$counts) == bcs$oligo_id)
-    eset = DESeq2::DESeqDataSetFromMatrix(dset$counts, dset$meta, ~1, rowData=bcs)
-    DESeq2::sizeFactors(eset) = colSums(dset$counts) / max(colSums(dset$counts))
-    reps = calc_representation(dset$counts, bcs, dset$meta) |>
-        mutate(bc_type = factor(bc_type))
-    smp_per_pat = table(eset$patient)
-    cors_per_pat = calc_sample_cor(reps)
-    cor_axes = attr(cors_per_pat, "reps")
-
-    pdf(args$plotfile, 10, 4+nrow(dset$meta)/5)
-    print(plot_reads(reps, dset$meta))
-    print(plt$try(plot_pca(eset[,eset$mapped_reads >= 1e5], bcs)))
-    print(plot_distr(reps))
-    for (pat in names(cors_per_pat)) {
-        cur_pat = cors_per_pat[[pat]]
-        pat_id = sub("[^0-9]*([0-9]+)", "\\1", pat)
-        print(plot_sample_cor(cur_pat, cor_axes))
-        if (length(unique(reps$rep[reps$patient == pat])) > 2)
-            print(plt$try(plot_rep_cor(reps, pat)))
-    }
-    dev.off()
-
-    saveRDS(eset[,eset$mapped_reads >= 1e5], file=args$outfile)
-})
