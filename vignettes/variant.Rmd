@@ -1,0 +1,41 @@
+---
+title: "Variant calling"
+output:
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Variant calling}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{css echo=FALSE}
+img {
+    border: 0px !important;
+    margin: 2em 2em 2em 2em !important;
+}
+code {
+    border: 0px !important;
+}
+```
+
+```{r echo=FALSE, results="hide"}
+knitr::opts_chunk$set(
+    cache = FALSE,
+    echo = TRUE,
+    collapse = TRUE,
+    comment = "#>"
+)
+suppressPackageStartupMessages(library(pepitope))
+```
+
+## Section
+
+text
+
+```{r eval=FALSE}
+#install.packages("clustermq")
+```
+
+```{r}
+# code
+```
