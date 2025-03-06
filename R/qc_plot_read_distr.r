@@ -1,3 +1,4 @@
+#' @import dplyr
 calc_representation = function(lib_counts, bcs, meta) {
     reshape2::melt(lib_counts) |> as_tibble() |>
         dplyr::rename(oligo_id=Var1, sample_id=Var2) |>

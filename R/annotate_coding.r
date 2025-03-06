@@ -5,16 +5,18 @@
 #' @param asm   Genomic sequence BSGenome object
 #' @return      A GRanges object with annotated variants
 #'
+#' @importFrom BiocGenerics width strand strand<-
+#' @importFrom S4Vectors mcols mcols<-
 #' @importFrom GenomicFeatures transcripts threeUTRsByTranscript cdsBy
 #'      extractTranscriptSeqs
-#' @importFrom VariantAnnotation readVcfAsVRanges sampleNames ref alt refDepth
-#'      altDepth
+#' @importFrom VariantAnnotation sampleNames ref alt refDepth altDepth
 #' @importFrom Biostrings subseq nchar reverse translate replaceAt DNAStringSet
 #'      xscat vcountPattern
 #' @importFrom BSgenome getSeq
 #' @importFrom GenomeInfoDb seqnames seqnames<- genome genome<-
 #'      isCircular isCircular<- seqinfo seqinfo<-
 #' @importFrom stringi stri_locate_first
+#' @importFrom methods as
 #' @export
 annotate_coding = function(vr, txdb, asm) {
     vr$sampleNames = sampleNames(vr)

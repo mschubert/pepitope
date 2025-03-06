@@ -1,8 +1,15 @@
 #' Genomic track plot for variant + transcripts + RNA-seq
 #'
+#' @param rec A record
+#' @param gene_id A gene id
+#' @param res results object
+#' @param gene gene name
+#' @param txdb txdb object
+#' @return A plot
 #' @importFrom GenomeInfoDb seqnames seqlevelsStyle
-#' @importFrom Gviz GenomeAxisTrack AnnotationTrack GeneRegionTrack AlignmentsTrack plotTracks
-#' @export
+#' @importFrom Gviz GenomeAxisTrack AnnotationTrack GeneRegionTrack AlignmentsTrack plotTracks identifier<-
+#' @importFrom IRanges start end
+#' @keywords internal
 plot_genomic_context = function(rec, gene_id, res, gene, txdb) {
 #    gene_id = "ENSG00000162572"
 

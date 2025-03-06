@@ -2,7 +2,7 @@
 # use guide_counter to count barcodes
 count_bc = function(tdir, lib) {
     lpath = file.path(tdir, "lib.tsv")
-    write.table(lib, file=lpath, sep="\t", row.names=FALSE, quote=FALSE)
+    utils::write.table(lib, file=lpath, sep="\t", row.names=FALSE, quote=FALSE)
     fqs = list.files(tdir, pattern="\\.fq.gz", full.names=TRUE)
 
     cmd = paste("guide-counter count",

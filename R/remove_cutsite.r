@@ -5,7 +5,7 @@
 #' @param seed  Set random seed to select same changes on multiple runs
 #' @return      cDNA with minimal changes to no longer contain the cut site
 #'
-#' @importFrom dplyr `%>%` rowwise
+#' @importFrom dplyr rowwise
 #' @importFrom Biostrings subseq getGeneticCode DNAString translate replaceAt
 #'      DNAStringSet reverseComplement vmatchPattern vcountPattern
 #' @export
@@ -14,9 +14,9 @@ remove_cutsite = function(nuc, site, seed=NULL) {
     revtrans = function(aa) {
         aa_split = strsplit(as.character(aa), "+")[[1]]
         tr = getGeneticCode()
-        lapply(aa_split, function(x) names(tr)[tr == x]) %>%
-            do.call(tidyr::crossing, .) %>%
-            rowwise() %>%
+        lapply(aa_split, function(x) names(tr)[tr == x]) |>
+            do.call(tidyr::crossing, args=_) |>
+            rowwise() |>
             purrr::pmap_chr(paste0)
     }
     alt_nuc = function(nuc, match) {
@@ -26,7 +26,7 @@ remove_cutsite = function(nuc, site, seed=NULL) {
     }
 
     rc = function(x) as.character(reverseComplement(DNAString(x)))
-    m = c(vmatchPattern(site, nuc), vmatchPattern(rc(site), nuc)) %>% unlist()
+    m = c(vmatchPattern(site, nuc), vmatchPattern(rc(site), nuc)) |> unlist()
     if (length(m) == 0)
         return(nuc)
 
@@ -35,12 +35,12 @@ remove_cutsite = function(nuc, site, seed=NULL) {
 
     nucs = nuc = DNAStringSet(nuc)
     for (i in seq_along(m))
-        nucs = lapply(nucs, alt_nuc, match=m[i]) %>% do.call(c, .)
+        nucs = lapply(nucs, alt_nuc, match=m[i]) |> do.call(c, args=_)
     nucs = DNAStringSet(nucs)
 
     valid = vcountPattern(site, nucs) + vcountPattern(rc(site), nucs) == 0
     nchange = mapply(function(i) stringdist::stringdist(subseq(nuc, m[i]), subseq(nucs, m[i])),
-                     i=seq_along(m)) %>% as.matrix() %>% rowSums()
+                     i=seq_along(m)) |> as.matrix() |> rowSums()
     min_valid = which(valid & nchange == min(nchange[valid]))
     as.character(nucs[sample(min_valid, 1)])
 }

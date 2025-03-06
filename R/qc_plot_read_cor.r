@@ -17,6 +17,7 @@ calc_sample_cor = function(reps, keep=c("patient", "bc_type", "gene_name", "mut_
     re
 }
 
+#' @importFrom stats cor
 plot_sample_cor = function(sample_cor_df, axes=c("rep 1", "rep 2"), add=list()) {
     ax1 = rlang::sym(axes[1])
     ax2 = rlang::sym(axes[2])

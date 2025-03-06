@@ -5,7 +5,9 @@
 #' @importFrom GenomicFeatures mapToTranscripts
 #' @importFrom Biostrings AAStringSet DNAStringSetList GENETIC_CODE
 #' @importFrom XVector subseq subseq<-
-#' @importFrom S4Vectors %in%
+#' @importFrom S4Vectors %in% DataFrame elementNROWS
+#' @importFrom MatrixGenerics rowRanges
+#' @importFrom methods callGeneric as is
 setGeneric("predictCoding",
     signature=c("query", "subject", "seqSource", "varAllele"),
     function(query, subject, seqSource, varAllele, ...)

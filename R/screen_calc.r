@@ -1,3 +1,4 @@
+#' @importFrom stats setNames
 calc_de = function(eset, cfg) {
     if (!is.null(cfg$patient))
         eset = eset[,eset$patient %in% cfg$patient]
@@ -12,7 +13,7 @@ calc_de = function(eset, cfg) {
             tibble::rownames_to_column("oligo_id") |>
             as_tibble() |>
             arrange(padj, pvalue) |>
-            left_join(as.data.frame(rowData(eset))) |>
+            left_join(as.data.frame(SummarizedExperiment::rowData(eset))) |>
             mutate(bc_type = factor(bc_type))
     }
     lapply(cfg$comparisons, get_result) |>

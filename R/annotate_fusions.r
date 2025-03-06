@@ -87,6 +87,8 @@ tx_combine_breaks = function(vr, left, right) {
 #' @param type  Whether we want info for the 'left' or 'right' side of the break
 #' @return      A named list of transcript GRanges objects with CDS exons
 #'
+#' @importFrom IRanges start end subsetByOverlaps
+#' @importFrom GenomicFeatures exonsByOverlaps
 #' @keywords internal
 cds_by_break = function(gr, txdb, cds, type="left") {
     exo = exonsByOverlaps(txdb, gr)
@@ -113,6 +115,7 @@ cds_by_break = function(gr, txdb, cds, type="left") {
 #' @param tx    A list of transcripts obtained from `transcripts(txdb)`
 #' @return      A DataFrame with sequence information
 #'
+#' @importFrom IRanges start
 #' @keywords internal
 add_seq_info = function(gr, cds_break, asm, txdb, tx) {
     seqs = filter_proper_orf(extractTranscriptSeqs(asm, cds_break))

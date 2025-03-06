@@ -6,6 +6,21 @@
 \usage{
 plot_genomic_context(rec, gene_id, res, gene, txdb)
 }
+\arguments{
+\item{rec}{A record}
+
+\item{gene_id}{A gene id}
+
+\item{res}{results object}
+
+\item{gene}{gene name}
+
+\item{txdb}{txdb object}
+}
+\value{
+A plot
+}
 \description{
 Genomic track plot for variant + transcripts + RNA-seq
 }
+\keyword{internal}
