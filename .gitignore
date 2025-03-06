@@ -12,3 +12,5 @@ src/*.so
 *.log
 narray.Rcheck
 .github/*.html
+/doc/
+/Meta/
