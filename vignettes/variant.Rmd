@@ -59,7 +59,7 @@ rna_tpm_file = "tpm_file.tsv"
 fusion_vcf_file = "my_fusions.vcf.gz"
 ```
 
-Prerequesites
+Prerequisites
 -------------
 
 ### Selecting the right reference genome
@@ -91,6 +91,7 @@ The `sarek` pipline uses UCSC prefixes on the GRCh38 genome, so we need to switc
 the genome and gene annotation styles:
 
 ```{r}
+seqlevelsStyle(ens106) = "UCSC"
 seqlevelsStyle(asm) = "UCSC"
 asm@seqinfo@genome[] = "GRCh38"
 ```
@@ -107,11 +108,16 @@ interested in. These files are usually called:
 * `salmon.merged.gene_counts.tsv`
 * `salmon.merged.gene_tpm.tsv`
 
+We can combine and subset them the following way:
+
 ```{r}
 rna_counts = readr::read_tsv(rna_counts_file)
 rna_tpm = readr::read_tsv(rna_tpm_file)
 
-rna_sample = ...
+counts = readr::read_tsv(args$rna_count) |> dplyr::select(gene_id, gene_name, count=SAMPLE)
+tpm = readr::read_tsv(args$rna_tpm) |> dplyr::select(gene_id, gene_name, tpm=SAMPLE)
+
+rna_sample = inner_join(counts, tpm)
 ```
 
 __ SHOW TABLE HERE __
@@ -126,6 +132,12 @@ vr1 = readVcfAsVRanges(variant_vcf_file) |>
     filter_variants(min_cov=2, min_af=0.05, pass=TRUE)
 ```
 
+Here, we are using the following filters:
+
+* `min_cov=2` -- a variant needs to be covered by at least 2 reads
+* `min_af=0.05` -- a variant needs to occur in at leat 5% of reads
+* `pass=TRUE` -- a variant needs to pass the standard QC filters
+
 __ SHOW TABLE HERE __
 
 ### Annotating and subsetting expressed variants
@@ -136,6 +148,17 @@ subs = ann |>
     filter_expressed(rna_sample, min_reads=1, min_tpm=0) |>
     subset_context(15)
 ```
+
+Here, we are using the following filters:
+
+* `min_reads=1` -- the gene needs to have at least one RNA read
+* `min_tpm=0` -- we do not apply an additional TPM filter
+
+In addition, we set the region of interest (context) to 15 codons up- and downstream of the
+variant. Hence, a SNP will have a total length of 93 nucleotides (15*3 + the SNP codon itself).
+An insertion will have the inserted sequence and 15 codons, a deletion only 15 codons both
+sides. A frameshift will have 15 codons upstream and the entire sequence downstream until a
+STOP codon is reached. The latter may extend into the 3' UTR.
 
 __ SHOW TABLE HERE __
 
@@ -153,7 +176,15 @@ Fusion genes from RNA-seq
 ```{r}
 vr2 = readVcfAsVRanges(fusion_vcf_file) |>
     filter_fusions(min_reads=2, min_split_reads=1, min_tools=1)
+
+seqlevelsStyle(vr2) = "UCSC"
 ```
+
+Here, we are using the following filters:
+
+* `min_reads=2` -- the fusion needs to be supported by 2 split or pair distance reads
+* `min_split_reads=1` -- the fusion needs to be supported by at least one split read
+* `min_tools=1` -- the fusion needs to be reported by at least one tool
 
 __ SHOW TABLE HERE __
 
@@ -164,6 +195,13 @@ fus = annotate_fusions(vr2, ens106, asm) |>
     filter_expressed(rna_sample, min_reads=1, min_tpm=0) |>
     subset_context(15)
 ```
+
+Here, we are using the following filters:
+
+* `min_reads=1` -- the gene needs to have at least one RNA read
+* `min_tpm=0` -- we do not apply an additional TPM filter
+
+In addition, we set the region of interest to 15 codons up- and downstream of the fusion site.
 
 __ SHOW TABLE HERE __
 
