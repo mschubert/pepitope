@@ -28,14 +28,174 @@ knitr::opts_chunk$set(
 suppressPackageStartupMessages(library(pepitope))
 ```
 
-## Section
+This vignette describes how to go from variants (and optionally gene fusions) to
+the Minigene Library report.
 
-text
+We will usually work with standard processing pipelines for variant calling,
+RNA-seq quantification, and RNA fusion calling. The best-known collection of
+these workflows is [NF-core](https://nf-co.re/).
 
-```{r eval=FALSE}
-#install.packages("clustermq")
-```
+It provides the following pipelines for these tasks:
+
+* [`sarek`](https://nf-co.re/sarek/) for variant calling using HaploytypeCaller and Mutect2
+* [`rnaseq`](https://nf-co.re/rnaseq/) for RNA-seq quantification using STAR
+* [`rnafusion`](https://nf-co.re/rnafusion/) for RNA fusion quantification using multiple algorithms
+
+Running these will usually require access to high performance computing
+facilities, and you already get the processed files from your core facility
+or sequencing provider.
 
 ```{r}
-# code
+library(pepitope)
+
+# SNPs and small indels, e.g. from 'sarek' nf-core pipeline
+variant_vcf_file = "my_variants.vcf.gz"
+
+# RNA counts and TPM file, e.g. from 'rnaseq' nf-core pipeline
+rna_counts_file = "count_file.tsv"
+rna_tpm_file = "tpm_file.tsv"
+
+# Combined fusion VCF file, e.g. from 'rnafusion' nf-core pipeline
+fusion_vcf_file = "my_fusions.vcf.gz"
 ```
+
+Prerequesites
+-------------
+
+### Selecting the right reference genome
+
+The variant calling and RNA-seq counts were mapped to a reference genome and
+gene annotations. It is important to keep these consistent between the NF-core
+processing pipelines and the Minigene Library annotation.
+
+We are usually working with `BSgenome` (for the reference genome) and `EnsDb`
+(for the gene annotations) objects. For human data, the most widely used
+reference genome is `GRCh38`, and a recent `Ensembl` annotation release.
+
+With our test data, we know that `GRCh38` is the correct reference genome and
+`Ensembl 106` is the correct version of gene annotations. We can get both
+objects from the `BSgenome` and `AnnotationHub` Bioconductor packages, respectively.
+
+```{r}
+ens106 = AnnotationHub::AnnotationHub()[["AH100643"]]
+asm = BSgenome.Hsapiens.NCBI.GRCh38::BSgenome.Hsapiens.NCBI.GRCh38
+rna_counts = readr::read_tsv(rna_counts_file)
+```
+
+A caveat here is that the chromosome prefixes need to be consistent between the
+variants in the VCF file and the genome/gene annotations. There are two
+"styles", either UCSC (includes "chr" prefix) or NCBI/Ensembl (without "chr"
+prefix).
+
+The `sarek` pipline uses UCSC prefixes on the GRCh38 genome, so we need to switch
+the genome and gene annotation styles:
+
+```{r}
+seqlevelsStyle(asm) = "UCSC"
+asm@seqinfo@genome[] = "GRCh38"
+```
+
+The correct styles will depend on how your VCF files were generated.
+
+### Adding RNA expression
+
+The NF-core `rnaseq` workflow will provide two gene expression files, one for
+raw read counts and one for transcripts per million (TPM). These contain all
+samples in a run, so we need to subset them to the current sample we are
+interested in. These files are usually called:
+
+* `salmon.merged.gene_counts.tsv`
+* `salmon.merged.gene_tpm.tsv`
+
+```{r}
+rna_counts = readr::read_tsv(rna_counts_file)
+rna_tpm = readr::read_tsv(rna_tpm_file)
+
+rna_sample = ...
+```
+
+__ SHOW TABLE HERE __
+
+SNPs and small indels
+---------------------
+
+### Reading and filtering mutations
+
+```{r}
+vr1 = readVcfAsVRanges(variant_vcf_file) |>
+    filter_variants(min_cov=2, min_af=0.05, pass=TRUE)
+```
+
+__ SHOW TABLE HERE __
+
+### Annotating and subsetting expressed variants
+
+```{r}
+ann = annotate_coding(vr1, ens106, asm)
+subs = ann |>
+    filter_expressed(rna_sample, min_reads=1, min_tpm=0) |>
+    subset_context(15)
+```
+
+__ SHOW TABLE HERE __
+
+### Phasing with germline variants
+
+```{r}
+# not implemented yet
+```
+
+Fusion genes from RNA-seq
+-------------------------
+
+### Annotating fusion genes
+
+```{r}
+vr2 = readVcfAsVRanges(fusion_vcf_file) |>
+    filter_fusions(min_reads=2, min_split_reads=1, min_tools=1)
+```
+
+__ SHOW TABLE HERE __
+
+### Subsetting expressed fusion genes
+
+```{r}
+fus = annotate_fusions(vr2, ens106, asm) |>
+    filter_expressed(rna_sample, min_reads=1, min_tpm=0) |>
+    subset_context(15)
+```
+
+__ SHOW TABLE HERE __
+
+Generating the Minigene Library
+-------------------------------
+
+### Tiling cDNAs of interest into smaller peptides
+
+```{r}
+tiled = pep_tile(subs, fus, unique=TRUE) |>
+    remove_cutsite(BbsI="GAAGAC")
+```
+
+__ SHOW TABLE HERE __
+
+### Adding barcodes
+
+```{r}
+# this is not yet implemented
+```
+
+__ SHOW TABLE HERE __
+
+### Saving a report file
+
+We can then combine our generated tables into a report save it with the
+`writexl` package:
+
+```{r eval=FALSE}
+report = make_report(ann, subs, fus, tiled)
+writexl::write_xlsx(report, "report_file.xlsx")
+```
+
+This `.xlsx` file will contain the different tables as sheets. We will use it 
+as an annotation file for the quality control and screen steps.
