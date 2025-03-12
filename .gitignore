@@ -10,7 +10,7 @@ src/*.so
 *.swp
 *.tar.gz
 *.log
-narray.Rcheck
+*.Rcheck
 .github/*.html
 /doc/
 /Meta/

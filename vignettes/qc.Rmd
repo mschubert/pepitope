@@ -100,33 +100,82 @@ barcode_lib = "/path/to/file"
 The next step is to count the construct barcodes in each individual FASTQ file
 after demultiplexing. Internally, we use the `guide-counter` tool to identify the
 position the construct barcodes occur in the library reads and subsequently
-count the number of the occurrences:
+count the number of occurrences. Here we pass the directory containing the
+demultiplexed FASTQ files and the barcode library file with all possible
+(not only the used) barcodes:
 
 ```{r}
-counts = count_bc(temp_dir, barcode_lib) #FIXME: load_dset
+dset = count_bc(temp_dir, barcode_lib)
 ```
 
-Here, `counts` will be a list with two objects, `meta` and `counts`:
+Here, `dset` will be a list with two objects:
 
-* `meta` -- is a data.frame sample information in rows, including total and mapped reads
+* `meta` -- is a data.frame sample and read information in rows
 * `counts` -- is a matrix with constructs in rows and samples in columns
 
 ### Merging with construct info
 
-merge with construct info
+In this step, we add the information of which barcode belongs to which sample
+and construct. We can use multiple barcode annotation files, but it is required
+that every construct barcodes occurs only in one sample and construct:
+
+```{r}
+bcs = # load construct info files here
+reps = calc_representation(dset$counts, bcs, dset$meta)
+```
 
 Quality Control plots
 ---------------------
 
 ### Plotting total barcode counts
 
-static + interactive plot
+The first overview that we want to get is to know how many barcodes are in which
+demultiplexed FASTQ, and whether they match the sample we expect them to be
+from. We can plot this the following way, for total read counts on the left and
+number of barcodes that have 10 or more reads on the right:
+
+```{r}
+plot_reads(reps, dset$meta)
+```
+
+We can also plot this interactively with `plotly`:
+
+```{r}
+library(plotly)
+plot = plot_distr(reps)
+subplot(ggplotly(plot[[1]]), ggplotly(plot[[2]]), nrows=1)
+```
 
 ### Representation of individual barcodes
 
-static + interactive plot
+The next question we want to ask is whether the individual construct barcodes
+are equally distributed within a sample, and where any potential contaminations
+come from. For this, we order the barcodes from least abundant (left) to most
+abundant (right) and plot a continuous line for how many reads are sequenced of
+this barcode on the y axis:
 
+```{r}
+plot_distr(reps)
+```
+
+In a perflectly balanced library we would expect a horizonal line that stays
+constant. This, however, is impossible to reach due to the sampling process that
+obtains reads stochastically. As the above plot is sampled from a near-perfect
+library, this distribution is the best you can expect.
+
+We can also plot this interactively with `plotly`, where we can hover over with
+the mouse to see which barcode is in which position exactly:
+
+```{r}
+library(plotly)
+ggplotly(plot_distr(reps), height=800)
+```
+
+<!-- add cor plots here
 ### Correlation of read counts between samples
 
 static plot
 
+```{r}
+```
+-->
