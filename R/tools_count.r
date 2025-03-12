@@ -1,6 +1,15 @@
-# start with demuxed fastq files in temp dir
-# use guide_counter to count barcodes
+#' Count barcodes using guide-counter
+#'
+#' @param tdir  Path to the directory with demultiplexed FASTQ files
+#' @param lib   Path to the barcode library file
+#' @return      A list with the data.frame meta and matrix counts
 count_bc = function(tdir, lib) {
+    res = count_external(tdir, lib)
+    load_dset(res$stats_tsv, res$counts_tsv, res$meta_tsv)
+}
+
+#' @keywords internal
+count_external = function(tdir, lib) {
     lpath = file.path(tdir, "lib.tsv")
     utils::write.table(lib, file=lpath, sep="\t", row.names=FALSE, quote=FALSE)
     fqs = list.files(tdir, pattern="\\.fq.gz", full.names=TRUE)
@@ -18,13 +27,14 @@ count_bc = function(tdir, lib) {
         lapply(readr::read_tsv)
 }
 
-load_dset = function(args) {
-    counts_stats = readr::read_tsv(args$stats_tsv) |> mutate(sample_id = sub("\\.R1$", "", label))
-    counts_df = readr::read_tsv(args$counts_tsv)
+#' @keywords internal
+load_dset = function(stats_tsv, counts_tsv, meta_tsv) {
+    counts_stats = readr::read_tsv(stats_tsv) |> mutate(sample_id = sub("\\.R1$", "", label))
+    counts_df = readr::read_tsv(counts_tsv)
     counts = data.matrix(counts_df[-(1:2)])
     rownames(counts) = counts_df$guide
     colnames(counts) = sub("\\.R1$", "", colnames(counts))
-    meta = readr::read_tsv(args$meta_tsv) |>
+    meta = readr::read_tsv(meta_tsv) |>
         left_join(counts_stats |> select(sample_id, total_reads, mapped_reads)) |>
         mutate(patient = factor(patient),
                smp = paste(ifelse(nchar(origin)>8, stringr::word(origin, 1), origin), rep, sep="-"),
