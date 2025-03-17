@@ -1,15 +1,22 @@
 #' Tile cDNA into peptide sequences
 #'
-#' @param df         A data.frame with variants to be tiled
+#' @param subs       A GRanges object of context-subset protein-coding variants
 #' @param tile_size  Oligo tiling size
 #' @param tile_ov    Oligo tiling overlap
 #'
 #' @importFrom dplyr mutate filter select group_by ungroup rowwise n
+#' @importFrom S4Vectors mcols
 #' @export
-pep_tile = function(df, tile_size=93, tile_ov=45) {
-    req = c("var_id", "mut_id", "gene_name", "gene_id", "tx_id", "cDNA")
-    if (!all(req %in% colnames(df)))
+pep_tile = function(subs, tile_size=93, tile_ov=45) {
+    req = c("var_id", "mut_id", "gene_name", "GENEID", "tx_name", "ref_nuc", "alt_nuc")
+    if (!all(req %in% colnames(mcols(subs))))
         stop("Required column(s) not found: ", paste(setdiff(req, colnames(df)), collapse=", "))
+
+    df = as.data.frame(subs) %>%
+        select(var_id, mut_id, gene_name, gene_id=GENEID, tx_id=tx_name,
+               ref=ref_nuc, alt=alt_nuc) %>%
+        tidyr::pivot_longer(c(ref, alt), names_to="type", values_to="cDNA") %>%
+        mutate(pep_id = ifelse(type == "alt", mut_id, sub("([0-9]+)[a-zA-Z*]+$", "\\1", mut_id)))
 
     # tile peptides to have max `tile_size` nt length
     tile_cDNA = function(p) {

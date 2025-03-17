@@ -59,6 +59,14 @@ rna_tpm_file = "tpm_file.tsv"
 fusion_vcf_file = "my_fusions.vcf.gz"
 ```
 
+```{r echo=FALSE}
+# set up all the actually required files in the background
+tdir = tempdir()
+variant_vcf_file = file.path(tdir, variant_vcf_file)
+vars = sim_variants()
+VariantAnnotation::writeVcf(vars, variant_vcf_file)
+```
+
 Prerequisites
 -------------
 
@@ -79,7 +87,7 @@ objects from the `BSgenome` and `AnnotationHub` Bioconductor packages, respectiv
 ```{r}
 ens106 = AnnotationHub::AnnotationHub()[["AH100643"]]
 asm = BSgenome.Hsapiens.NCBI.GRCh38::BSgenome.Hsapiens.NCBI.GRCh38
-rna_counts = readr::read_tsv(rna_counts_file)
+# rna_counts = readr::read_tsv(rna_counts_file)
 ```
 
 A caveat here is that the chromosome prefixes need to be consistent between the
@@ -110,7 +118,7 @@ interested in. These files are usually called:
 
 We can combine and subset them the following way:
 
-```{r}
+```{r eval=FALSE}
 rna_counts = readr::read_tsv(rna_counts_file)
 rna_tpm = readr::read_tsv(rna_tpm_file)
 
@@ -127,9 +135,17 @@ SNPs and small indels
 
 ### Reading and filtering mutations
 
-```{r}
+```{r eval=FALSE}
 vr1 = readVcfAsVRanges(variant_vcf_file) |>
     filter_variants(min_cov=2, min_af=0.05, pass=TRUE)
+```
+```{r echo=FALSE}
+# pass does not work with example data
+vr1 = readVcfAsVRanges(variant_vcf_file)
+genome(vr1) = "GRCh38" # save/load error
+vr1$AF = vars$AF # does not roundtrip via saved VCF
+vr1 = filter_variants(vr1, min_cov=2, min_af=0.05)
+fus = DataFrame() # we don't have simulated fusions yet
 ```
 
 Here, we are using the following filters:
@@ -145,7 +161,7 @@ __ SHOW TABLE HERE __
 ```{r}
 ann = annotate_coding(vr1, ens106, asm)
 subs = ann |>
-    filter_expressed(rna_sample, min_reads=1, min_tpm=0) |>
+#    filter_expressed(rna_sample, min_reads=1, min_tpm=0) |>
     subset_context(15)
 ```
 
@@ -173,7 +189,7 @@ Fusion genes from RNA-seq
 
 ### Annotating fusion genes
 
-```{r}
+```{r eval=FALSE}
 vr2 = readVcfAsVRanges(fusion_vcf_file) |>
     filter_fusions(min_reads=2, min_split_reads=1, min_tools=1)
 
@@ -190,7 +206,7 @@ __ SHOW TABLE HERE __
 
 ### Subsetting expressed fusion genes
 
-```{r}
+```{r eval=FALSE}
 fus = annotate_fusions(vr2, ens106, asm) |>
     filter_expressed(rna_sample, min_reads=1, min_tpm=0) |>
     subset_context(15)
@@ -211,7 +227,7 @@ Generating the Minigene Library
 ### Tiling cDNAs of interest into smaller peptides
 
 ```{r}
-tiled = pep_tile(subs, fus, unique=TRUE) |>
+tiled = pep_tile(subs) |>
     remove_cutsite(BbsI="GAAGAC")
 ```
 
@@ -236,4 +252,4 @@ writexl::write_xlsx(report, "report_file.xlsx")
 ```
 
 This `.xlsx` file will contain the different tables as sheets. We will use it 
-as an annotation file for the quality control and screen steps.
+as an annotation file in the quality control and screen steps.

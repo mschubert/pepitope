@@ -1,6 +1,7 @@
 #' Simulate mutations and return them as VRanges object
 #'
 #' @importFrom dplyr transmute
+#' @importFrom GenomeInfoDb keepStandardChromosomes
 #' @keywords internal
 sim_variants = function() {
     # start from the "pan-can hotspots", then add some specific test cases
