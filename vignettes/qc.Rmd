@@ -28,9 +28,6 @@ knitr::opts_chunk$set(
 suppressPackageStartupMessages(library(pepitope))
 ```
 
-Prerequisites
--------------
-
 This guide shows how to perform quality control on a library using the barcoded
 constructs from Variant Calling and a sample sheet that contains a second,
 sample-level barcode.
@@ -44,7 +41,10 @@ cells, or cells after co-culture. The goal of this step is to confirm that all
 constructs are present in the approriate proportions. We provide functions to
 process and analyze the sequencing data.
 
-For this step, we will work with a single FASTQ file that can contain multiple
+Prerequisites
+-------------
+
+For this workflow, we need with a single FASTQ file that can contain multiple
 samples:
 
 ```{r}

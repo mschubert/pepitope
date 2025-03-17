@@ -1,9 +1,8 @@
-#' Simulate mutations and write them into a VCF file
+#' Simulate mutations and return them as VRanges object
 #'
-#' @param fname File name of the VCF to save
 #' @importFrom dplyr transmute
 #' @keywords internal
-sim_vcf = function(fname) {
+sim_variants = function() {
     # start from the "pan-can hotspots", then add some specific test cases
     ens106 = AnnotationHub::AnnotationHub()[["AH100643"]]
     asm = BSgenome.Hsapiens.NCBI.GRCh38::BSgenome.Hsapiens.NCBI.GRCh38
@@ -66,14 +65,29 @@ sim_vcf = function(fname) {
     alt_nuc[vars$strand == "-"] = Biostrings::reverseComplement(alt_nuc[vars$strand == "-"])
 
     # convert to VRanges that pepitope can handle
-    vr = VariantAnnotation::VRanges(sampleNames = "tumor",
-                                    seqnames = vars$seqnames,
+    fmat = matrix(TRUE, ncol=1, nrow=nrow(vars), dimnames=list(NULL, "tumor"))
+    vr = VariantAnnotation::VRanges(seqnames = vars$seqnames,
                                     ranges = IRanges(vars$start, vars$end),
                                     ref = vars$ref_nuc,
                                     alt = alt_nuc,
-                                    n_pts = vars$n_pts)
+                                    n_pts = vars$n_pts,
+                                    sampleNames = "tumor",
+                                    refDepth = 90,
+                                    altDepth = 10,
+                                    softFilterMatrix = fmat)
+    vr$AF = altDepth(vr) / (refDepth(vr) + altDepth(vr))
+    seqlevels(vr) = seqlevels(seqinfo(ens106))
+    seqinfo(vr) = seqinfo(ens106)
+    seqlevelsStyle(vr) = "UCSC"
+    vr = keepStandardChromosomes(vr, pruning.mode="coarse")
+    vr
+}
 
-    VariantAnnotation::writeVcf(vr, fname)
+#' Simulate gene fusions and return them as VRanges object
+#'
+#' @importFrom dplyr transmute
+#' @keywords internal
+sim_fusions = function() {
 }
 
 #' Simulate sequencing data and write them to a FASTQ file
