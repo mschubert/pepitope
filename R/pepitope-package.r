@@ -11,6 +11,6 @@
 #' @docType package
 "_PACKAGE"
 
-#' Re-export from VariantAnnotation package
+#' @importFrom VariantAnnotation readVcfAsVRanges
 #' @export
-readVcfAsVRanges = VariantAnnotation::readVcfAsVRanges
+VariantAnnotation::readVcfAsVRanges
