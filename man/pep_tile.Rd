@@ -4,10 +4,10 @@
 \alias{pep_tile}
 \title{Tile cDNA into peptide sequences}
 \usage{
-pep_tile(df, tile_size = 93, tile_ov = 45)
+pep_tile(subs, tile_size = 93, tile_ov = 45)
 }
 \arguments{
-\item{df}{A data.frame with variants to be tiled}
+\item{subs}{A GRanges object of context-subset protein-coding variants}
 
 \item{tile_size}{Oligo tiling size}
 

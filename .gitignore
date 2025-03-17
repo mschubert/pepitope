@@ -4,6 +4,7 @@ docs
 inst/doc
 vignettes/*.R
 vignettes/*.md
+vignettes/*.html
 vignettes/.build.timestamp
 src/*.o
 src/*.so

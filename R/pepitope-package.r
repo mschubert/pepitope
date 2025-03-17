@@ -9,6 +9,8 @@
 #'
 #' @name pepitope
 #' @docType package
-#' @importFrom VariantAnnotation readVcfAsVRanges
-#' @export readVcfAsVRanges
 "_PACKAGE"
+
+#' Re-export from VariantAnnotation package
+#' @export
+readVcfAsVRanges = VariantAnnotation::readVcfAsVRanges

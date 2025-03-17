@@ -2,20 +2,18 @@
 % Please edit documentation in R/remove_cutsite.r
 \name{remove_cutsite}
 \alias{remove_cutsite}
-\title{Remove a Restriction Enzyme cut site but keep AA}
+\title{Remove a Restriction Enzyme cut site but keep AA in a tiled peptide data.frame}
 \usage{
-remove_cutsite(nuc, site, seed = NULL)
+remove_cutsite(pep, ...)
 }
 \arguments{
-\item{nuc}{cDNA nucleotide string}
+\item{pep}{A data.frame of tiled peptides}
 
-\item{site}{Recognition site to be replaced (fwd+rev comp)}
-
-\item{seed}{Set random seed to select same changes on multiple runs}
+\item{...}{Named argumennts of cut sites, e.g. `BbsI="GAAGAC"`}
 }
 \value{
-cDNA with minimal changes to no longer contain the cut site
+A data.frame with replace nucleotides and number of replacements
 }
 \description{
-Remove a Restriction Enzyme cut site but keep AA
+Remove a Restriction Enzyme cut site but keep AA in a tiled peptide data.frame
 }

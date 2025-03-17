@@ -2,13 +2,15 @@
 #'
 #' @importFrom dplyr transmute
 #' @importFrom GenomeInfoDb keepStandardChromosomes
-#' @keywords internal
+#' @importFrom GenomicFeatures proteinToGenome
+#' @export
+##' @keywords internal
 sim_variants = function() {
     # start from the "pan-can hotspots", then add some specific test cases
     ens106 = AnnotationHub::AnnotationHub()[["AH100643"]]
     asm = BSgenome.Hsapiens.NCBI.GRCh38::BSgenome.Hsapiens.NCBI.GRCh38
 
-    hotspots = readr::read_tsv("hotspots.txt") |>
+    hotspots = readr::read_tsv("/data/groups/wg-schubert/schubert/pepitope/hotspots.txt") |>
         transmute(gene_name = Gene,
                   residue = sub("[0-9]+$", "", Residue),
                   position = `Amino Acid Position`,

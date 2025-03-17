@@ -8,7 +8,7 @@
 #' @importFrom BiocGenerics width strand strand<-
 #' @importFrom S4Vectors mcols mcols<-
 #' @importFrom GenomicFeatures transcripts threeUTRsByTranscript cdsBy
-#'      extractTranscriptSeqs
+#'      extractTranscriptSeqs genes
 #' @importFrom VariantAnnotation sampleNames ref alt refDepth altDepth
 #' @importFrom Biostrings subseq nchar reverse translate replaceAt DNAStringSet
 #'      xscat vcountPattern

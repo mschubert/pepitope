@@ -6,6 +6,7 @@
 #' @return      A DataFrame objects with fusions
 #'
 #' @importFrom GenomicFeatures transcripts cdsBy
+#' @importFrom ensembldb genomeToTranscript transcriptToCds
 #' @export
 annotate_fusions = function(vr, txdb, asm) {
     if (length(vr) == 0)
