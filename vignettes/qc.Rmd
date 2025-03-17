@@ -57,7 +57,7 @@ Sample demultiplexing
 ### Creating a sample sheet
 
 ```{r}
-samples = 
+samples = ""
 ```
 
 __ SHOW TABLE HERE __
@@ -79,7 +79,7 @@ following possible fields, preceded by the number of nucleotides in the read. A
 In this example, we are using a 7-nucleotide barcode for the samples and keep
 the rest of the read:
 
-```{r}
+```{r eval=F}
 temp_dir = demux_fq(fastq, samples, read_structures="7B+T")
 ```
 
@@ -104,7 +104,7 @@ count the number of occurrences. Here we pass the directory containing the
 demultiplexed FASTQ files and the barcode library file with all possible
 (not only the used) barcodes:
 
-```{r}
+```{r eval=F}
 dset = count_bc(temp_dir, barcode_lib)
 ```
 
@@ -119,8 +119,8 @@ In this step, we add the information of which barcode belongs to which sample
 and construct. We can use multiple barcode annotation files, but it is required
 that every construct barcodes occurs only in one sample and construct:
 
-```{r}
-bcs = # load construct info files here
+```{r eval=F}
+bcs = "" # load construct info files here
 reps = calc_representation(dset$counts, bcs, dset$meta)
 ```
 
@@ -134,13 +134,13 @@ demultiplexed FASTQ, and whether they match the sample we expect them to be
 from. We can plot this the following way, for total read counts on the left and
 number of barcodes that have 10 or more reads on the right:
 
-```{r}
+```{r eval=F}
 plot_reads(reps, dset$meta)
 ```
 
 We can also plot this interactively with `plotly`:
 
-```{r}
+```{r eval=F}
 library(plotly)
 plot = plot_distr(reps)
 subplot(ggplotly(plot[[1]]), ggplotly(plot[[2]]), nrows=1)
@@ -154,7 +154,7 @@ come from. For this, we order the barcodes from least abundant (left) to most
 abundant (right) and plot a continuous line for how many reads are sequenced of
 this barcode on the y axis:
 
-```{r}
+```{r eval=F}
 plot_distr(reps)
 ```
 
@@ -166,7 +166,7 @@ library, this distribution is the best you can expect.
 We can also plot this interactively with `plotly`, where we can hover over with
 the mouse to see which barcode is in which position exactly:
 
-```{r}
+```{r eval=F}
 library(plotly)
 ggplotly(plot_distr(reps), height=800)
 ```
