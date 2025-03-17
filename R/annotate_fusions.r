@@ -6,7 +6,6 @@
 #' @return      A DataFrame objects with fusions
 #'
 #' @importFrom GenomicFeatures transcripts cdsBy
-#' @importFrom ensembldb genomeToTranscript transcriptToCds
 #' @export
 annotate_fusions = function(vr, txdb, asm) {
     if (length(vr) == 0)
@@ -117,6 +116,7 @@ cds_by_break = function(gr, txdb, cds, type="left") {
 #' @return      A DataFrame with sequence information
 #'
 #' @importFrom IRanges start
+#' @importFrom ensembldb genomeToTranscript transcriptToCds
 #' @keywords internal
 add_seq_info = function(gr, cds_break, asm, txdb, tx) {
     seqs = filter_proper_orf(extractTranscriptSeqs(asm, cds_break))

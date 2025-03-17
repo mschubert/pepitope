@@ -2,10 +2,12 @@
 # solves: https://github.com/Bioconductor/VariantAnnotation/pull/74
 # solves: https://github.com/Bioconductor/VariantAnnotation/issues/86
 
-#' @importFrom GenomicFeatures mapToTranscripts
+#' @importFrom GenomicFeatures mapToTranscripts transcriptsBy
+#' @importFrom GenomeInfoDb seqlevels
 #' @importFrom Biostrings AAStringSet DNAStringSetList GENETIC_CODE
 #' @importFrom XVector subseq subseq<-
 #' @importFrom S4Vectors %in% DataFrame elementNROWS
+#' @importFrom IRanges IRanges IntegerList
 #' @importFrom MatrixGenerics rowRanges
 #' @importFrom methods callGeneric as is
 setGeneric("predictCoding",

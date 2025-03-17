@@ -1,10 +1,15 @@
+#' Calculate differential abundance of construct barcodes
+#'
+#' @param eset  A DESeq2 object
+#' @param cfg  outdated
 #' @importFrom stats setNames
+#' @export
 calc_de = function(eset, cfg) {
     if (!is.null(cfg$patient))
         eset = eset[,eset$patient %in% cfg$patient]
     eset$origin = factor(make.names(sub("B cells", "Bcells", eset$origin)))
     eset$rep = factor(eset$rep)
-    design(eset) = ~ rep + origin
+    DESeq2::design(eset) = ~ rep + origin
     mod = DESeq2::estimateSizeFactors(eset) |> DESeq2::DESeq()
 
     get_result = function(comp) {
@@ -20,6 +25,12 @@ calc_de = function(eset, cfg) {
         setNames(sapply(cfg$comparisons, paste, collapse=" vs "))
 }
 
+#' Clean up a differential abundance result
+#'
+#' @param res  A DESeq2 results object
+#' @param sample  The sample name
+#' @param cap_fc  An absolute limit of the log2 fold change
+#' @return  A cleaned results object
 make_clean = function(res, sample, cap_fc=3) {
     res |>
         filter(bc_type %in% c(sub("+TAA", "", sample, fixed=TRUE), "shared", "TAA")) |>
