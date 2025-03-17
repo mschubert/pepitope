@@ -1,3 +1,25 @@
+#' Remove a Restriction Enzyme cut site but keep AA in a tiled peptide data.frame
+#'
+#' @param pep   A data.frame of tiled peptides
+#' @param ...   Named argumennts of cut sites, e.g. `BbsI="GAAGAC"`
+#' @return      A data.frame with replace nucleotides and number of replacements
+#'
+#' @export
+remove_cutsite = function(pep, ...) {
+    req = c("pep_id", "tiled")
+    if (!all(req %in% colnames(pep)))
+        stop("Required column(s) not found: ", paste(setdiff(req, colnames(pep)), collapse=", "))
+
+    args = list(...)
+    if (! length(args) == 1 && names(args) == "BbsI" && args[[1]] == "GAAGAC")
+        stop("for now only BbsI implemented")
+
+    pep$BbsI_replaced = vcountPattern("GAAGAC", pep$tiled) + vcountPattern("GTCTTC", pep$tiled)
+    pep$tiled = sapply(pep$tiled, remove_cutsite_nuc, site="GAAGAC", seed=178529, USE.NAMES=FALSE)
+#    stopifnot(pep$peptide == as.character(translate(DNAStringSet(pep$tiled), no.init.codon=TRUE)))
+    pep
+}
+
 #' Remove a Restriction Enzyme cut site but keep AA
 #'
 #' @param nuc   cDNA nucleotide string
@@ -8,8 +30,8 @@
 #' @importFrom dplyr rowwise
 #' @importFrom Biostrings subseq getGeneticCode DNAString translate replaceAt
 #'      DNAStringSet reverseComplement vmatchPattern vcountPattern
-#' @export
-remove_cutsite = function(nuc, site, seed=NULL) {
+#' @keywords internal
+remove_cutsite_nuc = function(nuc, site, seed=NULL) {
     set.seed(seed)
     revtrans = function(aa) {
         aa_split = strsplit(as.character(aa), "+")[[1]]
