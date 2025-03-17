@@ -1,7 +1,7 @@
 .PHONY: all
 all: doc vignettes test
 
-R = Rscript --no-save --no-restore -e
+R = R --no-save --no-restore -e
 PKGVER = $(shell grep Version: < DESCRIPTION | sed "s/Version: //")
 
 .PHONY: test
@@ -32,9 +32,10 @@ doc:
 .PHONY: package
 package: rcpp doc vignettes
 	R CMD build .
-	R CMD check --as-cran clustermq_$(PKGVER).tar.gz
+	R CMD check --as-cran pepitope_$(PKGVER).tar.gz
 
 .PHONY: deploy
+deploy:
 	$(R) "pkgdown::deploy_to_branch()"
 
 .PHONY: clean
