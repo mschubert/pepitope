@@ -101,42 +101,6 @@ core facility or sequencing provider.</p>
 <span></span>
 <span><span class="co"># Combined fusion VCF file, e.g. from 'rnafusion' nf-core pipeline</span></span>
 <span><span class="va">fusion_vcf_file</span> <span class="op">=</span> <span class="st">"my_fusions.vcf.gz"</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; loading from cache</span></span>
-<span><span class="co">#&gt; require("ensembldb")</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">100</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">9</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Column specification</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────</span></span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Delimiter:</span> "\t"</span></span>
-<span><span class="co">#&gt; <span style="color: #BB0000;">chr</span> (7): Gene, Residue, Amino Acid Position, Genomic Position, Type, Variant...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">dbl</span> (1): Samples</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">num</span> (1): Q-value</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use `spec()` to retrieve the full column specification for this data.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
-<span><span class="co">#&gt; Warning in valid.GenomicRanges.seqinfo(x, suggest.trim = TRUE): GRanges object contains 1 out-of-bound range located on sequence</span></span>
-<span><span class="co">#&gt;   LRG_432. Note that ranges located on a sequence whose length is unknown</span></span>
-<span><span class="co">#&gt;   (NA) or on a circular sequence are not considered out-of-bound (use</span></span>
-<span><span class="co">#&gt;   seqlengths() and isCircular() to get the lengths and circularity flags</span></span>
-<span><span class="co">#&gt;   of the underlying sequences). You can use trim() to trim these ranges.</span></span>
-<span><span class="co">#&gt;   See ?`trim,GenomicRanges-method` for more information.</span></span>
-<span><span class="co">#&gt; Warning in valid.GenomicRanges.seqinfo(x, suggest.trim = TRUE): GRanges object contains 1 out-of-bound range located on sequence</span></span>
-<span><span class="co">#&gt;   LRG_432. Note that ranges located on a sequence whose length is unknown</span></span>
-<span><span class="co">#&gt;   (NA) or on a circular sequence are not considered out-of-bound (use</span></span>
-<span><span class="co">#&gt;   seqlengths() and isCircular() to get the lengths and circularity flags</span></span>
-<span><span class="co">#&gt;   of the underlying sequences). You can use trim() to trim these ranges.</span></span>
-<span><span class="co">#&gt;   See ?`trim,GenomicRanges-method` for more information.</span></span>
-<span><span class="co">#&gt; Joining with `by = join_by(seqnames, gene_id)`</span></span>
-<span><span class="co">#&gt; Joining with `by = join_by(tx_id)`</span></span>
-<span><span class="co">#&gt; Joining with `by = join_by(gene_name)`</span></span>
-<span><span class="co">#&gt; Warning: There were 2 warnings in `dplyr::filter()`.</span></span>
-<span><span class="co">#&gt; The first warning was:</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `residue == substr(protein_sequence, position, position)`.</span></span>
-<span><span class="co">#&gt; Caused by warning in `substr()`:</span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> NAs introduced by coercion</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning.</span></span>
-<span><span class="co">#&gt; Fetching CDS for 93 proteins ... 93 found</span></span>
-<span><span class="co">#&gt; Checking CDS and protein sequence lengths ... 93/93 OK</span></span>
-<span><span class="co">#&gt; Warning in (function (seqlevels, genome, new_style) : cannot switch some</span></span>
-<span><span class="co">#&gt; GRCh38's seqlevels from NCBI to UCSC style</span></span></code></pre>
 <div class="section level2">
 <h2 id="prerequisites">Prerequisites<a class="anchor" aria-label="anchor" href="#prerequisites"></a>
 </h2>
@@ -156,7 +120,7 @@ release.</p>
 reference genome and <code>Ensembl 106</code> is the correct version of
 gene annotations. We can get both objects from the <code>BSgenome</code>
 and <code>AnnotationHub</code> Bioconductor packages, respectively.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ens106</span> <span class="op">=</span> <span class="fu">AnnotationHub</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/AnnotationHub/man/AnnotationHub-class.html" class="external-link">AnnotationHub</a></span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="st">"AH100643"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">#&gt; loading from cache</span></span>
 <span><span class="va">asm</span> <span class="op">=</span> <span class="fu">BSgenome.Hsapiens.NCBI.GRCh38</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/BSgenome.Hsapiens.NCBI.GRCh38/man/package.html" class="external-link">BSgenome.Hsapiens.NCBI.GRCh38</a></span></span>
@@ -167,7 +131,7 @@ There are two “styles”, either UCSC (includes “chr” prefix) or
 NCBI/Ensembl (without “chr” prefix).</p>
 <p>The <code>sarek</code> pipline uses UCSC prefixes on the GRCh38
 genome, so we need to switch the genome and gene annotation styles:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">seqlevelsStyle</span><span class="op">(</span><span class="va">ens106</span><span class="op">)</span> <span class="op">=</span> <span class="st">"UCSC"</span></span>
 <span><span class="fu">seqlevelsStyle</span><span class="op">(</span><span class="va">asm</span><span class="op">)</span> <span class="op">=</span> <span class="st">"UCSC"</span></span>
 <span><span class="va">asm</span><span class="op">@</span><span class="va">seqinfo</span><span class="op">@</span><span class="va">genome</span><span class="op">[</span><span class="op">]</span> <span class="op">=</span> <span class="st">"GRCh38"</span></span></code></pre></div>
@@ -187,7 +151,7 @@ called:</p>
 <li><code>salmon.merged.gene_tpm.tsv</code></li>
 </ul>
 <p>We can combine and subset them the following way:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rna_counts</span> <span class="op">=</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_tsv</a></span><span class="op">(</span><span class="va">rna_counts_file</span><span class="op">)</span></span>
 <span><span class="va">rna_tpm</span> <span class="op">=</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_tsv</a></span><span class="op">(</span><span class="va">rna_tpm_file</span><span class="op">)</span></span>
 <span></span>
@@ -204,7 +168,7 @@ called:</p>
 <div class="section level3">
 <h3 id="reading-and-filtering-mutations">Reading and filtering mutations<a class="anchor" aria-label="anchor" href="#reading-and-filtering-mutations"></a>
 </h3>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vr1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/VariantAnnotation/man/VRanges-class.html" class="external-link">readVcfAsVRanges</a></span><span class="op">(</span><span class="va">variant_vcf_file</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="../reference/filter_variants.html">filter_variants</a></span><span class="op">(</span>min_cov<span class="op">=</span><span class="fl">2</span>, min_af<span class="op">=</span><span class="fl">0.05</span>, pass<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>Here, we are using the following filters:</p>
@@ -224,100 +188,8 @@ filters</li>
 <div class="section level3">
 <h3 id="annotating-and-subsetting-expressed-variants">Annotating and subsetting expressed variants<a class="anchor" aria-label="anchor" href="#annotating-and-subsetting-expressed-variants"></a>
 </h3>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ann</span> <span class="op">=</span> <span class="fu"><a href="../reference/annotate_coding.html">annotate_coding</a></span><span class="op">(</span><span class="va">vr1</span>, <span class="va">ens106</span>, <span class="va">asm</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in .formatSeqnameByStyleFromQuery(x, sn, ifNotFound): More than 5</span></span>
-<span><span class="co">#&gt; seqnames with seqlevels style of the database (Ensembl) could not be mapped to</span></span>
-<span><span class="co">#&gt; the seqlevels style: UCSC!) Returning the orginal seqnames for these.</span></span>
-<span><span class="co">#&gt; Warning in .formatSeqnameByStyleFromQuery(x, sn, ifNotFound): More than 5</span></span>
-<span><span class="co">#&gt; seqnames with seqlevels style of the database (Ensembl) could not be mapped to</span></span>
-<span><span class="co">#&gt; the seqlevels style: UCSC!) Returning the orginal seqnames for these.</span></span>
-<span><span class="co">#&gt; Warning in valid.GenomicRanges.seqinfo(x, suggest.trim = TRUE): GRanges object contains 8 out-of-bound ranges located on sequence</span></span>
-<span><span class="co">#&gt;   LRG_432. Note that ranges located on a sequence whose length is unknown</span></span>
-<span><span class="co">#&gt;   (NA) or on a circular sequence are not considered out-of-bound (use</span></span>
-<span><span class="co">#&gt;   seqlengths() and isCircular() to get the lengths and circularity flags</span></span>
-<span><span class="co">#&gt;   of the underlying sequences). You can use trim() to trim these ranges.</span></span>
-<span><span class="co">#&gt;   See ?`trim,GenomicRanges-method` for more information.</span></span>
-<span><span class="co">#&gt; Warning in .formatSeqnameByStyleFromQuery(x, sn, ifNotFound): More than 5</span></span>
-<span><span class="co">#&gt; seqnames with seqlevels style of the database (Ensembl) could not be mapped to</span></span>
-<span><span class="co">#&gt; the seqlevels style: UCSC!) Returning the orginal seqnames for these.</span></span>
-<span><span class="co">#&gt; Warning in valid.GenomicRanges.seqinfo(x, suggest.trim = TRUE): GRanges object contains 1 out-of-bound range located on sequence</span></span>
-<span><span class="co">#&gt;   LRG_432. Note that ranges located on a sequence whose length is unknown</span></span>
-<span><span class="co">#&gt;   (NA) or on a circular sequence are not considered out-of-bound (use</span></span>
-<span><span class="co">#&gt;   seqlengths() and isCircular() to get the lengths and circularity flags</span></span>
-<span><span class="co">#&gt;   of the underlying sequences). You can use trim() to trim these ranges.</span></span>
-<span><span class="co">#&gt;   See ?`trim,GenomicRanges-method` for more information.</span></span>
-<span><span class="co">#&gt; Warning in valid.GenomicRanges.seqinfo(x, suggest.trim = TRUE): GRanges object contains 8 out-of-bound ranges located on sequence</span></span>
-<span><span class="co">#&gt;   LRG_432. Note that ranges located on a sequence whose length is unknown</span></span>
-<span><span class="co">#&gt;   (NA) or on a circular sequence are not considered out-of-bound (use</span></span>
-<span><span class="co">#&gt;   seqlengths() and isCircular() to get the lengths and circularity flags</span></span>
-<span><span class="co">#&gt;   of the underlying sequences). You can use trim() to trim these ranges.</span></span>
-<span><span class="co">#&gt;   See ?`trim,GenomicRanges-method` for more information.</span></span>
-<span><span class="co">#&gt; Warning in valid.GenomicRanges.seqinfo(x, suggest.trim = TRUE): GRanges object contains 8 out-of-bound ranges located on sequence</span></span>
-<span><span class="co">#&gt;   LRG_432. Note that ranges located on a sequence whose length is unknown</span></span>
-<span><span class="co">#&gt;   (NA) or on a circular sequence are not considered out-of-bound (use</span></span>
-<span><span class="co">#&gt;   seqlengths() and isCircular() to get the lengths and circularity flags</span></span>
-<span><span class="co">#&gt;   of the underlying sequences). You can use trim() to trim these ranges.</span></span>
-<span><span class="co">#&gt;   See ?`trim,GenomicRanges-method` for more information.</span></span>
-<span><span class="co">#&gt; Warning in valid.GenomicRanges.seqinfo(x, suggest.trim = TRUE): GRanges object contains 72416 out-of-bound ranges located on sequences</span></span>
-<span><span class="co">#&gt;   ENST00000644650, ENST00000647434, ENST00000349496, ENST00000396183,</span></span>
-<span><span class="co">#&gt;   ENST00000396185, ENST00000405570, ENST00000431914, ENST00000433400,</span></span>
-<span><span class="co">#&gt;   ENST00000441708, ENST00000450969, ENST00000642248, ENST00000642315,</span></span>
-<span><span class="co">#&gt;   ENST00000642426, ENST00000642886, ENST00000642992, ENST00000643031,</span></span>
-<span><span class="co">#&gt;   ENST00000643297, ENST00000643541, ENST00000643977, ENST00000643992,</span></span>
-<span><span class="co">#&gt;   ENST00000644138, ENST00000644867, ENST00000644873, ENST00000645210,</span></span>
-<span><span class="co">#&gt;   ENST00000645276, ENST00000645320, ENST00000645982, ENST00000646074,</span></span>
-<span><span class="co">#&gt;   ENST00000646369, ENST00000646725, ENST00000647390, ENST00000647413,</span></span>
-<span><span class="co">#&gt;   LRG_1108t1, ENST00000275493, ENST00000342916, ENST00000344576,</span></span>
-<span><span class="co">#&gt;   ENST00000420316, ENST00000454757, ENST00000455089, LRG_304t1,</span></span>
-<span><span class="co">#&gt;   ENST00000541774, LRG_724t4, ENST00000415288, ENST00000549061,</span></span>
-<span><span class="co">#&gt;   ENST00000683018, ENST00000683059, ENST00000683164, ENST00000296555,</span></span>
-<span><span class="co">#&gt;   LRG_1141t3, ENST00000573035, ENST00000614986, ENST00000620879,</span></span>
-<span><span class="co">#&gt;   ENST00000621734, ENST00000345146, ENST00000415282, ENST00000415913,</span></span>
-<span><span class="co">#&gt;   ENST00000446179, LRG_610t1, LRG_610t2, LRG_610t3, ENST00000330062,</span></span>
-<span><span class="co">#&gt;   ENST00000540499, LRG_611t1, LRG_611t2, ENST00000256078,</span></span>
-<span><span class="co">#&gt;   ENST00000311936, ENST00000685328, ENST00000688940, ENST00000692768,</span></span>
-<span><span class="co">#&gt;   ENST00000693229, LRG_344t1, LRG_344t2, ENST00000674622,</span></span>
-<span><span class="co">#&gt;   ENST00000371953, ENST00000686459, ENST00000688308, ENST00000348035,</span></span>
-<span><span class="co">#&gt;   ENST00000356142, ENST00000335508, LRG_624t2, ENST00000269305,</span></span>
-<span><span class="co">#&gt;   ENST00000359597, ENST00000413465, ENST00000420246, ENST00000445888,</span></span>
-<span><span class="co">#&gt;   ENST00000455263, ENST00000508793, ENST00000514944, LRG_321t1-1,</span></span>
-<span><span class="co">#&gt;   LRG_321t2-1, LRG_321t3-1, LRG_321t4-2, ENST00000610623,</span></span>
-<span><span class="co">#&gt;   ENST00000618944, ENST00000619186, LRG_321t5-1, LRG_321t6-1,</span></span>
-<span><span class="co">#&gt;   LRG_321t7-1, ENST00000291552, ENST00000380276, ENST00000464750,</span></span>
-<span><span class="co">#&gt;   ENST00000486519, LRG_615t1, and LRG_615t2. Note that ranges located on</span></span>
-<span><span class="co">#&gt;   a sequence whose length is unknown (NA) or on a circular sequence are</span></span>
-<span><span class="co">#&gt;   not considered out-of-bound (use seqlengths() and isCircular() to get</span></span>
-<span><span class="co">#&gt;   the lengths and circularity flags of the underlying sequences). You can</span></span>
-<span><span class="co">#&gt;   use trim() to trim these ranges. See ?`trim,GenomicRanges-method` for</span></span>
-<span><span class="co">#&gt;   more information.</span></span>
-<span><span class="co">#&gt; Warning in .formatSeqnameByStyleFromQuery(x, sn, ifNotFound): More than 5</span></span>
-<span><span class="co">#&gt; seqnames with seqlevels style of the database (Ensembl) could not be mapped to</span></span>
-<span><span class="co">#&gt; the seqlevels style: UCSC!) Returning the orginal seqnames for these.</span></span>
-<span><span class="co">#&gt; Warning in valid.GenomicRanges.seqinfo(x, suggest.trim = TRUE): GRanges object contains 1 out-of-bound range located on sequence</span></span>
-<span><span class="co">#&gt;   LRG_432. Note that ranges located on a sequence whose length is unknown</span></span>
-<span><span class="co">#&gt;   (NA) or on a circular sequence are not considered out-of-bound (use</span></span>
-<span><span class="co">#&gt;   seqlengths() and isCircular() to get the lengths and circularity flags</span></span>
-<span><span class="co">#&gt;   of the underlying sequences). You can use trim() to trim these ranges.</span></span>
-<span><span class="co">#&gt;   See ?`trim,GenomicRanges-method` for more information.</span></span>
-<span><span class="co">#&gt; Warning in .formatSeqnameByStyleFromQuery(x, sn, ifNotFound): More than 5</span></span>
-<span><span class="co">#&gt; seqnames with seqlevels style of the database (Ensembl) could not be mapped to</span></span>
-<span><span class="co">#&gt; the seqlevels style: UCSC!) Returning the orginal seqnames for these.</span></span>
-<span><span class="co">#&gt; Warning in valid.GenomicRanges.seqinfo(x, suggest.trim = TRUE): GRanges object contains 1 out-of-bound range located on sequence</span></span>
-<span><span class="co">#&gt;   LRG_432. Note that ranges located on a sequence whose length is unknown</span></span>
-<span><span class="co">#&gt;   (NA) or on a circular sequence are not considered out-of-bound (use</span></span>
-<span><span class="co">#&gt;   seqlengths() and isCircular() to get the lengths and circularity flags</span></span>
-<span><span class="co">#&gt;   of the underlying sequences). You can use trim() to trim these ranges.</span></span>
-<span><span class="co">#&gt;   See ?`trim,GenomicRanges-method` for more information.</span></span>
-<span><span class="co">#&gt; Warning in .formatSeqnameByStyleFromQuery(x, sn, ifNotFound): More than 5</span></span>
-<span><span class="co">#&gt; seqnames with seqlevels style of the database (Ensembl) could not be mapped to</span></span>
-<span><span class="co">#&gt; the seqlevels style: UCSC!) Returning the orginal seqnames for these.</span></span>
-<span><span class="co">#&gt; Warning in valid.GenomicRanges.seqinfo(x, suggest.trim = TRUE): GRanges object contains 8 out-of-bound ranges located on sequence</span></span>
-<span><span class="co">#&gt;   LRG_432. Note that ranges located on a sequence whose length is unknown</span></span>
-<span><span class="co">#&gt;   (NA) or on a circular sequence are not considered out-of-bound (use</span></span>
-<span><span class="co">#&gt;   seqlengths() and isCircular() to get the lengths and circularity flags</span></span>
-<span><span class="co">#&gt;   of the underlying sequences). You can use trim() to trim these ranges.</span></span>
-<span><span class="co">#&gt;   See ?`trim,GenomicRanges-method` for more information.</span></span>
 <span><span class="va">subs</span> <span class="op">=</span> <span class="va">ann</span> <span class="op">|&gt;</span></span>
 <span><span class="co">#    filter_expressed(rna_sample, min_reads=1, min_tpm=0) |&gt;</span></span>
 <span>    <span class="fu"><a href="../reference/subset_context.html">subset_context</a></span><span class="op">(</span><span class="fl">15</span><span class="op">)</span></span></code></pre></div>
@@ -342,7 +214,7 @@ downstream until a STOP codon is reached. The latter may extend into the
 <div class="section level3">
 <h3 id="phasing-with-germline-variants">Phasing with germline variants<a class="anchor" aria-label="anchor" href="#phasing-with-germline-variants"></a>
 </h3>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># not implemented yet</span></span></code></pre></div>
 </div>
 </div>
@@ -352,7 +224,7 @@ downstream until a STOP codon is reached. The latter may extend into the
 <div class="section level3">
 <h3 id="annotating-fusion-genes">Annotating fusion genes<a class="anchor" aria-label="anchor" href="#annotating-fusion-genes"></a>
 </h3>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vr2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/VariantAnnotation/man/VRanges-class.html" class="external-link">readVcfAsVRanges</a></span><span class="op">(</span><span class="va">fusion_vcf_file</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="../reference/filter_fusions.html">filter_fusions</a></span><span class="op">(</span>min_reads<span class="op">=</span><span class="fl">2</span>, min_split_reads<span class="op">=</span><span class="fl">1</span>, min_tools<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span>
 <span></span>
@@ -374,7 +246,7 @@ least one tool</li>
 <div class="section level3">
 <h3 id="subsetting-expressed-fusion-genes">Subsetting expressed fusion genes<a class="anchor" aria-label="anchor" href="#subsetting-expressed-fusion-genes"></a>
 </h3>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fus</span> <span class="op">=</span> <span class="fu"><a href="../reference/annotate_fusions.html">annotate_fusions</a></span><span class="op">(</span><span class="va">vr2</span>, <span class="va">ens106</span>, <span class="va">asm</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">filter_expressed</span><span class="op">(</span><span class="va">rna_sample</span>, min_reads<span class="op">=</span><span class="fl">1</span>, min_tpm<span class="op">=</span><span class="fl">0</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="../reference/subset_context.html">subset_context</a></span><span class="op">(</span><span class="fl">15</span><span class="op">)</span></span></code></pre></div>
@@ -398,7 +270,7 @@ downstream of the fusion site.</p>
 <div class="section level3">
 <h3 id="tiling-cdnas-of-interest-into-smaller-peptides">Tiling cDNAs of interest into smaller peptides<a class="anchor" aria-label="anchor" href="#tiling-cdnas-of-interest-into-smaller-peptides"></a>
 </h3>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tiled</span> <span class="op">=</span> <span class="fu"><a href="../reference/pep_tile.html">pep_tile</a></span><span class="op">(</span><span class="va">subs</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="../reference/remove_cutsite.html">remove_cutsite</a></span><span class="op">(</span>BbsI<span class="op">=</span><span class="st">"GAAGAC"</span><span class="op">)</span></span></code></pre></div>
 <p>__ SHOW TABLE HERE __</p>
@@ -406,7 +278,7 @@ downstream of the fusion site.</p>
 <div class="section level3">
 <h3 id="adding-barcodes">Adding barcodes<a class="anchor" aria-label="anchor" href="#adding-barcodes"></a>
 </h3>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># this is not yet implemented</span></span></code></pre></div>
 <p>__ SHOW TABLE HERE __</p>
 </div>
@@ -415,7 +287,7 @@ downstream of the fusion site.</p>
 </h3>
 <p>We can then combine our generated tables into a report save it with
 the <code>writexl</code> package:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">report</span> <span class="op">=</span> <span class="fu"><a href="../reference/make_report.html">make_report</a></span><span class="op">(</span><span class="va">ann</span>, <span class="va">subs</span>, <span class="va">fus</span>, <span class="va">tiled</span><span class="op">)</span></span>
 <span><span class="fu">writexl</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/writexl//reference/write_xlsx.html" class="external-link">write_xlsx</a></span><span class="op">(</span><span class="va">report</span>, <span class="st">"report_file.xlsx"</span><span class="op">)</span></span></code></pre></div>
 <p>This <code>.xlsx</code> file will contain the different tables as
