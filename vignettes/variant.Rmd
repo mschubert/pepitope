@@ -178,11 +178,13 @@ STOP codon is reached. The latter may extend into the 3' UTR.
 
 __ SHOW TABLE HERE __
 
+<!--
 ### Phasing with germline variants
 
 ```{r}
 # not implemented yet
 ```
+-->
 
 Fusion genes from RNA-seq
 -------------------------
@@ -233,6 +235,7 @@ tiled = pep_tile(subs) |>
 
 __ SHOW TABLE HERE __
 
+<!--
 ### Adding barcodes
 
 ```{r}
@@ -240,6 +243,7 @@ __ SHOW TABLE HERE __
 ```
 
 __ SHOW TABLE HERE __
+-->
 
 ### Saving a report file
 
