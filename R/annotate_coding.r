@@ -45,7 +45,7 @@ annotate_coding = function(vr, txdb, asm) {
     }
     coding_ranges = cdsBy(txdb)[codv$TXID]
     codv$ref_nuc = extractTranscriptSeqs(asm, coding_ranges)
-    codv$ref_prot = translate(codv$ref_nuc)
+    codv$ref_prot = suppressWarnings(translate(codv$ref_nuc))
     codv = codv[is_proper_orf(codv$ref_prot)]
 
     # get coding sequences with updated variants
@@ -53,7 +53,7 @@ annotate_coding = function(vr, txdb, asm) {
         replaceAt(codv$ref_nuc, as(codv$CDSLOC, "IRangesList"),
                   as(codv$varAllele, "DNAStringSetList"))
     )
-    codv$alt_prot = translate(codv$alt_nuc)
+    codv$alt_prot = suppressWarnings(translate(codv$alt_nuc))
     codv$silent_start = check_silent(codv$REFAA, codv$VARAA)
     codv$silent_end = check_silent(reverse(subseq(codv$REFAA, codv$silent_start+1)),
                                    reverse(subseq(codv$VARAA, codv$silent_start+1)))
