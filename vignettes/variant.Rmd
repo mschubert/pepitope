@@ -59,7 +59,7 @@ rna_tpm_file = "tpm_file.tsv"
 fusion_vcf_file = "my_fusions.vcf.gz"
 ```
 
-```{r echo=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 # set up all the actually required files in the background
 tdir = tempdir()
 variant_vcf_file = file.path(tdir, variant_vcf_file)
@@ -158,7 +158,7 @@ __ SHOW TABLE HERE __
 
 ### Annotating and subsetting expressed variants
 
-```{r warnings=FALSE}
+```{r warning=FALSE}
 ann = annotate_coding(vr1, ens106, asm)
 subs = ann |>
 #    filter_expressed(rna_sample, min_reads=1, min_tpm=0) |>
