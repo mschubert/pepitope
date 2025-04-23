@@ -158,7 +158,7 @@ __ SHOW TABLE HERE __
 
 ### Annotating and subsetting expressed variants
 
-```{r}
+```{r warnings=FALSE}
 ann = annotate_coding(vr1, ens106, asm)
 subs = ann |>
 #    filter_expressed(rna_sample, min_reads=1, min_tpm=0) |>
