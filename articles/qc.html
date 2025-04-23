@@ -29,7 +29,6 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item"><a class="nav-link" href="../index.html"><span class="fa fa-home"></span></a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/variant.html">Variant calling</a></li>
 <li class="active nav-item"><a class="nav-link" href="../articles/qc.html">Quality control</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/screen.html">Co-culture screen</a></li>
@@ -37,7 +36,18 @@
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/mschubert/pepitope"><span class="fa fa-github fa-lg"></span></a></li>
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/mschubert/pepitope/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lightswitch">
+<li><button class="dropdown-item" data-bs-theme-value="light"><span class="fa fa-sun"></span> Light</button></li>
+    <li><button class="dropdown-item" data-bs-theme-value="dark"><span class="fa fa-moon"></span> Dark</button></li>
+    <li><button class="dropdown-item" data-bs-theme-value="auto"><span class="fa fa-adjust"></span> Auto</button></li>
+  </ul>
+</li>
       </ul>
 </div>
 
@@ -80,25 +90,29 @@ transduced cells, or cells after co-culture. The goal of this step is to
 confirm that all constructs are present in the approriate proportions.
 We provide functions to process and analyze the sequencing data.</p>
 <div class="section level2">
-<h2 id="prerequisites">Prerequisites<a class="anchor" aria-label="anchor" href="#prerequisites"></a>
+<h2 id="preparation">Preparation<a class="anchor" aria-label="anchor" href="#preparation"></a>
 </h2>
+<div class="section level3">
+<h3 id="creating-a-sample-sheet">Creating a sample sheet<a class="anchor" aria-label="anchor" href="#creating-a-sample-sheet"></a>
+</h3>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">samples</span> <span class="op">=</span> <span class="st">""</span></span></code></pre></div>
+<p>__ SHOW TABLE HERE __</p>
+</div>
+<div class="section level3">
+<h3 id="sequencing-output">Sequencing output<a class="anchor" aria-label="anchor" href="#sequencing-output"></a>
+</h3>
 <p>For this workflow, we need with a single FASTQ file that can contain
 multiple samples:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fastq</span> <span class="op">=</span> <span class="st">""</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="sample-demultiplexing">Sample demultiplexing<a class="anchor" aria-label="anchor" href="#sample-demultiplexing"></a>
 </h2>
 <div class="section level3">
-<h3 id="creating-a-sample-sheet">Creating a sample sheet<a class="anchor" aria-label="anchor" href="#creating-a-sample-sheet"></a>
-</h3>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">samples</span> <span class="op">=</span> <span class="st">""</span></span></code></pre></div>
-<p>__ SHOW TABLE HERE __</p>
-</div>
-<div class="section level3">
-<h3 id="demultiplexing">Demultiplexing<a class="anchor" aria-label="anchor" href="#demultiplexing"></a>
+<h3 id="feature-syntax">Feature syntax<a class="anchor" aria-label="anchor" href="#feature-syntax"></a>
 </h3>
 <p>This step is using the <code>fqtk</code> toolkit to split the
 multi-sample FASTQ file into individual sample files, separated by their
@@ -117,6 +131,10 @@ sequence</li>
 <code>S</code> – skip these nucleotides and do not include in
 output</li>
 </ul>
+</div>
+<div class="section level3">
+<h3 id="demultiplexing-call">Demultiplexing call<a class="anchor" aria-label="anchor" href="#demultiplexing-call"></a>
+</h3>
 <p>In this example, we are using a 7-nucleotide barcode for the samples
 and keep the rest of the read:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
