@@ -16,6 +16,13 @@ img {
 code {
     border: 0px !important;
 }
+table.dataTable.compact,
+.dataTables_wrapper .dataTables_paginate,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_length {
+    font-size: 0.7em;
+}
 ```
 
 ```{r echo=FALSE, results="hide"}
@@ -67,8 +74,8 @@ vars = sim_variants()
 VariantAnnotation::writeVcf(vars, variant_vcf_file)
 ```
 
-Prerequisites
--------------
+Preparation
+-----------
 
 ### Selecting the right reference genome
 
@@ -87,7 +94,6 @@ objects from the `BSgenome` and `AnnotationHub` Bioconductor packages, respectiv
 ```{r}
 ens106 = AnnotationHub::AnnotationHub()[["AH100643"]]
 asm = BSgenome.Hsapiens.NCBI.GRCh38::BSgenome.Hsapiens.NCBI.GRCh38
-# rna_counts = readr::read_tsv(rna_counts_file)
 ```
 
 A caveat here is that the chromosome prefixes need to be consistent between the
@@ -108,10 +114,10 @@ The correct styles will depend on how your VCF files were generated.
 
 ### Adding RNA expression
 
-The NF-core `rnaseq` workflow will provide two gene expression files, one for
-raw read counts and one for transcripts per million (TPM). These contain all
-samples in a run, so we need to subset them to the current sample we are
-interested in. These files are usually called:
+The [NF-core `rnaseq` workflow](https://nf-co.re/rnaseq/) will provide two gene
+expression files, one for raw read counts and one for transcripts per million (TPM).
+These contain all samples in a run, so we need to subset them to the current sample
+we are interested in. These files are usually called:
 
 * `salmon.merged.gene_counts.tsv`
 * `salmon.merged.gene_tpm.tsv`
@@ -119,16 +125,13 @@ interested in. These files are usually called:
 We can combine and subset them the following way:
 
 ```{r eval=FALSE}
-rna_counts = readr::read_tsv(rna_counts_file)
-rna_tpm = readr::read_tsv(rna_tpm_file)
-
-counts = readr::read_tsv(args$rna_count) |> dplyr::select(gene_id, gene_name, count=SAMPLE)
-tpm = readr::read_tsv(args$rna_tpm) |> dplyr::select(gene_id, gene_name, tpm=SAMPLE)
+counts = readr::read_tsv(rna_counts_file) |>
+    dplyr::select(gene_id, gene_name, count=SAMPLE)
+tpm = readr::read_tsv(rna_tpm_file) |>
+    dplyr::select(gene_id, gene_name, tpm=SAMPLE)
 
 rna_sample = inner_join(counts, tpm)
 ```
-
-__ SHOW TABLE HERE __
 
 SNPs and small indels
 ---------------------
@@ -154,7 +157,11 @@ Here, we are using the following filters:
 * `min_af=0.05` -- a variant needs to occur in at leat 5% of reads
 * `pass=TRUE` -- a variant needs to pass the standard QC filters
 
-__ SHOW TABLE HERE __
+The resulting `vr1` object looks like the following:
+
+```{r echo=FALSE}
+DT::datatable(as.data.frame(vr1) |> dplyr::select(-QUAL, -totalDepth), class="compact stripe hover")
+```
 
 ### Annotating and subsetting expressed variants
 
@@ -176,7 +183,11 @@ An insertion will have the inserted sequence and 15 codons, a deletion only 15 c
 sides. A frameshift will have 15 codons upstream and the entire sequence downstream until a
 STOP codon is reached. The latter may extend into the 3' UTR.
 
-__ SHOW TABLE HERE __
+The `subs` dataframe looks like the following:
+
+```{r echo=FALSE, warning=FALSE}
+DT::datatable(as.data.frame(subs), class="compact stripe hover", options=list(scrollX=TRUE))
+```
 
 <!--
 ### Phasing with germline variants
@@ -191,6 +202,9 @@ Fusion genes from RNA-seq
 
 ### Annotating fusion genes
 
+First we want to read the fusion genes from a combined `vcf` file like the one produced by
+the [`rnafusion` NF-core pipeline](https://nf-co.re/rnafusion/):
+
 ```{r eval=FALSE}
 vr2 = readVcfAsVRanges(fusion_vcf_file) |>
     filter_fusions(min_reads=2, min_split_reads=1, min_tools=1)
@@ -204,9 +218,9 @@ Here, we are using the following filters:
 * `min_split_reads=1` -- the fusion needs to be supported by at least one split read
 * `min_tools=1` -- the fusion needs to be reported by at least one tool
 
-__ SHOW TABLE HERE __
-
 ### Subsetting expressed fusion genes
+
+Next, we subset the peptide context analogous to the SNPs:
 
 ```{r eval=FALSE}
 fus = annotate_fusions(vr2, ens106, asm) |>
@@ -221,6 +235,8 @@ Here, we are using the following filters:
 
 In addition, we set the region of interest to 15 codons up- and downstream of the fusion site.
 
+The `fus` table then looks like the following:
+
 __ SHOW TABLE HERE __
 
 Generating the Minigene Library
@@ -233,7 +249,11 @@ tiled = pep_tile(subs) |>
     remove_cutsite(BbsI="GAAGAC")
 ```
 
-__ SHOW TABLE HERE __
+The `tiled` peptide table looks like the following:
+
+```{r echo=FALSE}
+DT::datatable(tiled, class="compact stripe hover", options=list(scrollX=TRUE))
+```
 
 <!--
 ### Adding barcodes
@@ -245,10 +265,10 @@ __ SHOW TABLE HERE __
 __ SHOW TABLE HERE __
 -->
 
-### Saving a report file
+### Saving the report file
 
 We can then combine our generated tables into a report save it with the
-`writexl` package:
+`writexl` package. We can include all tables listed above:
 
 ```{r eval=FALSE}
 report = make_report(ann, subs, fus, tiled)

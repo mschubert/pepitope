@@ -1,6 +1,6 @@
 Package: pepitope
 Title: Extract the peptide context around mutations in a VCF
-Version: 0.2.917
+Version: 0.2.918
 Authors@R: c(
     person('Michael', 'Schubert', email='mschu.dev@gmail.com',
            role = c('aut', 'cre'),
@@ -31,7 +31,6 @@ Imports:
     ggplot2,
     ggpp,
     gtools,
-    Gviz,
     IRanges,
     MatrixGenerics,
     methods,
@@ -55,6 +54,8 @@ Encoding: UTF-8
 Suggests:
     AnnotationHub,
     BSgenome.Hsapiens.NCBI.GRCh38,
+    DT,
+    Gviz,
     knitr,
     rmarkdown,
     testthat,
