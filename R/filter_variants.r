@@ -8,7 +8,7 @@
 #' @param sample   Only include if in `sampleNames(vr)`
 #' @param chrs     Either "default" or a character vector of chromosome names
 #'
-#' @importFrom VariantAnnotation softFilterMatrix altDepth
+#' @importFrom VariantAnnotation softFilterMatrix altDepth totalDepth
 #' @importFrom Biobase sampleNames
 #' @importFrom GenomicRanges seqnames
 #' @importFrom GenomeInfoDb keepStandardChromosomes
@@ -34,7 +34,9 @@ filter_variants = function(vr, ..., min_cov=2, min_af=0.05, pass=TRUE, sample=NU
     }
 
     if (!is.null(min_af)) {
-        if (inherits(vr$AF, "SimpleNumericList")) {
+        if (is.null(vr$AF)) {
+            vec_af = altDepth(vr) / totalDepth(vr)
+        } else if (inherits(vr$AF, "SimpleNumericList")) {
             if (any(sapply(vr$AF, length)) != 1)
                 stop("'AF' field has multiple variants, convert to long format first")
             vec_af = unlist(vr$AF)
