@@ -1,6 +1,6 @@
 Package: pepitope
 Title: Extract the peptide context around mutations in a VCF
-Version: 0.2.918
+Version: 0.2.919
 Authors@R: c(
     person('Michael', 'Schubert', email='mschu.dev@gmail.com',
            role = c('aut', 'cre'),

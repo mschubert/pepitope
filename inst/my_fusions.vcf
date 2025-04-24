@@ -1,0 +1,19 @@
+##fileformat=VCFv4.2
+##reference=GRCh38
+##ALT=<ID=BND,Description="Breakend">
+##INFO=<ID=GENEA,Number=1,Type=String,Description="Upstream gene">
+##INFO=<ID=GENEB,Number=1,Type=String,Description="Downstream gene">
+##INFO=<ID=CHRA,Number=1,Type=String,Description="Chromosome of the first breakpoint (geneA)">
+##INFO=<ID=POSA,Number=1,Type=Integer,Description="Position of the last base of the upstream exon">
+##INFO=<ID=CHRB,Number=1,Type=String,Description="Chromosome of the second breakpoint (geneB)">
+##INFO=<ID=POSB,Number=1,Type=Integer,Description="Position of the first base of the downstream exon">
+##INFO=<ID=TOOL_HITS,Number=1,Type=Integer,Description="Number of fusion callers that detected the event">
+##INFO=<ID=ORIENTATION,Number=2,Type=String,Description="Strand orientation of geneA,geneB (+ or -)">
+##FORMAT=<ID=DV,Number=1,Type=Integer,Description="Discordant paired-end reads supporting the fusion">
+##FORMAT=<ID=RV,Number=1,Type=Integer,Description="Split reads supporting the fusion">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	SAMPLE
+chr2	42295516	EML4_ALK	N	]chr2:29223342]N	.	PASS	GENEA=EML4;GENEB=ALK;CHRA=chr2;POSA=42295516;CHRB=chr2;POSB=29223342;TOOL_HITS=1;ORIENTATION=+,-	DV:RV	2:1
+chr5	150404767	CD74_ROS1	N	N]chr6:117326224]	.	PASS	GENEA=CD74;GENEB=ROS1;CHRA=chr5;POSA=150404767;CHRB=chr6;POSB=117326224;TOOL_HITS=1;ORIENTATION=-,-	DV:RV	2:1
+chr10	43114736	RET_PTC3	N	]chr10:59906122]N	.	PASS	GENEA=RET;GENEB=CCDC6;CHRA=chr10;POSA=43114736;CHRB=chr10;POSB=59906122;TOOL_HITS=1;ORIENTATION=+,-	DV:RV	2:1
+chr12	11869969	ETV6_NTRK3	N	]chr15:87940623]N	.	PASS	GENEA=ETV6;GENEB=NTRK3;CHRA=chr12;POSA=11869969;CHRB=chr15;POSB=87940623;TOOL_HITS=1;ORIENTATION=+,-	DV:RV	2:1
+chr22	23289621	BCR_ABL1	N	N[chr9:130835447[	.	PASS	GENEA=BCR;GENEB=ABL1;CHRA=chr22;POSA=23289621;CHRB=chr9;POSB=130835447;TOOL_HITS=1;ORIENTATION=+,+	DV:RV	2:1

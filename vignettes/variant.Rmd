@@ -45,33 +45,23 @@ these workflows is [NF-core](https://nf-co.re/).
 It provides the following pipelines for these tasks:
 
 * [`sarek`](https://nf-co.re/sarek/) for variant calling using HaploytypeCaller and Mutect2
-* [`rnaseq`](https://nf-co.re/rnaseq/) for RNA-seq quantification using STAR
+* [`rnaseq`](https://nf-co.re/rnaseq/) for RNA-seq quantification using STAR and Salmon
 * [`rnafusion`](https://nf-co.re/rnafusion/) for RNA fusion quantification using multiple algorithms
 
 Running these will usually require access to high performance computing
 facilities, and you already get the processed files from your core facility
 or sequencing provider.
 
+Here, we are using example files provided with the package:
+
 ```{r}
 library(pepitope)
 
 # SNPs and small indels, e.g. from 'sarek' nf-core pipeline
-variant_vcf_file = "my_variants.vcf.gz"
-
-# RNA counts and TPM file, e.g. from 'rnaseq' nf-core pipeline
-rna_counts_file = "count_file.tsv"
-rna_tpm_file = "tpm_file.tsv"
+variant_vcf_file = system.file("my_variants.vcf", package="pepitope")
 
 # Combined fusion VCF file, e.g. from 'rnafusion' nf-core pipeline
-fusion_vcf_file = "my_fusions.vcf.gz"
-```
-
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-# set up all the actually required files in the background
-tdir = tempdir()
-variant_vcf_file = file.path(tdir, variant_vcf_file)
-vars = sim_variants()
-VariantAnnotation::writeVcf(vars, variant_vcf_file)
+fusion_vcf_file = system.file("my_fusions.vcf", package="pepitope")
 ```
 
 Preparation
@@ -125,9 +115,10 @@ we are interested in. These files are usually called:
 We can combine and subset them the following way:
 
 ```{r eval=FALSE}
-counts = readr::read_tsv(rna_counts_file) |>
+# note that this is not run in this example because we don't have RNA-seq data
+counts = readr::read_tsv("salmon.merged.gene_counts.tsv") |>
     dplyr::select(gene_id, gene_name, count=SAMPLE)
-tpm = readr::read_tsv(rna_tpm_file) |>
+tpm = readr::read_tsv("salmon.merged.gene_tpm.tsv") |>
     dplyr::select(gene_id, gene_name, tpm=SAMPLE)
 
 rna_sample = inner_join(counts, tpm)
@@ -138,17 +129,9 @@ SNPs and small indels
 
 ### Reading and filtering mutations
 
-```{r eval=FALSE}
+```{r}
 vr1 = readVcfAsVRanges(variant_vcf_file) |>
     filter_variants(min_cov=2, min_af=0.05, pass=TRUE)
-```
-```{r echo=FALSE}
-# pass does not work with example data
-vr1 = readVcfAsVRanges(variant_vcf_file)
-genome(vr1) = "GRCh38" # save/load error
-vr1$AF = vars$AF # does not roundtrip via saved VCF
-vr1 = filter_variants(vr1, min_cov=2, min_af=0.05)
-fus = DataFrame() # we don't have simulated fusions yet
 ```
 
 Here, we are using the following filters:
@@ -200,12 +183,12 @@ DT::datatable(as.data.frame(subs), class="compact stripe hover", options=list(sc
 Fusion genes from RNA-seq
 -------------------------
 
-### Annotating fusion genes
+### Reading a fusion VCF
 
 First we want to read the fusion genes from a combined `vcf` file like the one produced by
 the [`rnafusion` NF-core pipeline](https://nf-co.re/rnafusion/):
 
-```{r eval=FALSE}
+```{r}
 vr2 = readVcfAsVRanges(fusion_vcf_file) |>
     filter_fusions(min_reads=2, min_split_reads=1, min_tools=1)
 
@@ -218,26 +201,20 @@ Here, we are using the following filters:
 * `min_split_reads=1` -- the fusion needs to be supported by at least one split read
 * `min_tools=1` -- the fusion needs to be reported by at least one tool
 
-### Subsetting expressed fusion genes
+### Annotating fusion genes
 
 Next, we subset the peptide context analogous to the SNPs:
 
-```{r eval=FALSE}
+```{r}
 fus = annotate_fusions(vr2, ens106, asm) |>
-    filter_expressed(rna_sample, min_reads=1, min_tpm=0) |>
-    subset_context(15)
+    subset_context_fusion(15)
 ```
-
-Here, we are using the following filters:
-
-* `min_reads=1` -- the gene needs to have at least one RNA read
-* `min_tpm=0` -- we do not apply an additional TPM filter
-
-In addition, we set the region of interest to 15 codons up- and downstream of the fusion site.
 
 The `fus` table then looks like the following:
 
-__ SHOW TABLE HERE __
+```{r echo=FALSE}
+DT::datatable(as.data.frame(fus), class="compact stripe hover", options=list(scrollX=TRUE))
+```
 
 Generating the Minigene Library
 -------------------------------
@@ -273,6 +250,9 @@ We can then combine our generated tables into a report save it with the
 ```{r eval=FALSE}
 report = make_report(ann, subs, fus, tiled)
 writexl::write_xlsx(report, "report_file.xlsx")
+```
+```{r echo=FALSE}
+#report = make_report(ann, subs, fus, tiled)
 ```
 
 This `.xlsx` file will contain the different tables as sheets. We will use it 
