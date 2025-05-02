@@ -18,7 +18,7 @@ make_pep_table = function(outfile) {
     tiled = pep_tile(subs) |> remove_cutsite(BbsI="GAAGAC")
 
     bc_file = "https://raw.githubusercontent.com/hawkjo/freebarcodes/master/barcodes/barcodes12-1.txt"
-    bcs = readr::read_tsv(bc_file, col_names=FALSE)$X1 |> head(nrow(tiled))
+    bcs = readr::read_tsv(bc_file, col_names=FALSE, show_col_types=FALSE)$X1 |> head(nrow(tiled))
     res = tiled |> dplyr::select(-cDNA) |> dplyr::mutate(barcode = bcs)
     write.table(res, outfile, sep="\t", row.names=FALSE, quote=FALSE)
 }
@@ -45,8 +45,8 @@ sim_fastq = function(sample_sheet, peptide_sheet, target_reads=1000) {
     if (missing(peptide_sheet))
         peptide_sheet = system.file("my_peptides.tsv", package="pepitope")
 
-    samples = readr::read_tsv(sample_sheet)
-    peptides = readr::read_tsv(peptide_sheet)
+    samples = readr::read_tsv(sample_sheet, show_col_types=FALSE)
+    peptides = readr::read_tsv(peptide_sheet, show_col_types=FALSE)
 
     idx = expand.grid(p=seq_len(nrow(peptides)), s=seq_len(nrow(samples)))
     idx_s = lapply(idx$s, function(i) samples[i,])

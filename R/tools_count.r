@@ -15,7 +15,7 @@ count_bc = function(tdir, samples, valid_barcodes, reverse_complement=FALSE) {
     colnames(counts) = sub("\\.R1$", "", colnames(counts))
 
     if (is.character(samples) && length(samples) == 1 && file.exists(samples))
-        samples = readr::read_tsv(samples)
+        samples = readr::read_tsv(samples, show_col_types=FALSE)
 
     meta = samples |>
         left_join(stats |> select(sample_id, total_reads, mapped_reads)) |>
@@ -47,5 +47,5 @@ count_external = function(tdir, valid_barcodes, reverse_complement) {
 
     res = c(counts="barcodes.counts.txt", stats="barcodes.stats.txt") |>
         lapply(\(f) file.path(tdir, f)) |>
-        lapply(readr::read_tsv)
+        lapply(readr::read_tsv, show_col_types=FALSE)
 }

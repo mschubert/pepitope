@@ -32,7 +32,10 @@ knitr::opts_chunk$set(
     collapse = TRUE,
     comment = "#>"
 )
-suppressPackageStartupMessages(library(pepitope))
+suppressPackageStartupMessages({
+    library(pepitope)
+    library(plotly)
+})
 ```
 
 This guide shows how to perform quality control on a library using the barcoded
@@ -82,7 +85,7 @@ For this example, we have already provided a sample sheet with the package:
 sample_sheet = system.file("my_samples.tsv", package="pepitope")
 ```
 
-```{r echo=FALSE}
+```{r echo=FALSE, message=FALSE}
 DT::datatable(readr::read_tsv(sample_sheet), class="compact stripe hover")
 ```
 
@@ -110,6 +113,7 @@ the rest of the read:
 
 ```{r}
 temp_dir = demux_fq(fastq_file, sample_sheet, read_structures="7B+T")
+list.files(temp_dir, pattern="\\.fq\\.gz$")
 ```
 
 You can perform additional quality control steps on the sample-level FASTQ
@@ -130,7 +134,7 @@ Here, we are using barcodes from
 
 ```{r}
 lib = "https://raw.githubusercontent.com/hawkjo/freebarcodes/master/barcodes/barcodes12-1.txt"
-valid_barcodes = readr::read_tsv(lib, col_names=FALSE)$X1
+valid_barcodes = readr::read_tsv(lib, col_names=FALSE, show_col_types=FALSE)$X1
 ```
 
 ### Counting construct barcodes
@@ -159,7 +163,7 @@ that every construct barcodes occurs only in one sample and construct:
 
 ```{r}
 peptides = system.file("my_peptides.tsv", package="pepitope") |>
-    readr::read_tsv() |>
+    readr::read_tsv(show_col_types=FALSE) |>
     dplyr::mutate(bc_type = "pat1")
 
 reps = calc_representation(dset$counts, peptides, dset$meta)
@@ -184,7 +188,8 @@ We can also plot this interactively with `plotly`:
 ```{r}
 library(plotly)
 plot = plot_reads(reps, dset$meta)
-subplot(ggplotly(plot[[1]]), ggplotly(plot[[2]]), nrows=1)
+subplot(ggplotly(plot[[1]], height=300),
+        ggplotly(plot[[2]], height=300), nrows=1)
 ```
 
 ### Representation of individual barcodes
@@ -209,7 +214,7 @@ the mouse to see which barcode is in which position exactly:
 
 ```{r}
 library(plotly)
-ggplotly(plot_distr(reps), height=800)
+ggplotly(plot_distr(reps), height=400)
 ```
 
 <!-- add cor plots here
