@@ -1,17 +1,23 @@
 #' Count barcodes using guide-counter
 #'
 #' @param tdir  Path to the directory with demultiplexed FASTQ files
-#' @param lib   Path to the barcode library file
+#' @param valid_barcodes  A character vector of all possible barcodes
+#' @param reverse_complement  Whether to count the reverse complement of the barcodes instead
 #' @return      A list with the data.frame meta and matrix counts
-count_bc = function(tdir, lib) {
-    res = count_external(tdir, lib)
+count_bc = function(tdir, valid_barcodes, reverse_complement=FALSE) {
+    res = count_external(tdir, valid_barcodes, reverse_complement)
     load_dset(res$stats_tsv, res$counts_tsv, res$meta_tsv)
 }
 
 #' @keywords internal
-count_external = function(tdir, lib) {
+count_external = function(tdir, valid_barcodes, reverse_complement) {
+    tsv = tibble::tibble(name = as.character(valid_barcodes)) |>
+        dplyr::mutate(barcode=name, gene=name)
+    if (reverse_complement)
+        tsv$barcode = as.character(Biostrings::reverseComplement(DNAStringSet(tsv$barcode)))
     lpath = file.path(tdir, "lib.tsv")
-    utils::write.table(lib, file=lpath, sep="\t", row.names=FALSE, quote=FALSE)
+    utils::write.table(tsv, file=lpath, sep="\t", row.names=FALSE, quote=FALSE)
+
     fqs = list.files(tdir, pattern="\\.fq.gz", full.names=TRUE)
 
     cmd = paste("guide-counter count",

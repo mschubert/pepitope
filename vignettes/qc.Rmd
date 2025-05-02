@@ -16,6 +16,13 @@ img {
 code {
     border: 0px !important;
 }
+table.dataTable.compact,
+.dataTables_wrapper .dataTables_paginate,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_length {
+    font-size: 0.7em;
+}
 ```
 
 ```{r echo=FALSE, results="hide"}
@@ -44,21 +51,39 @@ process and analyze the sequencing data.
 Preparation
 -----------
 
-### Creating a sample sheet
-
-```{r}
-samples = ""
-```
-
-__ SHOW TABLE HERE __
-
 ### Sequencing output
 
 For this workflow, we need with a single FASTQ file that can contain multiple
-samples:
+samples. In this example, we are simulating our reads, but usually this will be
+the file produced by sequencing your pooled and barcode-labeled samples.
+
+Here, we simulate an example file instead:
 
 ```{r}
-fastq = ""
+# usually: fastq_file = "/path/to/your/file.fq.gz"
+fastq_file = sim_fastq()
+```
+
+### Creating a sample sheet
+
+Before we can start working with the FASTQ sequencing output, we need to describe
+which samples it contains. For this, we create a sample sheet with the following
+columns:
+
+* `sample_id` -- a unique identifier of the sample
+* `patient` -- the patient or sample group that the sample comes from
+* `rep` -- a number indicating the replicate number
+* `origin` -- a descriptor of which kind of sample this is
+* `barcode` -- the barcode used to label all condition-specific constructs in the sequencing data
+
+For this example, we have already provided a sample sheet with the package:
+
+```{r}
+sample_sheet = system.file("my_samples.tsv", package="pepitope")
+```
+
+```{r echo=FALSE}
+DT::datatable(readr::read_tsv(sample_sheet), class="compact stripe hover")
 ```
 
 Sample demultiplexing
@@ -74,17 +99,17 @@ Here, `read_structures` describes how the split the samples. It has the
 following possible fields, preceded by the number of nucleotides in the read. A
 `+` instead of a number is used to indicated to use all remaining nucleotides:
 
-* `B` -- the sample barcode to split on
-* `T` -- the read sequence with the construct barcode and sequence
-* `S` -- skip these nucleotides and do not include in output
+* `B` -- the sample barcode to split on (required)
+* `T` -- the read sequence with the construct barcode and sequence (required)
+* `S` -- skip these nucleotides and do not include in output (optional)
 
 ### Demultiplexing call
 
 In this example, we are using a 7-nucleotide barcode for the samples and keep
 the rest of the read:
 
-```{r eval=F}
-temp_dir = demux_fq(fastq, samples, read_structures="7B+T")
+```{r}
+temp_dir = demux_fq(fastq_file, sample_sheet, read_structures="7B+T")
 ```
 
 You can perform additional quality control steps on the sample-level FASTQ
@@ -95,8 +120,17 @@ Construct barcode counting
 
 ### Working with the full construct barcode library
 
+In order to count the barcodes from our constructs, as well as assess potential
+contaminations from other samples, we need to provide a list of all possible
+barcodes.
+
+Here, we are using barcodes from
+[this publication](https://www.pnas.org/doi/full/10.1073/pnas.1802640115) and
+[Github repository](https://github.com/hawkjo/freebarcodes):
+
 ```{r}
-barcode_lib = "/path/to/file"
+lib = "https://raw.githubusercontent.com/hawkjo/freebarcodes/master/barcodes/barcodes12-1.txt"
+valid_barcodes = readr::read_tsv(lib, col_names=FALSE)$X1
 ```
 
 ### Counting construct barcodes
@@ -108,8 +142,8 @@ count the number of occurrences. Here we pass the directory containing the
 demultiplexed FASTQ files and the barcode library file with all possible
 (not only the used) barcodes:
 
-```{r eval=F}
-dset = count_bc(temp_dir, barcode_lib)
+```{r}
+dset = count_bc(temp_dir, valid_barcodes, reverse_complement=TRUE)
 ```
 
 Here, `dset` will be a list with two objects:
