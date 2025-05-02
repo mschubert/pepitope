@@ -1,5 +1,6 @@
 #' @import ggplot2
 #' @importFrom patchwork wrap_plots plot_layout
+#' @export
 plot_reads = function(reps, meta) {
     plot_one = function(rsum, y, position) {
         rsum$bc_type = factor(rsum$bc_type, levels=unique(both$bc_type))

@@ -1,6 +1,6 @@
 #' Create a peptide .tsv in the inst directory
 #'
-#' @param outfile
+#' @param outfile  The file to save peptide table to
 #' @keywords internal
 make_pep_table = function(outfile) {
     if (missing(outfile))
@@ -28,7 +28,7 @@ make_pep_table = function(outfile) {
 #' @param sample_sheet   The .tsv file containing sample information
 #' @param peptide_sheet  The .tsv file containing construct information
 #' @param target_reads   How many reads to simulate on average
-#' @keywords internal
+#' @export
 sim_fastq = function(sample_sheet, peptide_sheet, target_reads=1000) {
     sim_reads = function(sample, construct, n) {
         read_seq = paste0(sample$barcode, construct$barcode, construct$tiled)

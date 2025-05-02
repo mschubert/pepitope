@@ -4,12 +4,16 @@
 \alias{count_bc}
 \title{Count barcodes using guide-counter}
 \usage{
-count_bc(tdir, lib)
+count_bc(tdir, samples, valid_barcodes, reverse_complement = FALSE)
 }
 \arguments{
 \item{tdir}{Path to the directory with demultiplexed FASTQ files}
 
-\item{lib}{Path to the barcode library file}
+\item{samples}{A path or data.frame containing the sample sheet}
+
+\item{valid_barcodes}{A character vector of all possible barcodes}
+
+\item{reverse_complement}{Whether to count the reverse complement of the barcodes instead}
 }
 \value{
 A list with the data.frame meta and matrix counts

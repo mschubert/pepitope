@@ -1,5 +1,9 @@
-# provide fastq file
-# use fqtk cli to demux fastq files
+#' Use fqtk tool to demultiplex fastq files
+#'
+#' @param fq  A path to the fastq file to demultiplex
+#' @param samples  A sample sheet in tsv format
+#' @param read_structures  A character string describing the read structure
+#' @export
 demux_fq = function(fq, samples, read_structures) {
     tdir = tempdir()
 

@@ -160,7 +160,7 @@ that every construct barcodes occurs only in one sample and construct:
 ```{r}
 peptides = system.file("my_peptides.tsv", package="pepitope") |>
     readr::read_tsv() |>
-    mutate(bc_type = "pat1")
+    dplyr::mutate(bc_type = "pat1")
 
 reps = calc_representation(dset$counts, peptides, dset$meta)
 ```
@@ -183,7 +183,7 @@ We can also plot this interactively with `plotly`:
 
 ```{r}
 library(plotly)
-plot = plot_distr(reps)
+plot = plot_reads(reps, dset$meta)
 subplot(ggplotly(plot[[1]]), ggplotly(plot[[2]]), nrows=1)
 ```
 

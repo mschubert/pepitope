@@ -1,4 +1,5 @@
 #' @import dplyr
+#' @export
 calc_representation = function(lib_counts, bcs, meta) {
     reshape2::melt(lib_counts) |> as_tibble() |>
         dplyr::rename(barcode=Var1, sample_id=Var2) |>
@@ -14,6 +15,7 @@ calc_representation = function(lib_counts, bcs, meta) {
         ungroup()
 }
 
+#' @export
 plot_distr = function(reps) {
     ggplot(reps, aes(x=rnk, y=value, color=bc_type)) +
         geom_line(aes(linetype=is_matched)) +

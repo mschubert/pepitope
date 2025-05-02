@@ -5,6 +5,7 @@
 #' @param valid_barcodes  A character vector of all possible barcodes
 #' @param reverse_complement  Whether to count the reverse complement of the barcodes instead
 #' @return      A list with the data.frame meta and matrix counts
+#' @export
 count_bc = function(tdir, samples, valid_barcodes, reverse_complement=FALSE) {
     res = count_external(tdir, valid_barcodes, reverse_complement)
 
