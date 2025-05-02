@@ -24,12 +24,21 @@ make_pep_table = function(outfile) {
 
 #' Simulate sequencing data and write them to a FASTQ file
 #'
-#' @param outfile        The .fastq.gz file to save results to
 #' @param sample_sheet   The .tsv file containing sample information
 #' @param peptide_sheet  The .tsv file containing construct information
 #' @param target_reads   How many reads to simulate on average
 #' @keywords internal
-sim_fastq = function(outfile, sample_sheet, peptide_sheet, target_reads=100) {
+sim_fastq = function(sample_sheet, peptide_sheet, target_reads=100) {
+    sim_reads = function(sample, construct, n) {
+        read_seq = paste0(sample$barcode, construct$barcode, construct$tiled)
+        Map(paste, sep="\n", USE.NAMES=FALSE,
+            paste0("@", sample$barcode, ":", construct$barcode, "_read", seq_len(n)),
+            read_seq,
+            "+",
+            paste0(rep("I", nchar(read_seq)), collapse = "")
+        )
+    }
+
     if (missing(sample_sheet))
         sample_sheet = system.file("my_samples.tsv", package="pepitope")
     if (missing(peptide_sheet))
@@ -38,9 +47,13 @@ sim_fastq = function(outfile, sample_sheet, peptide_sheet, target_reads=100) {
     samples = readr::read_tsv(sample_sheet)
     peptides = readr::read_tsv(peptide_sheet)
 
-    # multiple samples: noise + 2 clear drop-outs
+    idx = expand.grid(p=seq_len(nrow(peptides)), s=seq_len(nrow(samples)))
+    idx_s = lapply(idx$s, function(i) samples[i,])
+    idx_p = lapply(idx$p, function(i) peptides[i,])
+    res = Map(sim_reads, sample=idx_s, construct=idx_p, rpois(nrow(idx), target_reads))
 
-    # merge with barcodes
-
-    # use biostrings to write fastq
+    tdir = tempdir()
+    outfile = file.path(tdir, "my_seqdata.fq")
+    do.call(cat, c(do.call(c, res), list(file=outfile, sep="\n")))
+    outfile
 }
