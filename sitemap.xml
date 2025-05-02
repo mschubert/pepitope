@@ -15,6 +15,7 @@
 <url><loc>/reference/cds_by_break.html</loc></url>
 <url><loc>/reference/check_silent.html</loc></url>
 <url><loc>/reference/count_bc.html</loc></url>
+<url><loc>/reference/demux_fq.html</loc></url>
 <url><loc>/reference/extract_fusion_ranges.html</loc></url>
 <url><loc>/reference/filter_fusions.html</loc></url>
 <url><loc>/reference/filter_proper_orf.html</loc></url>
@@ -23,6 +24,7 @@
 <url><loc>/reference/index.html</loc></url>
 <url><loc>/reference/is_proper_orf.html</loc></url>
 <url><loc>/reference/make_clean.html</loc></url>
+<url><loc>/reference/make_pep_table.html</loc></url>
 <url><loc>/reference/make_report.html</loc></url>
 <url><loc>/reference/pep_tile.html</loc></url>
 <url><loc>/reference/pepitope.html</loc></url>
@@ -30,7 +32,7 @@
 <url><loc>/reference/reexports.html</loc></url>
 <url><loc>/reference/remove_cutsite.html</loc></url>
 <url><loc>/reference/remove_cutsite_nuc.html</loc></url>
-<url><loc>/reference/sim_seq.html</loc></url>
+<url><loc>/reference/sim_fastq.html</loc></url>
 <url><loc>/reference/subset_context.html</loc></url>
 <url><loc>/reference/subset_context_fusion.html</loc></url>
 <url><loc>/reference/tx_combine_breaks.html</loc></url>
