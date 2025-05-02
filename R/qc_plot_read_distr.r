@@ -1,9 +1,9 @@
 #' @import dplyr
 calc_representation = function(lib_counts, bcs, meta) {
     reshape2::melt(lib_counts) |> as_tibble() |>
-        dplyr::rename(oligo_id=Var1, sample_id=Var2) |>
-        inner_join(bcs |> select(oligo_id, bc_type, gene_name, mut_id)) |>
-        inner_join(meta) |>
+        dplyr::rename(barcode=Var1, sample_id=Var2) |>
+        inner_join(bcs |> select(barcode, bc_type, gene_name, mut_id)) |>
+        inner_join(meta |> select(-barcode)) |>
         mutate(is_matched = bc_type == "TAA" |
                bc_type == as.character(sub("[^0-9]*([0-9]+).*", "\\1", patient))) |>
         group_by(sample_id) |>

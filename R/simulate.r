@@ -17,7 +17,8 @@ make_pep_table = function(outfile) {
     subs = ann |> subset_context(15)
     tiled = pep_tile(subs) |> remove_cutsite(BbsI="GAAGAC")
 
-    bcs = make_lib() |> pull(barcode) |> head(nrow(tiled))
+    bc_file = "https://raw.githubusercontent.com/hawkjo/freebarcodes/master/barcodes/barcodes12-1.txt"
+    bcs = readr::read_tsv(bc_file, col_names=FALSE)$X1 |> head(nrow(tiled))
     res = tiled |> dplyr::select(-cDNA) |> dplyr::mutate(barcode = bcs)
     write.table(res, outfile, sep="\t", row.names=FALSE, quote=FALSE)
 }
@@ -28,7 +29,7 @@ make_pep_table = function(outfile) {
 #' @param peptide_sheet  The .tsv file containing construct information
 #' @param target_reads   How many reads to simulate on average
 #' @keywords internal
-sim_fastq = function(sample_sheet, peptide_sheet, target_reads=100) {
+sim_fastq = function(sample_sheet, peptide_sheet, target_reads=1000) {
     sim_reads = function(sample, construct, n) {
         read_seq = paste0(sample$barcode, construct$barcode, construct$tiled)
         Map(paste, sep="\n", USE.NAMES=FALSE,

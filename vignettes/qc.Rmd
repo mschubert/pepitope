@@ -55,12 +55,12 @@ Preparation
 
 For this workflow, we need with a single FASTQ file that can contain multiple
 samples. In this example, we are simulating our reads, but usually this will be
-the file produced by sequencing your pooled and barcode-labeled samples.
-
-Here, we simulate an example file instead:
+the file produced by sequencing your pooled and barcode-labeled samples:
 
 ```{r}
-# usually: fastq_file = "/path/to/your/file.fq.gz"
+fastq_file = "/path/to/your/file.fq.gz"
+
+# here we don't have sequencing data so we simulate the reads instead:
 fastq_file = sim_fastq()
 ```
 
@@ -143,7 +143,7 @@ demultiplexed FASTQ files and the barcode library file with all possible
 (not only the used) barcodes:
 
 ```{r}
-dset = count_bc(temp_dir, valid_barcodes, reverse_complement=TRUE)
+dset = count_bc(temp_dir, sample_sheet, valid_barcodes)
 ```
 
 Here, `dset` will be a list with two objects:
@@ -157,9 +157,12 @@ In this step, we add the information of which barcode belongs to which sample
 and construct. We can use multiple barcode annotation files, but it is required
 that every construct barcodes occurs only in one sample and construct:
 
-```{r eval=F}
-bcs = "" # load construct info files here
-reps = calc_representation(dset$counts, bcs, dset$meta)
+```{r}
+peptides = system.file("my_peptides.tsv", package="pepitope") |>
+    readr::read_tsv() |>
+    mutate(bc_type = "pat1")
+
+reps = calc_representation(dset$counts, peptides, dset$meta)
 ```
 
 Quality Control plots
@@ -172,13 +175,13 @@ demultiplexed FASTQ, and whether they match the sample we expect them to be
 from. We can plot this the following way, for total read counts on the left and
 number of barcodes that have 10 or more reads on the right:
 
-```{r eval=F}
+```{r}
 plot_reads(reps, dset$meta)
 ```
 
 We can also plot this interactively with `plotly`:
 
-```{r eval=F}
+```{r}
 library(plotly)
 plot = plot_distr(reps)
 subplot(ggplotly(plot[[1]]), ggplotly(plot[[2]]), nrows=1)
@@ -192,7 +195,7 @@ come from. For this, we order the barcodes from least abundant (left) to most
 abundant (right) and plot a continuous line for how many reads are sequenced of
 this barcode on the y axis:
 
-```{r eval=F}
+```{r}
 plot_distr(reps)
 ```
 
@@ -204,7 +207,7 @@ library, this distribution is the best you can expect.
 We can also plot this interactively with `plotly`, where we can hover over with
 the mouse to see which barcode is in which position exactly:
 
-```{r eval=F}
+```{r}
 library(plotly)
 ggplotly(plot_distr(reps), height=800)
 ```
