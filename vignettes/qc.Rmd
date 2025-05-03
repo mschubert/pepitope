@@ -82,10 +82,11 @@ peptide/minigene tables:
 
 The other required fields are, for each sample:
 
-* `bc_type` -- barcode type, i.e. sample or name of shared barcode pool
+* `gene_name` -- an identifier for the gene, e.g. `NRAS`
 * `mut_id` -- a common identifier for `ref` and `alt` sequences, e.g. `NRAS_Q61`
-* `pep_type` -- whether this is a `ref` or `alt` sequence
 * `pep_id` -- a unique identifier for each peptide, e.g. `NRAS_Q61L-1`
+* `pep_type` -- whether this is a `ref` or `alt` sequence
+* `bc_type` -- barcode type, i.e. sample or name of shared barcode pool
 * `tiled` -- the tiled nucleotide sequence
 
 For the QC analysis, we will need a named list of these barcoded Minigene
