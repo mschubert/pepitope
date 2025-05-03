@@ -134,11 +134,13 @@ sample_sheet = system.file("my_samples.tsv", package="pepitope")
 DT::datatable(readr::read_tsv(sample_sheet), class="compact stripe hover")
 ```
 
-### Sequencing output
+Demultiplexing and counting
+---------------------------
 
-For this workflow, we need with a single FASTQ file that can contain multiple
-samples. In this example, we are simulating our reads, but usually this will be
-the file produced by sequencing your pooled and barcode-labeled samples:
+### FASTQ read structure
+
+A sequencing file will contain a sample barcode, construct barcode, and construct
+sequence.
 
 ```{r}
 fastq_file = "/path/to/your/file.fq.gz"
@@ -146,11 +148,6 @@ fastq_file = "/path/to/your/file.fq.gz"
 # here we don't have sequencing data so we simulate the reads instead:
 fastq_file = example_fastq(sample_sheet, all_constructs)
 ```
-
-Demultiplexing and counting
----------------------------
-
-### Read structure syntax
 
 This step is using the `fqtk` toolkit to split the multi-sample FASTQ file into
 individual sample files, separated by their sample barcode and save to a
