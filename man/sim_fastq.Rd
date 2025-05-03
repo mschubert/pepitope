@@ -4,14 +4,14 @@
 \alias{sim_fastq}
 \title{Simulate sequencing data and write them to a FASTQ file}
 \usage{
-sim_fastq(sample_sheet, peptide_sheet, target_reads = 1000)
+sim_fastq(samples, peptide_sheets, target_reads = 1000)
 }
 \arguments{
-\item{sample_sheet}{The .tsv file containing sample information}
-
-\item{peptide_sheet}{The .tsv file containing construct information}
-
 \item{target_reads}{How many reads to simulate on average}
+
+\item{sample_sheet}{The .tsv or data.frame file containing sample information}
+
+\item{peptide_sheet}{A list, each item containing construct information}
 }
 \description{
 Simulate sequencing data and write them to a FASTQ file

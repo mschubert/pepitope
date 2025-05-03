@@ -25,33 +25,41 @@ make_pep_table = function(outfile) {
 
 #' Simulate sequencing data and write them to a FASTQ file
 #'
-#' @param sample_sheet   The .tsv file containing sample information
-#' @param peptide_sheet  The .tsv file containing construct information
+#' @param sample_sheet   The .tsv or data.frame file containing sample information
+#' @param peptide_sheet  A list, each item containing construct information
 #' @param target_reads   How many reads to simulate on average
 #' @export
-sim_fastq = function(sample_sheet, peptide_sheet, target_reads=1000) {
-    sim_reads = function(sample, construct, n) {
-        read_seq = paste0(sample$barcode, construct$barcode, construct$tiled)
+sim_fastq = function(samples, peptide_sheets, target_reads=1000) {
+    sim_reads = function(sample_barcode, construct_seq, n) {
+        read_seq = paste0(sample_barcode, construct_seq)
         Map(paste, sep="\n", USE.NAMES=FALSE,
-            paste0("@", sample$barcode, ":", construct$barcode, "_read", seq_len(n)),
+            paste0("@", sample_barcode, ":", construct_seq, "_read", seq_len(n)),
             read_seq,
             "+",
             paste0(rep("I", nchar(read_seq)), collapse = "")
         )
     }
 
-    if (missing(sample_sheet))
-        sample_sheet = system.file("my_samples.tsv", package="pepitope")
-    if (missing(peptide_sheet))
-        peptide_sheet = system.file("my_peptides.tsv", package="pepitope")
+    if (is.character(samples) && length(samples) == 1 && file.exists(samples))
+        samples = readr::read_tsv(samples, show_col_types=FALSE)
 
-    samples = readr::read_tsv(sample_sheet, show_col_types=FALSE)
-    peptides = readr::read_tsv(peptide_sheet, show_col_types=FALSE)
+    all_seq = dplyr::bind_rows(peptide_sheets, .id="bc_type")
+    counts = matrix(0, nrow=nrow(all_seq), ncol=length(samples$sample_id),
+        dimnames=list(barcode=all_seq$barcode, sample_id=samples$sample_id))
 
-    idx = expand.grid(p=seq_len(nrow(peptides)), s=seq_len(nrow(samples)))
-    idx_s = lapply(idx$s, function(i) samples[i,])
-    idx_p = lapply(idx$p, function(i) peptides[i,])
-    res = Map(sim_reads, sample=idx_s, construct=idx_p, rpois(nrow(idx), target_reads))
+    # fill all expected barcodes (i.e., has an entry in the sample sheet)
+    smp_file = samples |> select(sample_id, patient) |>
+        mutate(patient = strsplit(patient, "+", fixed=TRUE)) |>
+        tidyr::unnest(patient)
+    for (i in seq_len(nrow(smp_file))) {
+        matches = all_seq$bc_type == smp_file$patient[i]
+        counts[matches, smp_file$sample_id[i]] = rpois(sum(matches), target_reads)
+    }
+
+    # add all non-zero read entries in fastq format
+    reads = reshape2::melt(counts) |> filter(value != 0) |>
+        inner_join(samples, by=join_by(sample_id))
+    res = with(reads, Map(sim_reads, barcode.y, barcode.x, value))
 
     tdir = tempdir()
     outfile = file.path(tdir, "my_seqdata.fq")

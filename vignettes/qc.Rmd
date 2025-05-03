@@ -88,6 +88,8 @@ The other required fields are, for each sample:
 * `pep_id` -- a unique identifier for each peptide, e.g. `NRAS_Q61L-1`
 * `tiled` -- the tiled nucleotide sequence
 
+For the QC analysis, we will need a named list of these barcoded Minigene tables:
+
 ```{r}
 constructs = system.file("my_peptides.tsv", package="pepitope") |>
     readr::read_tsv(show_col_types=FALSE)
@@ -126,7 +128,9 @@ columns:
 * `origin` -- a descriptor of which kind of sample this is
 * `barcode` -- the barcode used to label all condition-specific constructs in the sequencing data
 
-For this example, we have already provided a sample sheet with the package:
+For this example, we have already provided a sample sheet with the package. It
+includes three samples, two for library QC (`pat2` and `pat3`) and one with
+mock-transfected vs. actual peptide T-cell co-culture:
 
 ```{r}
 sample_sheet = system.file("my_samples.tsv", package="pepitope")
@@ -146,7 +150,7 @@ the file produced by sequencing your pooled and barcode-labeled samples:
 fastq_file = "/path/to/your/file.fq.gz"
 
 # here we don't have sequencing data so we simulate the reads instead:
-fastq_file = sim_fastq()
+fastq_file = sim_fastq(sample_sheet, all_constructs)
 ```
 
 Demultiplexing and counting
