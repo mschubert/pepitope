@@ -1,6 +1,6 @@
 sample_id	patient	rep	origin	barcode
-lib1	pat1	1	Library	AAGACCA
-lib2	pat1	2	Library	CCAGTGT
+lib1	pat2	1	Library	AAGACCA
+lib2	pat3	1	Library	CCAGTGT
 mock1	pat1	1	Mock	TGAGTCC
 mock2	pat1	2	Mock	CAAGATG
 screen1	pat1	1	Sample	AACCGAC
