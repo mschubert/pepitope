@@ -1,6 +1,7 @@
 #' Create a peptide .tsv in the inst directory
 #'
 #' @param outfile  The file to save peptide table to
+#' @importFrom dplyr mutate select
 #' @keywords internal
 make_pep_table = function(outfile) {
     if (missing(outfile))
@@ -15,12 +16,9 @@ make_pep_table = function(outfile) {
         filter_variants(min_cov=2, min_af=0.05, pass=TRUE)
     ann = annotate_coding(vr1, ens106, asm)
     subs = ann |> subset_context(15)
-    tiled = pep_tile(subs) |> remove_cutsite(BbsI="GAAGAC")
+    tiled = pep_tile(subs) |> remove_cutsite(BbsI="GAAGAC") |> select(-cDNA)
 
-    bc_file = "https://raw.githubusercontent.com/hawkjo/freebarcodes/master/barcodes/barcodes12-1.txt"
-    bcs = readr::read_tsv(bc_file, col_names=FALSE, show_col_types=FALSE)$X1 |> head(nrow(tiled))
-    res = tiled |> dplyr::select(-cDNA) |> dplyr::mutate(barcode = bcs)
-    write.table(res, outfile, sep="\t", row.names=FALSE, quote=FALSE)
+    write.table(tiled, outfile, sep="\t", row.names=FALSE, quote=FALSE)
 }
 
 #' Simulate sequencing data and write them to a FASTQ file
