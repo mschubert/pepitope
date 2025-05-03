@@ -48,23 +48,23 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sim_fastq</span><span class="op">(</span><span class="va">sample_sheet</span>, <span class="va">peptide_sheet</span>, target_reads <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sim_fastq</span><span class="op">(</span><span class="va">samples</span>, <span class="va">peptide_sheets</span>, target_reads <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-sample-sheet">sample_sheet<a class="anchor" aria-label="anchor" href="#arg-sample-sheet"></a></dt>
-<dd><p>The .tsv file containing sample information</p></dd>
+<dl><dt id="arg-target-reads">target_reads<a class="anchor" aria-label="anchor" href="#arg-target-reads"></a></dt>
+<dd><p>How many reads to simulate on average</p></dd>
+
+
+<dt id="arg-sample-sheet">sample_sheet<a class="anchor" aria-label="anchor" href="#arg-sample-sheet"></a></dt>
+<dd><p>The .tsv or data.frame file containing sample information</p></dd>
 
 
 <dt id="arg-peptide-sheet">peptide_sheet<a class="anchor" aria-label="anchor" href="#arg-peptide-sheet"></a></dt>
-<dd><p>The .tsv file containing construct information</p></dd>
-
-
-<dt id="arg-target-reads">target_reads<a class="anchor" aria-label="anchor" href="#arg-target-reads"></a></dt>
-<dd><p>How many reads to simulate on average</p></dd>
+<dd><p>A list, each item containing construct information</p></dd>
 
 </dl></div>
 
