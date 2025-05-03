@@ -93,6 +93,10 @@ tables. We will usually have assembled them in a `.xlsx` file with these
 barcodes added, however, here we will use an example dataset:
 
 ```{r}
+## normally we'd read all sheets from our barcoded construct file:
+# fname = "my_combined_barcoded_file.xlsx"
+# sapply(readxl::excel_sheets(fname), readxl::read_xlsx, path=fname, simplify=FALSE)
+
 all_constructs = example_peptides(valid_barcodes)
 ```
 
