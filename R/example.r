@@ -1,12 +1,8 @@
-#' Create a peptide .tsv in the inst directory
+#' Create a my_peptides.tsv in the inst directory
 #'
-#' @param outfile  The file to save peptide table to
 #' @importFrom dplyr mutate select
 #' @keywords internal
-make_pep_table = function(outfile) {
-    if (missing(outfile))
-        outfile = file.path(system.file(package="pepitope"), "my_peptides.tsv")
-
+example_peptide_file = function(outfile) {
     variant_vcf_file = system.file("my_variants.vcf", package="pepitope")
     ens106 = AnnotationHub::AnnotationHub()[["AH100643"]]
     asm = BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38
@@ -18,16 +14,38 @@ make_pep_table = function(outfile) {
     subs = ann |> subset_context(15)
     tiled = pep_tile(subs) |> remove_cutsite(BbsI="GAAGAC") |> select(-cDNA)
 
+    outfile = file.path(system.file(package="pepitope"), "my_peptides.tsv")
     write.table(tiled, outfile, sep="\t", row.names=FALSE, quote=FALSE)
 }
 
-#' Simulate sequencing data and write them to a FASTQ file
+#' Create example peptide sheets for multiple samples
+#'
+#' @param valid_barcodes  A character vector of valid barcodes
+#' @return  A named list of peptide/minigene constructs with barcodes
+#' @keywords internal
+#' @export
+example_peptides = function(valid_barcodes) {
+    constructs = system.file("my_peptides.tsv", package="pepitope") |>
+        readr::read_tsv(show_col_types=FALSE)
+
+    n = nrow(constructs)
+    all_constructs = list(
+        pat1 = constructs |> mutate(barcode = valid_barcodes[seq_len(n)]),
+        pat2 = constructs |> mutate(barcode = valid_barcodes[seq_len(n) + n]),
+        pat3 = constructs |> mutate(barcode = valid_barcodes[seq_len(n) + 2*n]),
+        common = constructs |> mutate(barcode = valid_barcodes[seq_len(n) + 3*n])
+    )
+}
+
+#' Simulate sequencing data and write them to a temporary FASTQ file
 #'
 #' @param sample_sheet   The .tsv or data.frame file containing sample information
 #' @param peptide_sheet  A list, each item containing construct information
 #' @param target_reads   How many reads to simulate on average
+#' @return  The path to the created FASTQ file
+#' @keywords internal
 #' @export
-sim_fastq = function(samples, peptide_sheets, target_reads=1000) {
+example_fastq = function(samples, peptide_sheets, target_reads=1000) {
     sim_reads = function(sample_barcode, construct_seq, n) {
         read_seq = paste0(sample_barcode, construct_seq)
         Map(paste, sep="\n", USE.NAMES=FALSE,

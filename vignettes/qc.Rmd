@@ -88,20 +88,12 @@ The other required fields are, for each sample:
 * `pep_id` -- a unique identifier for each peptide, e.g. `NRAS_Q61L-1`
 * `tiled` -- the tiled nucleotide sequence
 
-For the QC analysis, we will need a named list of these barcoded Minigene tables:
+For the QC analysis, we will need a named list of these barcoded Minigene
+tables. We will usually have assembled them in a `.xlsx` file with these
+barcodes added, however, here we will use an example dataset:
 
 ```{r}
-constructs = system.file("my_peptides.tsv", package="pepitope") |>
-    readr::read_tsv(show_col_types=FALSE)
-
-# normally we'd have different constructs for each patient
-n = nrow(constructs)
-all_constructs = list(
-    pat1 = constructs |> mutate(barcode = valid_barcodes[seq_len(n)]),
-    pat2 = constructs |> mutate(barcode = valid_barcodes[seq_len(n) + n]),
-    pat3 = constructs |> mutate(barcode = valid_barcodes[seq_len(n) + 2*n]),
-    common = constructs |> mutate(barcode = valid_barcodes[seq_len(n) + 3*n])
-)
+all_constructs = example_peptides(valid_barcodes)
 ```
 
 ```{r echo=FALSE, message=FALSE, results="asis"}
@@ -130,7 +122,9 @@ columns:
 
 For this example, we have already provided a sample sheet with the package. It
 includes three samples, two for library QC (`pat2` and `pat3`) and one with
-mock-transfected vs. actual peptide T-cell co-culture:
+mock-transfected vs. actual peptide T-cell co-culture (`pat1`). The `pat1` and
+`pat2` samples additionally include a common construct set. Whenever we use
+multiple construct sets in a sample, we separate them using a `+`:
 
 ```{r}
 sample_sheet = system.file("my_samples.tsv", package="pepitope")
@@ -150,7 +144,7 @@ the file produced by sequencing your pooled and barcode-labeled samples:
 fastq_file = "/path/to/your/file.fq.gz"
 
 # here we don't have sequencing data so we simulate the reads instead:
-fastq_file = sim_fastq(sample_sheet, all_constructs)
+fastq_file = example_fastq(sample_sheet, all_constructs)
 ```
 
 Demultiplexing and counting
