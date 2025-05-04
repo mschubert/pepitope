@@ -16,7 +16,7 @@ Description: Given a reference genome and VCF file, this package will provide
 URL: https://github.com/mschubert/pepitope
 BugReports: https://github.com/mschubert/pepitope/issues
 Depends:
-    R (>= 4.2.0)
+    R (>= 4.5.0)
 Imports:
     Biobase,
     BiocGenerics,
