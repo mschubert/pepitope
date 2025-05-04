@@ -96,7 +96,8 @@ barcodes added, however, here we will use an example dataset:
 ```{r}
 ## normally we'd read all sheets from our barcoded construct file:
 # fname = "my_combined_barcoded_file.xlsx"
-# sapply(readxl::excel_sheets(fname), readxl::read_xlsx, path=fname, simplify=FALSE)
+# sheets = readxl::excel_sheets(fname)
+# all_constructs = sapply(sheets, readxl::read_xlsx, path=fname, simplify=FALSE)
 
 all_constructs = example_peptides(valid_barcodes)
 ```
@@ -137,6 +138,12 @@ sample_sheet = system.file("my_samples.tsv", package="pepitope")
 
 ```{r echo=FALSE, message=FALSE}
 DT::datatable(readr::read_tsv(sample_sheet), class="compact stripe hover")
+```
+
+We can confirm that these barcodes do not overlap:
+
+```{r}
+plot_barcode_overlap(all_constructs, valid_barcodes)
 ```
 
 Demultiplexing and counting

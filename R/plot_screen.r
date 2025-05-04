@@ -1,4 +1,7 @@
-plot_one = function(res, sample, links=TRUE, labs=TRUE) {
+#' Plot screen results
+#'
+#' @export
+plot_screen = function(res, sample, links=TRUE, labs=TRUE) {
     res$log2FoldChange = sign(res$log2FoldChange) * pmin(abs(res$log2FoldChange), 8)
     lab = res |> filter(padj<0.1) |> group_by(gene_name) |>
         filter(n_distinct(pep_type)==1 | is.na(pep_type) | pep_type=="alt")
