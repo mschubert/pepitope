@@ -144,13 +144,13 @@ Demultiplexing and counting
 
 ### FASTQ read structure
 
-A sequencing file will contain a sample barcode, construct barcode, and construct
-sequence.
+A sequencing (FASTQ) file will contain a sample barcode, construct barcode,
+and construct sequence:
 
 ```{r}
-fastq_file = "/path/to/your/file.fq.gz"
+## normally we'd supply the path to our sequencing file:
+# fastq_file = "/path/to/your/file.fq.gz"
 
-# here we don't have sequencing data so we simulate the reads instead:
 fastq_file = example_fastq(sample_sheet, all_constructs)
 ```
 
@@ -158,7 +158,7 @@ This step is using the `fqtk` toolkit to split the multi-sample FASTQ file into
 individual sample files, separated by their sample barcode and save to a
 temporary directory.
 
-Here, `read_structures` describes how the split the samples. It has the
+Here, `read_structures` describes how the split these samples. It has the
 following possible fields, preceded by the number of nucleotides in the read. A
 `+` instead of a number is used to indicated to use all remaining nucleotides:
 
@@ -166,10 +166,10 @@ following possible fields, preceded by the number of nucleotides in the read. A
 * `T` -- the read sequence with the construct barcode and sequence (required)
 * `S` -- skip these nucleotides and do not include in output (optional)
 
-### Demultiplexing call
+### Sample demultiplexing
 
-In this example, we are using a 7-nucleotide barcode for the samples and keep
-the rest of the read:
+In this example, we use a 7-nucleotide barcode for the samples and keep the
+rest of the read in the split files:
 
 ```{r}
 temp_dir = demux_fq(fastq_file, sample_sheet, read_structures="7B+T")
@@ -225,8 +225,10 @@ We can also plot this interactively with `plotly`:
 ```{r}
 library(plotly)
 plot = plot_reads(reps, dset$meta)
-subplot(ggplotly(plot[[1]], height=300),
-        ggplotly(plot[[2]], height=300), nrows=1)
+subplot(ggplotly(plot[[1]], height=400),
+        ggplotly(plot[[2]], height=400),
+        ggplotly(plot[[3]], height=400),
+        ggplotly(plot[[4]], height=400), nrows=2)
 ```
 
 ### Representation of individual barcodes
@@ -251,7 +253,7 @@ the mouse to see which barcode is in which position exactly:
 
 ```{r}
 library(plotly)
-ggplotly(plot_distr(reps), height=400)
+ggplotly(plot_distr(reps), height=500, tooltip="text")
 ```
 
 <!-- add cor plots here

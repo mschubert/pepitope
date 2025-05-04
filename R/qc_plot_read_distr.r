@@ -3,7 +3,7 @@
 calc_representation = function(lib_counts, bcs, meta) {
     reshape2::melt(lib_counts) |> as_tibble() |>
         dplyr::rename(barcode=Var1, sample_id=Var2) |>
-        inner_join(bcs |> select(barcode, bc_type, gene_name, mut_id)) |>
+        inner_join(bcs |> select(barcode, bc_type, gene_name, mut_id, pep_id, pep_type)) |>
         inner_join(meta |> select(-barcode)) |>
         rowwise() |>
             mutate(is_matched = bc_type %in% strsplit(as.character(patient), "+", fixed=TRUE)[[1]]) |>
@@ -13,7 +13,9 @@ calc_representation = function(lib_counts, bcs, meta) {
             mutate(frac = value / bcs_per_sample,
                    rnk = (rank(value, ties.method="first")-1) / (n()-1),
                    rlab = paste0(rank(value, ties.method="first"), "/", n())) |>
-        ungroup()
+        ungroup() |>
+        mutate(bc_type = factor(bc_type, levels=unique(bcs$bc_type)),
+               bc_type = forcats::fct_na_value_to_level(bc_type, "unused"))
 }
 
 #' @export
