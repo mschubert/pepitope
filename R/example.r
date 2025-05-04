@@ -42,10 +42,11 @@ example_peptides = function(valid_barcodes) {
 #' @param sample_sheet   The .tsv or data.frame file containing sample information
 #' @param peptide_sheet  A list, each item containing construct information
 #' @param target_reads   How many reads to simulate on average
-#' @return  The path to the created FASTQ file
+#' @param seed  The random seed used for sampling the number of reads
+#' @return      The path to the created FASTQ file
 #' @keywords internal
 #' @export
-example_fastq = function(samples, peptide_sheets, target_reads=1000) {
+example_fastq = function(samples, peptide_sheets, target_reads=1000, seed=91651) {
     sim_reads = function(sample_barcode, construct_seq, n) {
         read_seq = paste0(sample_barcode, construct_seq)
         Map(paste, sep="\n", USE.NAMES=FALSE,
@@ -64,6 +65,8 @@ example_fastq = function(samples, peptide_sheets, target_reads=1000) {
         dimnames=list(barcode=all_seq$barcode, sample_id=samples$sample_id))
 
     # fill all expected barcodes (i.e., has an entry in the sample sheet)
+    if (!is.null(seed))
+        set.seed(seed)
     smp_file = samples |> select(sample_id, patient) |>
         mutate(patient = strsplit(patient, "+", fixed=TRUE)) |>
         tidyr::unnest(patient)

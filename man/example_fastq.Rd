@@ -4,10 +4,12 @@
 \alias{example_fastq}
 \title{Simulate sequencing data and write them to a temporary FASTQ file}
 \usage{
-example_fastq(samples, peptide_sheets, target_reads = 1000)
+example_fastq(samples, peptide_sheets, target_reads = 1000, seed = 91651)
 }
 \arguments{
 \item{target_reads}{How many reads to simulate on average}
+
+\item{seed}{The random seed used for sampling the number of reads}
 
 \item{sample_sheet}{The .tsv or data.frame file containing sample information}
 
@@ -19,3 +21,4 @@ The path to the created FASTQ file
 \description{
 Simulate sequencing data and write them to a temporary FASTQ file
 }
+\keyword{internal}

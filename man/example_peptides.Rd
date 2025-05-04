@@ -15,3 +15,4 @@ A named list of peptide/minigene constructs with barcodes
 \description{
 Create example peptide sheets for multiple samples
 }
+\keyword{internal}
