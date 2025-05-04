@@ -30,7 +30,9 @@
 <url><loc>/reference/make_report.html</loc></url>
 <url><loc>/reference/pep_tile.html</loc></url>
 <url><loc>/reference/pepitope.html</loc></url>
+<url><loc>/reference/plot_barcode_overlap.html</loc></url>
 <url><loc>/reference/plot_genomic_context.html</loc></url>
+<url><loc>/reference/plot_screen.html</loc></url>
 <url><loc>/reference/reexports.html</loc></url>
 <url><loc>/reference/remove_cutsite.html</loc></url>
 <url><loc>/reference/remove_cutsite_nuc.html</loc></url>
