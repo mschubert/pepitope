@@ -1,5 +1,5 @@
-pepitope: extract *pep*tide ep*itope*s
-======================================
+pepitope: extract, qc and screen *pep*tide ep*itope*s
+=====================================================
 
 R package to extract the peptide context (flanking region around mutations)
 from reference genome and variant (VCF) file.

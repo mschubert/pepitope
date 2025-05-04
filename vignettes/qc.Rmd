@@ -114,6 +114,12 @@ for (i in seq_along(all_constructs)) {
 cat(":::\n")
 ```
 
+We can confirm that these barcodes do not overlap:
+
+```{r fig.height=2.5}
+plot_barcode_overlap(all_constructs, valid_barcodes)
+```
+
 ### Creating a sample sheet
 
 Before we can start working with the FASTQ sequencing output, we need to describe
@@ -138,12 +144,6 @@ sample_sheet = system.file("my_samples.tsv", package="pepitope")
 
 ```{r echo=FALSE, message=FALSE}
 DT::datatable(readr::read_tsv(sample_sheet), class="compact stripe hover")
-```
-
-We can confirm that these barcodes do not overlap:
-
-```{r}
-plot_barcode_overlap(all_constructs, valid_barcodes)
 ```
 
 Demultiplexing and counting

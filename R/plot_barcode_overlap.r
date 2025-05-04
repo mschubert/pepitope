@@ -13,8 +13,11 @@ plot_barcode_overlap = function(all_constructs, valid_barcodes) {
     if (!missing(valid_barcodes))
         dset = left_join(data.frame(barcode = valid_barcodes), dset)
 
-    dset$barcode = as.integer(factor(dset$barcode))
-    ggplot(dset, aes(x=barcode, y=bc_type)) +
+    dset2 = dset |>
+        mutate(barcode = as.integer(factor(barcode))) |>
+        filter(!is.na(bc_type))
+
+    ggplot(dset2, aes(x=barcode, y=bc_type)) +
         geom_tile(aes(fill=overlap)) +
         scale_fill_brewer(palette="Set1") +
         ggtitle("Barcode overlap")

@@ -1,5 +1,5 @@
 Package: pepitope
-Title: Extract the peptide context around mutations in a VCF
+Title: Extract, QC and screen peptide epitopes
 Version: 0.2.921
 Authors@R: c(
     person('Michael', 'Schubert', email='mschu.dev@gmail.com',
