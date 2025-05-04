@@ -4,7 +4,7 @@
 #' @param cfg  outdated
 #' @importFrom stats setNames
 #' @export
-calc_de = function(eset, cfg) {
+screen_calc = function(eset, cfg) {
     if (!is.null(cfg$patient))
         eset = eset[,eset$patient %in% cfg$patient]
     eset$origin = factor(make.names(sub("B cells", "Bcells", eset$origin)))
@@ -31,7 +31,8 @@ calc_de = function(eset, cfg) {
 #' @param sample  The sample name
 #' @param cap_fc  An absolute limit of the log2 fold change
 #' @return  A cleaned results object
-make_clean = function(res, sample, cap_fc=3) {
+#' @export
+screen_clean = function(res, sample, cap_fc=3) {
     res |>
         filter(bc_type %in% c(sub("+TAA", "", sample, fixed=TRUE), "shared", "TAA")) |>
         mutate(log2FoldChange = sign(log2FoldChange) * pmin(cap_fc, abs(log2FoldChange)))

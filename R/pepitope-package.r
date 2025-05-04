@@ -14,3 +14,7 @@
 #' @importFrom VariantAnnotation readVcfAsVRanges
 #' @export
 VariantAnnotation::readVcfAsVRanges
+
+#' @import dplyr
+#' @import ggplot2
+NULL

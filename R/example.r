@@ -1,6 +1,5 @@
 #' Create a my_peptides.tsv in the inst directory
 #'
-#' @importFrom dplyr mutate select
 #' @keywords internal
 example_peptide_file = function(outfile) {
     variant_vcf_file = system.file("my_variants.vcf", package="pepitope")
@@ -60,7 +59,7 @@ example_fastq = function(samples, peptide_sheets, target_reads=1000, seed=91651)
     if (is.character(samples) && length(samples) == 1 && file.exists(samples))
         samples = readr::read_tsv(samples, show_col_types=FALSE)
 
-    all_seq = dplyr::bind_rows(peptide_sheets, .id="bc_type")
+    all_seq = bind_rows(peptide_sheets, .id="bc_type")
     counts = matrix(0, nrow=nrow(all_seq), ncol=length(samples$sample_id),
         dimnames=list(barcode=all_seq$barcode, sample_id=samples$sample_id))
 

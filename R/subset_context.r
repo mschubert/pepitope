@@ -4,7 +4,6 @@
 #' @param ctx_codons  How many flanking codons each to include in the context
 #' @return  GRanges object with sequence information of only context
 #'
-#' @importFrom dplyr `%>%`
 #' @importFrom Biostrings vmatchPattern nchar
 #' @export
 subset_context = function(codv, ctx_codons) {
@@ -30,8 +29,8 @@ subset_context = function(codv, ctx_codons) {
     ctx_end_over = pmax(0, roi_codon_end_alt + ctx - len_alt)
 
     ext_by = pmin(len_alt, 2*ctx+3) - ctx_len_alt
-    add_to_end = pmin(ext_by, ctx_start_over) %>% pmin(len_alt - ctx_start) %>% pmax(0)
-    add_to_start = pmin(ext_by, ctx_end_over) %>% pmin(ctx_start-1) %>% pmax(0)
+    add_to_end = pmin(ext_by, ctx_start_over) |> pmin(len_alt - ctx_start) |> pmax(0)
+    add_to_start = pmin(ext_by, ctx_end_over) |> pmin(ctx_start-1) |> pmax(0)
     add_to_start[codv$VARAA == "*"] = 0
     stopifnot(add_to_start == 0 | add_to_end == 0,
               codv$CONSEQUENCE == "extension" | (add_to_start %% 3 == 0 & add_to_end %% 3 == 0),

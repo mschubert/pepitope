@@ -1,4 +1,8 @@
-#' @import dplyr
+#' Calculate ranked barcode representation across samples
+#'
+#' @param lib_counts  A count matrix
+#' @param bcs  Barcodes
+#' @param meta  Sample sheet and read count summaries
 #' @export
 calc_representation = function(lib_counts, bcs, meta) {
     reshape2::melt(lib_counts) |> as_tibble() |>
@@ -18,6 +22,10 @@ calc_representation = function(lib_counts, bcs, meta) {
                bc_type = forcats::fct_na_value_to_level(bc_type, "unused"))
 }
 
+#' Plot the read distribution across barcodes
+#'
+#' @param reps  A `data.frame` from `calc_representation`
+#' @return  A `ggplot2` object
 #' @export
 plot_distr = function(reps) {
     reps2 = reps |>
