@@ -8,6 +8,12 @@
 #' @importFrom SummarizedExperiment SummarizedExperiment
 #' @export
 count_bc = function(tdir, all_constructs, valid_barcodes, reverse_complement=FALSE) {
+    construct_df = bind_rows(all_constructs, .id="bc_type")
+    if (any(duplicated(construct_df$barcode)))
+        stop("Duplicate barcodes are not allowed but found in 'all_constructs'")
+    if (missing(valid_barcodes))
+        valid_barcodes = construct_df$barcode
+
     res = count_external(tdir, valid_barcodes, reverse_complement)
 
     stats = res$stats |> mutate(sample_id = sub("\\.R1$", "", label))
@@ -23,7 +29,6 @@ count_bc = function(tdir, all_constructs, valid_barcodes, reverse_complement=FAL
                short = paste(patient, smp),
                label = sprintf("%s (%s)", short, sample_id))
 
-    construct_df = bind_rows(all_constructs, .id="bc_type")
     rows = data.frame(barcode=valid_barcodes) |>
         left_join(construct_df) |>
         mutate(bc_type = ifelse(is.na(bc_type), "unused", bc_type),
