@@ -40,12 +40,12 @@ the Minigene Library report.
 
 We will usually work with standard processing pipelines for variant calling,
 RNA-seq quantification, and RNA fusion calling. The best-known collection of
-these workflows is [NF-core](https://nf-co.re/).
+these workflows is [*NF-core*](https://nf-co.re/).
 
 It provides the following pipelines for these tasks:
 
-* [`sarek`](https://nf-co.re/sarek/) for variant calling using HaplotypeCaller and Mutect2
-* [`rnaseq`](https://nf-co.re/rnaseq/) for RNA-seq quantification using STAR and Salmon
+* [`sarek`](https://nf-co.re/sarek/) for variant calling, usually using *HaplotypeCaller* and *Mutect2*
+* [`rnaseq`](https://nf-co.re/rnaseq/) for RNA-seq quantification, usually using *STAR* and *Salmon*
 * [`rnafusion`](https://nf-co.re/rnafusion/) for RNA fusion quantification using multiple algorithms
 
 Running these will usually require access to high performance computing
@@ -75,10 +75,10 @@ processing pipelines and the Minigene Library annotation.
 
 We are usually working with `BSgenome` (for the reference genome) and `EnsDb`
 (for the gene annotations) objects. For human data, the most widely used
-reference genome is `GRCh38`, and a recent `Ensembl` annotation release.
+reference genome is `GRCh38`, and a recent *Ensembl* annotation release.
 
 With our test data, we know that `GRCh38` is the correct reference genome and
-`Ensembl 106` is the correct version of gene annotations. We can get both
+*Ensembl 106* is the correct version of gene annotations. We can get both
 objects from the `BSgenome` and `AnnotationHub` Bioconductor packages, respectively.
 
 ```{r}
@@ -104,7 +104,7 @@ The correct styles will depend on how your VCF files were generated.
 
 ### Adding RNA expression
 
-The [NF-core `rnaseq` workflow](https://nf-co.re/rnaseq/) will provide two gene
+The [*NF-core* `rnaseq` workflow](https://nf-co.re/rnaseq/) will provide two gene
 expression files, one for raw read counts and one for transcripts per million (TPM).
 These contain all samples in a run, so we need to subset them to the current sample
 we are interested in. These files are usually called:
@@ -136,9 +136,9 @@ vr1 = readVcfAsVRanges(variant_vcf_file) |>
 
 Here, we are using the following filters:
 
-* `min_cov=2` -- a variant needs to be covered by at least 2 reads
-* `min_af=0.05` -- a variant needs to occur in at leat 5% of reads
-* `pass=TRUE` -- a variant needs to pass the standard QC filters
+* `min_cov = 2` -- a variant needs to be covered by at least 2 reads
+* `min_af = 0.05` -- a variant needs to occur in at leat 5% of reads
+* `pass = TRUE` -- a variant needs to pass the standard QC filters
 
 The resulting `vr1` object looks like the following:
 
@@ -157,8 +157,8 @@ subs = ann |>
 
 Here, we are using the following filters:
 
-* `min_reads=1` -- the gene needs to have at least one RNA read
-* `min_tpm=0` -- we do not apply an additional TPM filter
+* `min_reads = 1` -- the gene needs to have at least one RNA read
+* `min_tpm = 0` -- we do not apply an additional TPM filter
 
 In addition, we set the region of interest (context) to 15 codons up- and downstream of the
 variant. Hence, a SNP will have a total length of 93 nucleotides (15*3 + the SNP codon itself).
@@ -197,9 +197,9 @@ seqlevelsStyle(vr2) = "UCSC"
 
 Here, we are using the following filters:
 
-* `min_reads=2` -- the fusion needs to be supported by 2 split or pair distance reads
-* `min_split_reads=1` -- the fusion needs to be supported by at least one split read
-* `min_tools=1` -- the fusion needs to be reported by at least one tool
+* `min_reads = 2` -- the fusion needs to be supported by 2 split or pair distance reads
+* `min_split_reads = 1` -- the fusion needs to be supported by at least one split read
+* `min_tools = 1` -- the fusion needs to be reported by at least one tool
 
 ### Annotating fusion genes
 
@@ -244,15 +244,12 @@ __ SHOW TABLE HERE __
 
 ### Saving the report file
 
-We can then combine our generated tables into a report save it with the
+We can then combine our generated tables into a report save it with e.g. the
 `writexl` package. We can include all tables listed above:
 
 ```{r eval=FALSE}
 report = make_report(ann, subs, fus, tiled)
-writexl::write_xlsx(report, "report_file.xlsx")
-```
-```{r echo=FALSE}
-#report = make_report(ann, subs, fus, tiled)
+# writexl::write_xlsx(report, "report_file.xlsx")
 ```
 
 This `.xlsx` file will contain the different tables as sheets. We will use it 
