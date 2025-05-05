@@ -13,6 +13,9 @@ calc_representation(lib_counts, bcs, meta)
 
 \item{meta}{Sample sheet and read count summaries}
 }
+\value{
+A data.frame with ranked read counts and their fractions
+}
 \description{
 Calculate ranked barcode representation across samples
 }

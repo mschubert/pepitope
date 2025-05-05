@@ -4,7 +4,21 @@
 \alias{plot_screen}
 \title{Plot screen results}
 \usage{
-plot_screen(res, sample, links = TRUE, labs = TRUE)
+plot_screen(res, sample, links = TRUE, labs = TRUE, cap_fc = 8)
+}
+\arguments{
+\item{res}{A results `data.frame` from `screen_calc()`}
+
+\item{sample}{Which library to plot}
+
+\item{links}{Whether to draw arrows between ref and significant alt peptides}
+
+\item{labs}{Whether to label genes in less dense areas}
+
+\item{cap_fc}{Maximum amount of fold-change to limit values to}
+}
+\value{
+A `ggplot2` object of the differential expression results
 }
 \description{
 Plot screen results

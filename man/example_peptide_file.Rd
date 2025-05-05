@@ -4,7 +4,7 @@
 \alias{example_peptide_file}
 \title{Create a my_peptides.tsv in the inst directory}
 \usage{
-example_peptide_file(outfile)
+example_peptide_file()
 }
 \description{
 Create a my_peptides.tsv in the inst directory

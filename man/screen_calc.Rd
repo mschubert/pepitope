@@ -4,12 +4,12 @@
 \alias{screen_calc}
 \title{Calculate differential abundance of construct barcodes}
 \usage{
-screen_calc(eset, cfg)
+screen_calc(dset, comparisons)
 }
 \arguments{
-\item{eset}{A DESeq2 object}
+\item{comparisons}{A character vector of sample and reference condition, or list thereof}
 
-\item{cfg}{outdated}
+\item{eset}{A `SummarizedExperiment` object from `count_bc()`}
 }
 \description{
 Calculate differential abundance of construct barcodes

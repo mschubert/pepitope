@@ -10,7 +10,7 @@ plot_distr(dset)
 \item{dset}{The `SummarizedExperiment` object from `count_bc`}
 }
 \value{
-A `ggplot2` object
+A `ggplot2` object with cumulative read distribution plots
 }
 \description{
 Plot the read distribution across barcodes

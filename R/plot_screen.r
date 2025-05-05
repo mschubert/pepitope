@@ -1,10 +1,18 @@
 #' Plot screen results
 #'
+#' @param res     A results `data.frame` from `screen_calc()`
+#' @param sample  Which library to plot
+#' @param links   Whether to draw arrows between ref and significant alt peptides
+#' @param labs    Whether to label genes in less dense areas
+#' @param cap_fc  Maximum amount of fold-change to limit values to
+#' @return  A `ggplot2` object of the differential expression results
+#'
 #' @export
-plot_screen = function(res, sample, links=TRUE, labs=TRUE) {
-    res$log2FoldChange = sign(res$log2FoldChange) * pmin(abs(res$log2FoldChange), 8)
+plot_screen = function(res, sample, links=TRUE, labs=TRUE, cap_fc=8) {
+    res$log2FoldChange = sign(res$log2FoldChange) * pmin(abs(res$log2FoldChange), cap_fc)
     lab = res |> filter(padj<0.1) |> group_by(gene_name) |>
         filter(n_distinct(pep_type)==1 | is.na(pep_type) | pep_type=="alt")
+
     p = ggplot(res, aes(x=baseMean, y=log2FoldChange)) +
         geom_hline(yintercept=0, color="grey") +
         geom_point(aes(color=bc_type, shape=pep_type, size=padj<0.1, alpha=padj<0.1)) +

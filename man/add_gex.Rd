@@ -17,3 +17,4 @@ Annotated variants including gene counts and TPM
 \description{
 Add gene expression values to variant result
 }
+\keyword{internal}
