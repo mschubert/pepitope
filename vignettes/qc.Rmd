@@ -209,15 +209,6 @@ with the following way:
 Quality Control plots
 ---------------------
 
-### Calculating summary statistics
-
-We can calculate summary statistics to use in quality control plots like this:
-
-```{r}
-all_constructs_df = bind_rows(all_constructs, .id="bc_type")
-reps = calc_representation(dset$counts, all_constructs_df, dset$meta)
-```
-
 ### Plotting total barcode counts
 
 The first overview that we want to get is to know how many barcodes are in which
@@ -226,18 +217,18 @@ from. We can plot this the following way, for total read counts on the left and
 number of barcodes that have 10 or more reads on the right:
 
 ```{r}
-plot_reads(reps, dset$meta)
+plot_reads(dset)
 ```
 
 We can also plot this interactively with `plotly`:
 
 ```{r}
 library(plotly)
-plot = plot_reads(reps, dset$meta)
-subplot(ggplotly(plot[[1]], height=400),
-        ggplotly(plot[[2]], height=400),
-        ggplotly(plot[[3]], height=400),
-        ggplotly(plot[[4]], height=400), nrows=2)
+plot = plot_reads(dset)
+subplot(ggplotly(plot[[1]], height=300),
+        ggplotly(plot[[2]], height=300), nrows=1)
+subplot(ggplotly(plot[[3]], height=300),
+        ggplotly(plot[[4]], height=300), nrows=1)
 ```
 
 ### Representation of individual barcodes
@@ -249,7 +240,7 @@ abundant (right) and plot a continuous line for how many reads are sequenced of
 this barcode on the y axis:
 
 ```{r}
-plot_distr(reps)
+plot_distr(dset)
 ```
 
 In a perflectly balanced library we would expect a horizonal line that stays
@@ -262,7 +253,7 @@ the mouse to see which barcode is in which position exactly:
 
 ```{r}
 library(plotly)
-ggplotly(plot_distr(reps), height=500, tooltip="text")
+ggplotly(plot_distr(dset), height=500, tooltip="text")
 ```
 
 <!-- add cor plots here

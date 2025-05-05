@@ -3,7 +3,7 @@
 #' @param lib_counts  A count matrix
 #' @param bcs  Barcodes
 #' @param meta  Sample sheet and read count summaries
-#' @export
+#' @keywords internal
 calc_representation = function(lib_counts, bcs, meta) {
     reshape2::melt(lib_counts) |> as_tibble() |>
         dplyr::rename(barcode=Var1, sample_id=Var2) |>
@@ -17,18 +17,16 @@ calc_representation = function(lib_counts, bcs, meta) {
             mutate(frac = value / bcs_per_sample,
                    rnk = (rank(value, ties.method="first")-1) / (n()-1),
                    rlab = paste0(rank(value, ties.method="first"), "/", n())) |>
-        ungroup() |>
-        mutate(bc_type = factor(bc_type, levels=unique(bcs$bc_type)),
-               bc_type = forcats::fct_na_value_to_level(bc_type, "unused"))
+        ungroup()
 }
 
 #' Plot the read distribution across barcodes
 #'
-#' @param reps  A `data.frame` from `calc_representation`
+#' @param dset  The `SummarizedExperiment` object from `count_bc`
 #' @return  A `ggplot2` object
 #' @export
-plot_distr = function(reps) {
-    reps2 = reps |>
+plot_distr = function(dset) {
+    reps = calc_representation(assay(dset), as_tibble(rowData(dset)), as_tibble(colData(dset))) |>
         filter(is_matched | value > 0) |>
         mutate(text = sprintf("%s (%s)\n%i reads (%.1f%%)\n%s (%s)",
             ifelse(is.na(pep_id), oligo_id, pep_id),
@@ -36,7 +34,7 @@ plot_distr = function(reps) {
             as.integer(value), frac,
             ifelse(is_matched, "matched", "contamination"), rlab))
 
-    ggplot(reps2, aes(x=rnk, y=value, group=bc_type, color=bc_type, text=text)) +
+    ggplot(reps, aes(x=rnk, y=value, group=bc_type, color=bc_type, text=text)) +
         geom_line(aes(linetype=is_matched)) +
         scale_linetype_manual(values=c("TRUE"="solid", "FALSE"="dashed")) +
         scale_color_manual(values=make_pal(reps$bc_type),

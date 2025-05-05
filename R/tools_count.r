@@ -24,7 +24,10 @@ count_bc = function(tdir, all_constructs, valid_barcodes, reverse_complement=FAL
                label = sprintf("%s (%s)", short, sample_id))
 
     construct_df = bind_rows(all_constructs, .id="bc_type")
-    rows = data.frame(barcode=valid_barcodes) |> left_join(construct_df)
+    rows = data.frame(barcode=valid_barcodes) |>
+        left_join(construct_df) |>
+        mutate(bc_type = ifelse(is.na(bc_type), "unused", bc_type),
+               bc_type = factor(bc_type, levels=c(names(all_constructs), "unused")))
 
     SummarizedExperiment(
         list(counts = counts[, meta$sample_id, drop=FALSE]),
