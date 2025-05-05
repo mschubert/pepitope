@@ -68,9 +68,9 @@ Here, we use barcodes from
 [this publication](https://www.pnas.org/doi/full/10.1073/pnas.1802640115) and
 [Github repository](https://github.com/hawkjo/freebarcodes):
 
-```{r}
+```{r message=FALSE}
 lib = "https://raw.githubusercontent.com/hawkjo/freebarcodes/master/barcodes/barcodes12-1.txt"
-valid_barcodes = readr::read_tsv(lib, col_names=FALSE, show_col_types=FALSE)$X1
+valid_barcodes = readr::read_tsv(lib, col_names=FALSE)$X1
 ```
 
 These barcodes need to be of the same length and not overlap between samples in
