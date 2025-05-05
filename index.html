@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Extract the peptide context around mutations in a VCF • pepitope</title>
+<title>Extract, QC and screen peptide epitopes • pepitope</title>
 <script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Extract the peptide context around mutations in a VCF">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Extract, QC and screen peptide epitopes">
 <meta name="description" content="Given a reference genome and VCF file, this package will provide the upstream/downstream peptide context of a variant. It will generate a summary report for protein-coding variants including the reference and mutated allele, read coverage, amino acid sequence, and other information. It can also be used to remove restriction sites from cDNA, alongside other helper functions.">
 <meta property="og:description" content="Given a reference genome and VCF file, this package will provide the upstream/downstream peptide context of a variant. It will generate a summary report for protein-coding variants including the reference and mutated allele, read coverage, amino acid sequence, and other information. It can also be used to remove restriction sites from cDNA, alongside other helper functions.">
 </head>
@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">pepitope</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.921</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.922</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,7 +58,7 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="pepitope-extract-peptide-epitopes">pepitope: extract <em>pep</em>tide ep<em>itope</em>s<a class="anchor" aria-label="anchor" href="#pepitope-extract-peptide-epitopes"></a>
+<div class="page-header"><h1 id="pepitope-extract-qc-and-screen-peptide-epitopes">pepitope: extract, qc and screen <em>pep</em>tide ep<em>itope</em>s<a class="anchor" aria-label="anchor" href="#pepitope-extract-qc-and-screen-peptide-epitopes"></a>
 </h1></div>
 <p>R package to extract the peptide context (flanking region around mutations) from reference genome and variant (VCF) file.</p>
 <p>The peptide context is defined as up- and downstream around the following:</p>
