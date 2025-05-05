@@ -122,6 +122,13 @@ plot_barcode_overlap(all_constructs, valid_barcodes)
 
 ### Creating a sample sheet
 
+A sequencing (FASTQ) file will contain a sample barcode, construct barcode,
+and construct sequence:
+
+```{r}
+fastq_file = "/path/to/your/file.fq.gz"
+```
+
 Before we can start working with the FASTQ sequencing output, we need to describe
 which samples it contains. For this, we create a sample sheet with the following
 columns:
@@ -146,20 +153,17 @@ sample_sheet = system.file("my_samples.tsv", package="pepitope")
 DT::datatable(readr::read_tsv(sample_sheet), class="compact stripe hover")
 ```
 
+Here, we did not actually do any sequencing, so we provide a simulated FASTQ
+file instead:
+
+```{r}
+fastq_file = example_fastq(sample_sheet, all_constructs)
+```
+
 Demultiplexing and counting
 ---------------------------
 
-### FASTQ read structure
-
-A sequencing (FASTQ) file will contain a sample barcode, construct barcode,
-and construct sequence:
-
-```{r}
-## normally we'd supply the path to our sequencing file:
-# fastq_file = "/path/to/your/file.fq.gz"
-
-fastq_file = example_fastq(sample_sheet, all_constructs)
-```
+### Sample demultiplexing
 
 This step is using the `fqtk` toolkit to split the multi-sample FASTQ file into
 individual sample files, separated by their sample barcode and save to a
@@ -172,8 +176,6 @@ following possible fields, preceded by the number of nucleotides in the read. A
 * `B` -- the sample barcode to split on (required)
 * `T` -- the read sequence with the construct barcode and sequence (required)
 * `S` -- skip these nucleotides and do not include in output (optional)
-
-### Sample demultiplexing
 
 In this example, we use a 7-nucleotide barcode for the samples and keep the
 rest of the read in the split files:
