@@ -29,6 +29,7 @@ plot_screen = function(res, sample, links=TRUE, labs=TRUE) {
     p
 }
 
+#' @keywords internal
 make_links = function(res, sample) {
     arrs = res |> filter(bc_type == sample) |>
         select(mut_id, pep_type, baseMean, log2FoldChange, padj)

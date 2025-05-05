@@ -3,6 +3,8 @@
 #' @param lib_counts  A count matrix
 #' @param bcs  Barcodes
 #' @param meta  Sample sheet and read count summaries
+#' @return  A data.frame with ranked read counts and their fractions
+#'
 #' @keywords internal
 calc_representation = function(lib_counts, bcs, meta) {
     reshape2::melt(lib_counts) |> as_tibble() |>
@@ -23,7 +25,8 @@ calc_representation = function(lib_counts, bcs, meta) {
 #' Plot the read distribution across barcodes
 #'
 #' @param dset  The `SummarizedExperiment` object from `count_bc`
-#' @return  A `ggplot2` object
+#' @return  A `ggplot2` object with cumulative read distribution plots
+#'
 #' @export
 plot_distr = function(dset) {
     reps = calc_representation(assay(dset), as_tibble(rowData(dset)), as_tibble(colData(dset))) |>

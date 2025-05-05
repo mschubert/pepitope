@@ -3,6 +3,7 @@
 #' @param res  A DataFrame object from `fusions`
 #' @param ctx_codons  How many flanking codons each to include in the context
 #' @return     A DataFrame object of gene fusions
+#'
 #' @export
 subset_context_fusion = function(res, ctx_codons) {
     break_codon_start_5p = floor((res$break_cdsloc_5p-1)/3) * 3 + 1

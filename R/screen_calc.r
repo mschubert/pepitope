@@ -2,6 +2,7 @@
 #'
 #' @param eset  A DESeq2 object
 #' @param cfg  outdated
+#'
 #' @importFrom stats setNames
 #' @export
 screen_calc = function(eset, cfg) {
@@ -31,6 +32,7 @@ screen_calc = function(eset, cfg) {
 #' @param sample  The sample name
 #' @param cap_fc  An absolute limit of the log2 fold change
 #' @return  A cleaned results object
+#'
 #' @export
 screen_clean = function(res, sample, cap_fc=3) {
     res |>

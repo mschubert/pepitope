@@ -6,6 +6,7 @@
 #' @param gene gene name
 #' @param txdb txdb object
 #' @return A plot
+#'
 #' @importFrom GenomeInfoDb seqnames seqlevelsStyle
 #' @importFrom Gviz GenomeAxisTrack AnnotationTrack GeneRegionTrack AlignmentsTrack plotTracks identifier<-
 #' @importFrom IRanges start end

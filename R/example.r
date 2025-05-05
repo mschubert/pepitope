@@ -1,7 +1,7 @@
 #' Create a my_peptides.tsv in the inst directory
 #'
 #' @keywords internal
-example_peptide_file = function(outfile) {
+example_peptide_file = function() {
     variant_vcf_file = system.file("my_variants.vcf", package="pepitope")
     ens106 = AnnotationHub::AnnotationHub()[["AH100643"]]
     asm = BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38
@@ -21,6 +21,7 @@ example_peptide_file = function(outfile) {
 #'
 #' @param valid_barcodes  A character vector of valid barcodes
 #' @return  A named list of peptide/minigene constructs with barcodes
+#'
 #' @keywords internal
 #' @export
 example_peptides = function(valid_barcodes) {
@@ -43,6 +44,7 @@ example_peptides = function(valid_barcodes) {
 #' @param target_reads   How many reads to simulate on average
 #' @param seed  The random seed used for sampling the number of reads
 #' @return      The path to the created FASTQ file
+#'
 #' @keywords internal
 #' @export
 example_fastq = function(samples, peptide_sheets, target_reads=1000, seed=91651) {

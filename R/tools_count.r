@@ -4,7 +4,8 @@
 #' @param all_constructs  A named list of all construct libraries
 #' @param valid_barcodes  A character vector of all possible barcodes
 #' @param reverse_complement  Whether to count the reverse complement of the barcodes instead
-#' @return      A list with the data.frame meta and matrix counts
+#' @return      A `SummarizedExperiment` object with counts and metadata
+#'
 #' @importFrom SummarizedExperiment SummarizedExperiment
 #' @export
 count_bc = function(tdir, all_constructs, valid_barcodes, reverse_complement=FALSE) {
@@ -41,6 +42,13 @@ count_bc = function(tdir, all_constructs, valid_barcodes, reverse_complement=FAL
     )
 }
 
+#' Use `guide-counter` via a system call to actually count
+#'
+#' @param tdir  Path to the directory with demultiplexed FASTQ files
+#' @param valid_barcodes  A character vector of all possible barcodes
+#' @param reverse_complement  Whether to count the reverse complement of the barcodes instead
+#' @return      A list with the data.frame meta and matrix counts
+#'
 #' @importFrom Biostrings reverseComplement DNAStringSet
 #' @keywords internal
 count_external = function(tdir, valid_barcodes, reverse_complement) {

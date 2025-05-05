@@ -3,6 +3,7 @@
 #' @param fq  A path to the fastq file to demultiplex
 #' @param samples  A sample sheet as `data.frame` in tsv format
 #' @param read_structures  A character string describing the read structure
+#'
 #' @export
 demux_fq = function(fq, samples, read_structures) {
     tdir = tempdir()

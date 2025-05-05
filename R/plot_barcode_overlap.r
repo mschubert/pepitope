@@ -2,6 +2,7 @@
 #'
 #' @param all_constructs  A named list of all constructs
 #' @return  A ggplot2 object
+#'
 #' @export
 plot_barcode_overlap = function(all_constructs, valid_barcodes) {
     dset = bind_rows(all_constructs, .id="bc_type") |>

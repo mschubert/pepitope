@@ -4,7 +4,8 @@
 #' @param rec  Sample record from config file
 #' @return     Annotated variants including gene counts and TPM
 #'
-#' @export
+#' @keywords internal
+##' @export
 add_gex = function(res, rec) {
     counts = readr::read_tsv(rec$til_rna$count, col_names=c("gene_id", "gene_name", "count"))
     gex = readr::read_tsv(rec$til_rna$tpm) |>
