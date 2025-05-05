@@ -9,12 +9,22 @@
 #'
 #' @name pepitope
 #' @docType package
+#' @import dplyr
+#' @import ggplot2
 "_PACKAGE"
 
 #' @importFrom VariantAnnotation readVcfAsVRanges
 #' @export
 VariantAnnotation::readVcfAsVRanges
 
-#' @import dplyr
-#' @import ggplot2
-NULL
+#' @importFrom SummarizedExperiment colData
+#' @export
+SummarizedExperiment::colData
+
+#' @importFrom SummarizedExperiment rowData
+#' @export
+SummarizedExperiment::rowData
+
+#' @importFrom SummarizedExperiment assay
+#' @export
+SummarizedExperiment::assay

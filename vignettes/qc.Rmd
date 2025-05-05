@@ -196,13 +196,15 @@ demultiplexed FASTQ files and the barcode library file with all possible
 (not only the used) barcodes:
 
 ```{r}
-dset = count_bc(temp_dir, sample_sheet, valid_barcodes)
+dset = count_bc(temp_dir, all_constructs, valid_barcodes)
 ```
 
-Here, `dset` will be a list with two objects:
+Here, `dset` will be a `SummarizedExperiment` object that you can interact
+with the following way:
 
-* `meta` -- is a data.frame sample and read information in rows
-* `counts` -- is a matrix with constructs in rows and samples in columns
+* `colData(dset)` -- access the sample metadata as `data.frame`
+* `rowData(dset)` -- access the construct metadata as `data.frame`
+* `assay(dset)` -- access the construct counts as `matrix`
 
 Quality Control plots
 ---------------------

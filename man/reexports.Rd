@@ -4,6 +4,9 @@
 \name{reexports}
 \alias{reexports}
 \alias{readVcfAsVRanges}
+\alias{colData}
+\alias{rowData}
+\alias{assay}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -11,6 +14,8 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
+  \item{SummarizedExperiment}{\code{\link[SummarizedExperiment:SummarizedExperiment-class]{assay}}, \code{\link[SummarizedExperiment:SummarizedExperiment-class]{colData}}, \code{\link[SummarizedExperiment:SummarizedExperiment-class]{rowData}}}
+
   \item{VariantAnnotation}{\code{\link[VariantAnnotation:VRanges-class]{readVcfAsVRanges}}}
 }}
 

@@ -44,7 +44,7 @@ these workflows is [NF-core](https://nf-co.re/).
 
 It provides the following pipelines for these tasks:
 
-* [`sarek`](https://nf-co.re/sarek/) for variant calling using HaploytypeCaller and Mutect2
+* [`sarek`](https://nf-co.re/sarek/) for variant calling using HaplotypeCaller and Mutect2
 * [`rnaseq`](https://nf-co.re/rnaseq/) for RNA-seq quantification using STAR and Salmon
 * [`rnafusion`](https://nf-co.re/rnafusion/) for RNA fusion quantification using multiple algorithms
 

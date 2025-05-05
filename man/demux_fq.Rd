@@ -9,7 +9,7 @@ demux_fq(fq, samples, read_structures)
 \arguments{
 \item{fq}{A path to the fastq file to demultiplex}
 
-\item{samples}{A sample sheet in tsv format}
+\item{samples}{A sample sheet as `data.frame` in tsv format}
 
 \item{read_structures}{A character string describing the read structure}
 }
