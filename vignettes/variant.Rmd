@@ -231,16 +231,6 @@ The `tiled` peptide table looks like the following:
 DT::datatable(tiled, class="compact stripe hover", options=list(scrollX=TRUE))
 ```
 
-<!--
-### Adding barcodes
-
-```{r}
-# this is not yet implemented
-```
-
-__ SHOW TABLE HERE __
--->
-
 ### Saving the report file
 
 We can then combine our generated tables into a report save it with e.g. the
