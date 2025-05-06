@@ -19,6 +19,6 @@ make_report = function(vars, subs, fus=DataFrame(), tiled) {
             select(-tx_name, -(ref_nuc:alt_prot)) |> distinct(),
          `Unique Protein-Coding` = gr2df(subs) |> select(var_id, mut_id, everything()),
          `RNA Fusions` = as.data.frame(fus),
-         `93 nt Peptides` = tiled |> select(var_id, mut_id, pep_id,
-            gene_id:cDNA, n_tiles, BbsI_replaced, tiled, nt, peptide))
+         `93 nt Peptides` = tiled |> select(var_id, gene_id, mut_id, pep_id, pep_type,
+            tx_id, n_tiles, BbsI_replaced, tiled, nt, peptide))
 }
