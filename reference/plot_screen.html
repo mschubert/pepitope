@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pepitope</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.922</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.990</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,11 +48,40 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plot_screen</span><span class="op">(</span><span class="va">res</span>, <span class="va">sample</span>, links <span class="op">=</span> <span class="cn">TRUE</span>, labs <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plot_screen</span><span class="op">(</span><span class="va">res</span>, <span class="va">sample</span>, links <span class="op">=</span> <span class="cn">TRUE</span>, labs <span class="op">=</span> <span class="cn">TRUE</span>, cap_fc <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span></code></pre></div>
     </div>
 
+    <div class="section level2">
+    <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
-  </main></div>
+
+<dl><dt id="arg-res">res<a class="anchor" aria-label="anchor" href="#arg-res"></a></dt>
+<dd><p>A results `data.frame` from `screen_calc()`</p></dd>
+
+
+<dt id="arg-sample">sample<a class="anchor" aria-label="anchor" href="#arg-sample"></a></dt>
+<dd><p>Which library to plot</p></dd>
+
+
+<dt id="arg-links">links<a class="anchor" aria-label="anchor" href="#arg-links"></a></dt>
+<dd><p>Whether to draw arrows between ref and significant alt peptides</p></dd>
+
+
+<dt id="arg-labs">labs<a class="anchor" aria-label="anchor" href="#arg-labs"></a></dt>
+<dd><p>Whether to label genes in less dense areas</p></dd>
+
+
+<dt id="arg-cap-fc">cap_fc<a class="anchor" aria-label="anchor" href="#arg-cap-fc"></a></dt>
+<dd><p>Maximum amount of fold-change to limit values to</p></dd>
+
+</dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>A `ggplot2` object of the differential expression results</p>
+    </div>
+
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
