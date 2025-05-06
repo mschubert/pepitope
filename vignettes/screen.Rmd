@@ -28,14 +28,25 @@ knitr::opts_chunk$set(
 suppressPackageStartupMessages(library(pepitope))
 ```
 
-## Section
-
-text
-
-```{r eval=FALSE}
-#install.packages("clustermq")
+```{r echo=FALSE, results="hide"}
+lib = "https://raw.githubusercontent.com/hawkjo/freebarcodes/master/barcodes/barcodes12-1.txt"
+valid_barcodes = readr::read_tsv(lib, col_names=FALSE)$X1
+all_constructs = example_peptides(valid_barcodes)
+sample_sheet = system.file("my_samples.tsv", package="pepitope")
+fastq_file = example_fastq(sample_sheet, all_constructs)
+temp_dir = demux_fq(fastq_file, sample_sheet, read_structures="7B+T")
+dset = count_bc(temp_dir, all_constructs, valid_barcodes)
 ```
 
+## Calculating differential abundance
+
 ```{r}
-# code
+res = screen_calc(dset, list(c("Sample", "Mock")))
+res
+```
+
+## Plotting the screen results
+
+```{r}
+plot_screen(res$`Sample vs Mock`, "pat1")
 ```
