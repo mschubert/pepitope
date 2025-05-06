@@ -53,7 +53,7 @@ License: GPL-3
 Encoding: UTF-8
 Suggests:
     AnnotationHub,
-    BSgenome.Hsapiens.NCBI.GRCh38,
+    BSgenome.Hsapiens.UCSC.hg38,
     DT,
     Gviz,
     knitr,

@@ -83,7 +83,7 @@ objects from the `BSgenome` and `AnnotationHub` Bioconductor packages, respectiv
 
 ```{r}
 ens106 = AnnotationHub::AnnotationHub()[["AH100643"]]
-asm = BSgenome.Hsapiens.NCBI.GRCh38::BSgenome.Hsapiens.NCBI.GRCh38
+asm = BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38
 ```
 
 A caveat here is that the chromosome prefixes need to be consistent between the
@@ -92,12 +92,10 @@ variants in the VCF file and the genome/gene annotations. There are two
 prefix).
 
 The `sarek` pipline uses UCSC prefixes on the GRCh38 genome, so we need to switch
-the genome and gene annotation styles:
+the gene annotation styles:
 
 ```{r}
 seqlevelsStyle(ens106) = "UCSC"
-seqlevelsStyle(asm) = "UCSC"
-asm@seqinfo@genome[] = "GRCh38"
 ```
 
 The correct styles will depend on how your VCF files were generated.
@@ -222,7 +220,8 @@ Generating the Minigene Library
 ### Tiling cDNAs of interest into smaller peptides
 
 ```{r}
-tiled = pep_tile(subs) |>
+tiled = make_peptides(subs) |>
+    pep_tile() |>
     remove_cutsite(BbsI="GAAGAC")
 ```
 
@@ -249,7 +248,10 @@ We can then combine our generated tables into a report save it with e.g. the
 
 ```{r eval=FALSE}
 report = make_report(ann, subs, fus, tiled)
-# writexl::write_xlsx(report, "report_file.xlsx")
+writexl::write_xlsx(report, "report_file.xlsx")
+```
+```{r}
+report = make_report(ann, subs, fus, tiled)
 ```
 
 This `.xlsx` file will contain the different tables as sheets. We will use it 

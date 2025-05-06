@@ -4,10 +4,10 @@
 \alias{pep_tile}
 \title{Tile cDNA into peptide sequences}
 \usage{
-pep_tile(subs, tile_size = 93, tile_ov = 45)
+pep_tile(peptides, tile_size = 93, tile_ov = 45)
 }
 \arguments{
-\item{subs}{A GRanges object of context-subset protein-coding variants}
+\item{peptides}{A `data.frame` with context-subset peptide/minigene data}
 
 \item{tile_size}{Oligo tiling size}
 
