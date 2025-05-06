@@ -25,7 +25,8 @@ make_peptides = function(subs, fus=DataFrame()) {
         select(var_id, mut_id, gene_name, gene_id=GENEID, tx_id=tx_name,
                ref=ref_nuc, alt=alt_nuc) |>
         tidyr::pivot_longer(c(ref, alt), names_to="pep_type", values_to="cDNA") |>
-        mutate(pep_id = ifelse(pep_type == "alt", mut_id, sub("([0-9]+)[a-zA-Z*]+$", "\\1", mut_id)))
+        mutate(pep_id = ifelse(pep_type == "alt", mut_id, sub("([0-9]+)[a-zA-Z*]+$", "\\1", mut_id))) |>
+        select(var_id, mut_id, pep_id, pep_type, everything())
 
     if (nrow(fus) == 0)
         return(pep)
@@ -45,7 +46,8 @@ make_peptides = function(subs, fus=DataFrame()) {
         select(fusion, gene_id, tx_id, pep_type, pep_id, cDNA=alt_nuc)
     pep2 = bind_rows(refs, alt) |>
         mutate(var_id=fusion, mut_id=fusion) |>
-        arrange(fusion, desc(pep_type))
+        arrange(fusion, desc(pep_type)) |>
+        select(-fusion)
 
     bind_rows(pep, pep2)
 }

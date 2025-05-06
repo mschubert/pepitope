@@ -11,7 +11,15 @@ example_peptide_file = function() {
         filter_variants(min_cov=2, min_af=0.05, pass=TRUE)
     ann = annotate_coding(vr1, ens106, asm)
     subs = ann |> subset_context(15)
-    tiled = make_peptides(subs) |> pep_tile() |> remove_cutsite(BbsI="GAAGAC")
+
+    fusion_vcf_file = system.file("my_fusions.vcf", package="pepitope")
+    vr2 = readVcfAsVRanges(fusion_vcf_file) |>
+        filter_fusions(min_reads=2, min_split_reads=1, min_tools=1)
+    seqlevelsStyle(vr2) = "UCSC"
+    fus = annotate_fusions(vr2, ens106, asm) |>
+        subset_context_fusion(15)
+
+    tiled = make_peptides(subs, fus) |> pep_tile()
 
     outfile = file.path(system.file(package="pepitope"), "my_peptides.tsv")
     write.table(tiled, outfile, sep="\t", row.names=FALSE, quote=FALSE)
