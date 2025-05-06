@@ -11,7 +11,7 @@ example_peptide_file = function() {
         filter_variants(min_cov=2, min_af=0.05, pass=TRUE)
     ann = annotate_coding(vr1, ens106, asm)
     subs = ann |> subset_context(15)
-    tiled = pep_tile(subs) |> remove_cutsite(BbsI="GAAGAC") |> select(-cDNA)
+    tiled = make_peptides(subs) |> pep_tile() |> remove_cutsite(BbsI="GAAGAC")
 
     outfile = file.path(system.file(package="pepitope"), "my_peptides.tsv")
     write.table(tiled, outfile, sep="\t", row.names=FALSE, quote=FALSE)

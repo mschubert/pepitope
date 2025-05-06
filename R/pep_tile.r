@@ -29,7 +29,8 @@ pep_tile = function(peptides, tile_size=93, tile_ov=45) {
         group_by(pep_id) |>
             filter(!duplicated(tiled)) |>
             mutate(pep_id = if(n()>1) paste(pep_id, seq_along(pep_id), sep="-") else pep_id) |>
-        ungroup()
+        ungroup() |>
+        select(-cDNA)
 
 #    stopifnot(pep$type[duplicated(pep$tiled)] == "ref")
     stopifnot(!any(duplicated(pep$pep_id)))
