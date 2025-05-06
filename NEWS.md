@@ -1,8 +1,10 @@
 # git head
 
-* Provided example data for small variants and fusions as VCF files
-* WIP: Provided usage vignettes for Variant calling, QC and Co-culture screen
-* WIP: Added command-line wrappers for `fqtk` demultiplexing and `guide-counter`
+# pepitope 0.3
+
+* Added QC and screen incl. plotting functionality to the package
+* Added command-line wrappers for `fqtk` demultiplexing and `guide-counter`
+* Provided usage vignettes for Variant calling, QC and Co-culture screen
 
 # pepitope 0.2
 
