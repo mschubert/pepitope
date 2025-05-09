@@ -32,7 +32,7 @@ plot_distr = function(dset) {
     reps = calc_representation(assay(dset), as_tibble(rowData(dset)), as_tibble(colData(dset))) |>
         filter(is_matched | value > 0) |>
         mutate(text = sprintf("%s (%s)\n%i reads (%.1f%%)\n%s (%s)",
-            ifelse(is.na(pep_id), oligo_id, pep_id),
+            ifelse(is.na(pep_id), barcode, pep_id),
             ifelse(is.na(pep_type), "unused", pep_type),
             as.integer(value), frac,
             ifelse(is_matched, "matched", "contamination"), rlab))
