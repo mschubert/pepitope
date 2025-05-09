@@ -55,7 +55,6 @@ Suggests:
     AnnotationHub,
     BSgenome.Hsapiens.UCSC.hg38,
     DT,
-    Gviz,
     knitr,
     rmarkdown,
     testthat,
