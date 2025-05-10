@@ -1,6 +1,6 @@
 Package: pepitope
 Title: Extract, QC and screen peptide epitopes
-Version: 0.2.990
+Version: 0.2.991
 Authors@R: c(
     person('Michael', 'Schubert', email='mschu.dev@gmail.com',
            role = c('aut', 'cre'),
@@ -30,6 +30,7 @@ Imports:
     GenomicRanges,
     ggplot2,
     ggpp,
+    ggrepel,
     gtools,
     IRanges,
     MatrixGenerics,
