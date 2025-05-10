@@ -1,7 +1,7 @@
 #' Plot screen results
 #'
 #' @param res     A results `data.frame` from `screen_calc()`
-#' @param sample  Which library to plot
+#' @param sample  Which library to plot (default: all)
 #' @param links   Whether to draw arrows between ref and significant alt peptides
 #' @param labs    Whether to label genes in less dense areas
 #' @param cap_fc  Maximum amount of fold-change to limit values to
@@ -39,7 +39,9 @@ plot_screen = function(res, sample, links=TRUE, labs=TRUE, cap_fc=8) {
 
 #' @keywords internal
 make_links = function(res, sample) {
-    arrs = res |> filter(bc_type == sample) |>
+    if (missing(sample))
+        sample = unique(res$bc_type)
+    arrs = res |> filter(bc_type %in% sample) |>
         select(mut_id, pep_type, baseMean, log2FoldChange, padj)
     ar1 = arrs |> filter(pep_type == "ref") |> select(-pep_type) |>
         dplyr::rename(baseMean_ref=baseMean, log2FoldChange_ref=log2FoldChange)
