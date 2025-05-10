@@ -21,6 +21,11 @@ screen_calc = function(dset, comparisons) {
             arrange(padj, pvalue) |>
             left_join(as.data.frame(rowData(eset)))
     }
-    lapply(comparisons, get_result) |>
-        setNames(sapply(comparisons, paste, collapse=" vs "))
+
+    if (is.list(comparisons)) {
+        lapply(comparisons, get_result) |>
+            setNames(sapply(comparisons, paste, collapse=" vs "))
+    } else {
+        get_result(comparisons)
+    }
 }
