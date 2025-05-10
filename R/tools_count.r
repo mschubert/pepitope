@@ -12,6 +12,10 @@ count_bc = function(tdir, all_constructs, valid_barcodes, reverse_complement=FAL
     construct_df = merge_constructs(all_constructs)
     if (missing(valid_barcodes))
         valid_barcodes = construct_df$barcode
+    if (!is.character(valid_barcodes) && !is.factor(valid_barcodes))
+        stop("'valid_barcodes' must be a character vector")
+    if (!all(construct_df$barcode %in% valid_barcodes))
+        stop("'all_constructs' contains barcodes not in 'valid_barcodes'")
 
     res = count_external(tdir, valid_barcodes, reverse_complement)
 
@@ -94,6 +98,8 @@ count_external = function(tdir, valid_barcodes, reverse_complement) {
     utils::write.table(tsv, file=lpath, sep="\t", row.names=FALSE, quote=FALSE)
 
     fqs = list.files(tdir, pattern="\\.R1\\.fq\\.gz$", full.names=TRUE)
+    if (length(fqs) == 0)
+        stop("No fastq files found to count in directory ", sQuote(tdir))
 
     cmd = paste("guide-counter count",
         "--input", paste(fqs, collapse=" "),
