@@ -47,6 +47,8 @@ Usage
 * Subsetting the peptide context around each mutation
 * Make a report of variants, coding changes, and tiled peptides
 
+<details><summary><b>Code example</b></summary>
+
 ```r
 library(pepitope)
 
@@ -59,7 +61,6 @@ seqlevelsStyle(ens106) = "UCSC"
 variant_vcf_file = system.file("my_variants.vcf", package="pepitope")
 vr = readVcfAsVRanges(variant_vcf_file) |>
     filter_variants(min_cov=2, min_af=0.05, pass=TRUE)
-
 ann = annotate_coding(vr, ens106, asm)
 subs = ann |>
 #    filter_expressed(rna_sample, min_reads=1, min_tpm=0) |>
@@ -70,7 +71,6 @@ fusion_vcf_file = system.file("my_fusions.vcf", package="pepitope")
 vr2 = readVcfAsVRanges(fusion_vcf_file) |>
     filter_fusions(min_reads=2, min_split_reads=1, min_tools=1)
 seqlevelsStyle(vr2) = "UCSC"
-
 fus = annotate_fusions(vr2, ens106, asm) |>
     subset_context_fusion(15)
 
@@ -83,12 +83,16 @@ report = make_report(ann, subs, fus, tiled)
 writexl::write_xlsx(report, "my_variants.xlsx")
 ```
 
+</details>
+
 #### Creating construct library (wetlab)
 
 * Decide on barcodes for each of those constructs
 * Add them in the annotation sheets as `barcode` or `barcode_{1,2}` etc.
 * Order these constructs as gene blocks and clone them into expression vectors
 * Transduce target cells with this peptide construct library
+
+<details><summary><b>Code example</b></summary>
 
 Normally, we want to create an `xlsx` document with all libraries in use:
 
@@ -108,11 +112,15 @@ valid_barcodes = readr::read_tsv(lib, col_names=FALSE)$X1
 all_constructs = example_peptides(valid_barcodes)
 ```
 
+</details>
+
 #### Performing quality control on construct library sequencing ([vignette](https://mschubert.github.io/pepitope/articles/qc.html))
 
 * Check the quality of the construct libraries
 * Check the quality of the transduced target cells
 * Check the quality of the co-culture screens
+
+<details><summary><b>Code example</b></summary>
 
 Quality Control can be performed on the library, the target cells, or
 the co-culture screen:
@@ -130,7 +138,11 @@ plot_reads(dset)
 plot_distr(dset)
 ```
 
+</details>
+
 #### Differential abundance testing of co-culture screens ([vignette](https://mschubert.github.io/pepitope/articles/screen.html))
+
+<details><summary><b>Code example</b></summary>
 
 Differential abundance testing works the following way:
 
@@ -139,3 +151,5 @@ Differential abundance testing works the following way:
 res = screen_calc(dset, list(c("Sample", "Mock")))
 plot_screen(res$`Sample vs Mock`)
 ```
+
+</details>
