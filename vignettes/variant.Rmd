@@ -220,7 +220,7 @@ Generating the Minigene Library
 ### Tiling cDNAs of interest into smaller peptides
 
 ```{r}
-tiled = make_peptides(subs) |>
+tiled = make_peptides(subs, fus) |>
     pep_tile() |>
     remove_cutsite(BbsI="GAAGAC")
 ```
