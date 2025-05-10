@@ -56,6 +56,14 @@ temp_dir = demux_fq(fastq_file, sample_sheet, read_structures="7B+T")
 dset = count_bc(temp_dir, all_constructs, valid_barcodes)
 ```
 
+However, we need to make sure to perform the screen analysis only on
+relevant samples, otherwise the model may mis-estimate the variability:
+
+```{r}
+dset = dset[,grepl("pat1", dset$patient)]
+colData(dset)
+```
+
 Calculating differential abundance
 ----------------------------------
 
