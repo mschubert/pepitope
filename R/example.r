@@ -32,17 +32,37 @@ example_peptide_file = function() {
 #'
 #' @keywords internal
 #' @export
-example_peptides = function(valid_barcodes) {
+example_peptides = function(valid_barcodes, seed=18245) {
     constructs = system.file("my_peptides.tsv", package="pepitope") |>
         readr::read_tsv(show_col_types=FALSE)
 
-    n = nrow(constructs)
-    all_constructs = list(
-        pat1 = constructs |> mutate(barcode = valid_barcodes[seq_len(n)]),
-        pat2 = constructs |> mutate(barcode = valid_barcodes[seq_len(n) + n]),
-        pat3 = constructs |> mutate(barcode = valid_barcodes[seq_len(n) + 2*n]),
-        common = constructs |> mutate(barcode = valid_barcodes[seq_len(n) + 3*n])
-    )
+    mut_ids = unique(constructs$mut_id)
+    if (!is.null(seed))
+        set.seed(seed)
+
+    pat1 = constructs |>
+        mutate(barcode_1 = valid_barcodes[seq_len(n())],
+               barcode_2 = valid_barcodes[seq_len(n()) + n()])
+
+    offset = 2 * nrow(pat1)
+    pat2 = constructs |>
+        filter(mut_id %in% sample(mut_ids, 15)) |>
+        mutate(barcode_1 = valid_barcodes[seq_len(n()) + offset],
+               barcode_2 = valid_barcodes[seq_len(n()) + n() + offset])
+
+    offset = offset + 2 * nrow(pat2)
+    pat3 = constructs |>
+        filter(mut_id %in% sample(mut_ids, 15)) |>
+        mutate(barcode_1 = valid_barcodes[seq_len(n()) + offset],
+               barcode_2 = valid_barcodes[seq_len(n()) + n() + offset])
+
+    offset = offset + 2 * nrow(pat3)
+    common = constructs |>
+        filter(mut_id %in% sample(mut_ids, 15)) |>
+        mutate(barcode_1 = valid_barcodes[seq_len(n()) + offset],
+               barcode_2 = valid_barcodes[seq_len(n()) + n() + offset])
+
+    list(pat1=pat1, pat2=pat2, pat3=pat3, common=common)
 }
 
 #' Simulate sequencing data and write them to a temporary FASTQ file
@@ -69,7 +89,7 @@ example_fastq = function(samples, peptide_sheets, target_reads=1000, seed=91651)
     if (is.character(samples) && length(samples) == 1 && file.exists(samples))
         samples = readr::read_tsv(samples, show_col_types=FALSE)
 
-    all_seq = bind_rows(peptide_sheets, .id="bc_type")
+    all_seq = merge_constructs(peptide_sheets)
     counts = matrix(0, nrow=nrow(all_seq), ncol=length(samples$sample_id),
         dimnames=list(barcode=all_seq$barcode, sample_id=samples$sample_id))
 
