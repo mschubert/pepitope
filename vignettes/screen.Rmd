@@ -28,7 +28,25 @@ knitr::opts_chunk$set(
 suppressPackageStartupMessages(library(pepitope))
 ```
 
-```{r echo=FALSE, results="hide"}
+This guide shows how to calculate differential construct abundance and visualize
+the results. To calculate changes in barcode abundance, we use the `DESeq2` package,
+commonly used in differential expression analysis. Finally, we provide a utility
+function to visualize the results as an MA-plot (base abundance on the x axis,
+log2 fold change on the y axis).
+
+Preparation
+-----------
+
+In order to perform this analysis, we need the `SummarizedExperiment` (`dset`)
+object from the *Quality Control* results, and we need to know which comparisons
+we want to perform.
+
+From the *Quality Control* step, we know that we have two repeats each of `Mock`
+and `Sample` for a patient-specific (`pat1`) and a common library (`common`).
+These two repeats are important, as we need to estimate within-condition
+variability as well as between-condition variability.
+
+```{r echo=FALSE, message=FALSE, results="hide"}
 lib = "https://raw.githubusercontent.com/hawkjo/freebarcodes/master/barcodes/barcodes12-1.txt"
 valid_barcodes = readr::read_tsv(lib, col_names=FALSE)$X1
 all_constructs = example_peptides(valid_barcodes)
@@ -38,15 +56,49 @@ temp_dir = demux_fq(fastq_file, sample_sheet, read_structures="7B+T")
 dset = count_bc(temp_dir, all_constructs, valid_barcodes)
 ```
 
-## Calculating differential abundance
+Calculating differential abundance
+----------------------------------
+
+When we want to perform a comparison between two conditions, we refer in this
+comparison to the `origin` column of the sample sheet. In our case, we have the
+origin `Mock` and `Sample`, which describe an experiment of mock-transfected
+and co-cultured cells and cells transfected with the actualy construct library,
+respectively.
+
+Hence, our comparison here is that we want to see the changes of `Sample` over
+the `Mock` condition, which we indicate as a character vector of
+`c(sample, reference)` or a list thereof.
+
+In case of a single comparison (character vector), a `data.frame` will be
+returned. If there are more comparisons supplied in a list of character vectors,
+the result will be a list of `data.frame`s:
 
 ```{r}
 res = screen_calc(dset, list(c("Sample", "Mock")))
-res
 ```
 
-## Plotting the screen results
+The result will look like the following:
 
 ```{r}
-plot_screen(res$`Sample vs Mock`, "pat1")
+res[[1]]
 ```
+
+Plotting the screen results
+---------------------------
+
+We can plot the result of this differential abundance analysis using the
+`plot_screen` function. The only argument we need supply is a results table,
+but we can fine-tune the plot with the following additional arguments:
+
+* `sample` -- which library (or libraries) to plot (default: all)
+* `links` -- whether to draw arrows between ref and significant alt peptides
+* `labs` -- whether to label constructs in less dense areas of the plot
+* `cap_fc` -- a maximum (and negative minimum) fold change value to bound data points to
+
+```{r}
+plot_screen(res$`Sample vs Mock`)
+```
+
+As with the `Quality Control` already, we can also create and interactive plot.
+This will not display links between `ref` and `alt` peptides, but instead highlight
+a contruct group (by `mut_id`) when interacting with a data point.
