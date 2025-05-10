@@ -79,19 +79,44 @@ code {
     border: 0px !important;
 }
 </style>
-<pre><code><span><span class="co">#&gt; <span style="font-weight: bold;">Rows: </span><span style="color: #0000BB;">17214</span> <span style="font-weight: bold;">Columns: </span><span style="color: #0000BB;">1</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Column specification</span> <span style="color: #00BBBB;">────────────────────────────────────────────────────────</span></span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Delimiter:</span> "\t"</span></span>
-<span><span class="co">#&gt; <span style="color: #BB0000;">chr</span> (1): X1</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use `spec()` to retrieve the full column specification for this data.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
-<span><span class="co">#&gt; Joining with `by = join_by(sample_id)`</span></span>
-<span><span class="co">#&gt; Joining with `by = join_by(barcode)`</span></span></code></pre>
+<p>This guide shows how to calculate differential construct abundance
+and visualize the results. To calculate changes in barcode abundance, we
+use the <code>DESeq2</code> package, commonly used in differential
+expression analysis. Finally, we provide a utility function to visualize
+the results as an MA-plot (base abundance on the x axis, log2 fold
+change on the y axis).</p>
+<div class="section level2">
+<h2 id="preparation">Preparation<a class="anchor" aria-label="anchor" href="#preparation"></a>
+</h2>
+<p>In order to perform this analysis, we need the
+<code>SummarizedExperiment</code> (<code>dset</code>) object from the
+<em>Quality Control</em> results, and we need to know which comparisons
+we want to perform.</p>
+<p>From the <em>Quality Control</em> step, we know that we have two
+repeats each of <code>Mock</code> and <code>Sample</code> for a
+patient-specific (<code>pat1</code>) and a common library
+(<code>common</code>). These two repeats are important, as we need to
+estimate within-condition variability as well as between-condition
+variability.</p>
+</div>
 <div class="section level2">
 <h2 id="calculating-differential-abundance">Calculating differential abundance<a class="anchor" aria-label="anchor" href="#calculating-differential-abundance"></a>
 </h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<p>When we want to perform a comparison between two conditions, we refer
+in this comparison to the <code>origin</code> column of the sample
+sheet. In our case, we have the origin <code>Mock</code> and
+<code>Sample</code>, which describe an experiment of mock-transfected
+and co-cultured cells and cells transfected with the actualy construct
+library, respectively.</p>
+<p>Hence, our comparison here is that we want to see the changes of
+<code>Sample</code> over the <code>Mock</code> condition, which we
+indicate as a character vector of <code>c(sample, reference)</code> or a
+list thereof.</p>
+<p>In case of a single comparison (character vector), a
+<code>data.frame</code> will be returned. If there are more comparisons
+supplied in a list of character vectors, the result will be a list of
+<code>data.frame</code>s:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">=</span> <span class="fu"><a href="../reference/screen_calc.html">screen_calc</a></span><span class="op">(</span><span class="va">dset</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sample"</span>, <span class="st">"Mock"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; converting counts to integer mode</span></span>
 <span><span class="co">#&gt; Warning in DESeq2::DESeqDataSet(dset, ~rep + origin): some variables in design</span></span>
@@ -109,9 +134,10 @@ code {
 <span><span class="co">#&gt;    specify fitType='local' or 'mean' to avoid this message next time.</span></span>
 <span><span class="co">#&gt; final dispersion estimates</span></span>
 <span><span class="co">#&gt; fitting model and testing</span></span>
-<span><span class="co">#&gt; Joining with `by = join_by(barcode)`</span></span>
-<span><span class="va">res</span></span>
-<span><span class="co">#&gt; $`Sample vs Mock`</span></span>
+<span><span class="co">#&gt; Joining with `by = join_by(barcode)`</span></span></code></pre></div>
+<p>The result will look like the following:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 17,214 × 19</span></span></span>
 <span><span class="co">#&gt;    barcode      baseMean log2FoldChange lfcSE   stat pvalue  padj bc_type var_id</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span></span>
@@ -133,14 +159,37 @@ code {
 <div class="section level2">
 <h2 id="plotting-the-screen-results">Plotting the screen results<a class="anchor" aria-label="anchor" href="#plotting-the-screen-results"></a>
 </h2>
+<p>We can plot the result of this differential abundance analysis using
+the <code>plot_screen</code> function. The only argument we need supply
+is a results table, but we can fine-tune the plot with the following
+additional arguments:</p>
+<ul>
+<li>
+<code>sample</code> – which library (or libraries) to plot (default:
+all)</li>
+<li>
+<code>links</code> – whether to draw arrows between ref and
+significant alt peptides</li>
+<li>
+<code>labs</code> – whether to label constructs in less dense areas
+of the plot</li>
+<li>
+<code>cap_fc</code> – a maximum (and negative minimum) fold change
+value to bound data points to</li>
+</ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_screen.html">plot_screen</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">`Sample vs Mock`</span>, <span class="st">"pat1"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_screen.html">plot_screen</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">`Sample vs Mock`</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Joining with `by = join_by(mut_id)`</span></span>
 <span><span class="co">#&gt; Warning in scale_x_log10(limits = c(10, NA)): <span style="color: #00BB00;">log-10</span></span></span>
 <span><span class="co">#&gt; transformation introduced infinite values.</span></span>
 <span><span class="co">#&gt; Warning: Removed 16946 rows containing missing values or values outside the scale range</span></span>
 <span><span class="co">#&gt; (`geom_point()`).</span></span></code></pre></div>
-<p><img src="screen_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<p><img src="screen_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<p>As with the <code>Quality Control</code> already, we can also create
+and interactive plot. This will not display links between
+<code>ref</code> and <code>alt</code> peptides, but instead highlight a
+contruct group (by <code>mut_id</code>) when interacting with a data
+point.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
