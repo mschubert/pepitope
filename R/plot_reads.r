@@ -8,8 +8,8 @@
 plot_reads = function(dset) {
     plot_one = function(rsum, y, position) {
         ggplot(rsum, aes(x=label, y={{ y }}, fill=bc_type)) +
-            geom_col(position=position) +
-            scale_fill_brewer(palette="Set1", drop=FALSE) +
+            geom_col(position=position, show.legend=c(unused=TRUE, unmapped=TRUE)) +
+            scale_fill_manual(values=make_pal(rsum$bc_type), drop=FALSE) +
             coord_flip()
     }
 
@@ -21,6 +21,7 @@ plot_reads = function(dset) {
         mutate(bc_type=factor("unmapped"), reads=total_reads - mapped_reads) |>
         select(sample_id, label, bc_type, reads)
     both = bind_rows(read_summary, unmapped)
+    levels(read_summary$bc_type) = levels(both$bc_type)
 
     noax = theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
     plots = list(
