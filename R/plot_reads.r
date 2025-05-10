@@ -24,9 +24,7 @@ plot_reads = function(dset) {
 
     noax = theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
     plots = list(
-        plot_one(both, reads, "stack") + ylab("Reads total") + ggtitle("Read counts") +
-            geom_text(data=meta |> mutate(bc_type = NA), hjust=-0.1, size=2,
-                      aes(y=total_reads, label=ifelse(mapped_reads < 1e5, "DISCARD", ""))),
+        plot_one(both, reads, "stack") + ylab("Reads total") + ggtitle("Read counts"),
         plot_one(read_summary, reads, "fill") + noax + ylab("Mapped read fraction"),
         plot_one(read_summary, nonzero_bcs, "stack") +
             ylab("Barcodes total") + ggtitle("Barcodes >= 10 reads"),
