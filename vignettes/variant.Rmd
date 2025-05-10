@@ -240,7 +240,7 @@ We can then combine our generated tables into a report save it with e.g. the
 report = make_report(ann, subs, fus, tiled)
 writexl::write_xlsx(report, "report_file.xlsx")
 ```
-```{r}
+```{r echo=FALSE}
 report = make_report(ann, subs, fus, tiled)
 ```
 
