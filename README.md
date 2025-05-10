@@ -3,9 +3,9 @@ pepitope: extract, qc and screen *pep*tide ep*itope*s
 
 This R package is used to:
 
-* [**extract peptides**](#generating-peptide-constructs-vignette-) with flanking region around mutations
-* run [**quality control**](#performing-quality-control-on-construct-library-sequencing-vignette-) on sequencing of these libraries
-* perform [**differential abundance**](#differential-abundance-testing-of-co-culture-screens-vignette-) testing of co-culture screens
+* [**extract peptides**](#generating-peptide-constructs) with flanking region around mutations
+* run [**quality control**](#performing-quality-control-on-construct-library-sequencing) on sequencing of these libraries
+* perform [**differential abundance**](#differential-abundance-testing-of-co-culture-screens) testing of co-culture screens
 
 Installation
 ------------
@@ -43,18 +43,20 @@ Sys.which(c("fqtk", "guide-counter")) # should print paths, not ""
 Usage
 -----
 
-### Generating peptide constructs ([vignette 🔗](https://mschubert.github.io/pepitope/articles/variant.html))
+### Generating peptide constructs
 
 Here we have sequenced the DNA (and optionally RNA) of a patient and
 identified the variants in a `.vcf` file. We now want to extract the
 reference and mutated alternative sequences including their flanking
-regions into a summary report.
+regions into a summary report. The steps are:
 
 * Load a genome and annotation, usually GRCh38 and Ensembl
 * Load a VCF variants file as `VRanges` object and annotate the protein-coding mutations
 * Optionally, load a fusion VCF and annotating those
 * Subset the peptide context around each mutation
 * Make a report of variants, coding changes, and tiled peptides
+
+More information can be found in the [*Variant calling* vignette 🔗](https://mschubert.github.io/pepitope/articles/variant.html).
 
 <details><summary><b>Code example</b></summary>
 
@@ -99,7 +101,7 @@ writexl::write_xlsx(report, "my_variants.xlsx")
 We want to express the sequences (minigenes) including their flanking regions
 (context) in target cells that will be used in a co-culture screen with T-cells.
 For this, we first need to add a barcode to each construct and then order
-them as gene blocks and transduce them into the target cells.
+them as gene blocks and transduce them into the target cells. The steps are:
 
 * Decide on barcodes for each of those constructs
 * Add them in the annotation sheets as `barcode` or `barcode_{1,2}` etc.
@@ -128,16 +130,18 @@ all_constructs = example_peptides(valid_barcodes)
 
 </details>
 
-### Performing quality control on construct library sequencing ([vignette 🔗](https://mschubert.github.io/pepitope/articles/qc.html))
+### Performing quality control on construct library sequencing
 
 In each step of generating the target cells expressing the reference and mutated
 versions of each peptide, we want to make sure our library is well-represented.
 For this, we will check if all constructs that should be in there are, and whether
-they are present in a similar enough amount.
+they are present in a similar enough amount. The steps are:
 
 * Check the quality of the construct libraries
 * Check the quality of the transduced target cells
 * Check the quality of the co-culture screens
+
+More information can be found in the [*QC* vignette 🔗](https://mschubert.github.io/pepitope/articles/qc.html)
 
 <details><summary><b>Code example</b></summary>
 
@@ -156,15 +160,17 @@ plot_distr(dset)
 
 </details>
 
-### Differential abundance testing of co-culture screens ([vignette 🔗](https://mschubert.github.io/pepitope/articles/screen.html))
+### Differential abundance testing of co-culture screens
 
 Finally, we co-culture our target cells with T-cells expressing a variety of
 TCRs with our expressed peptide libraries to find the reactive ones. Those will
 be visible by decreasing in abundance more than the reference peptides compared
-to a mock-transduced population that was cultured the same way.
+to a mock-transduced population that was cultured the same way. The steps are:
 
 * Calculate the differential abundance of peptide barcodes
 * Plot the results to identify peptides recognized by T-cells
+
+More information can be found in the [*screen* vignette 🔗](https://mschubert.github.io/pepitope/articles/screen.html).
 
 <details><summary><b>Code example</b></summary>
 
