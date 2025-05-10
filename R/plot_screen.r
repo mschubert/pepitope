@@ -8,7 +8,7 @@
 #' @return  A `ggplot2` object of the differential expression results
 #'
 #' @export
-plot_screen = function(res, sample, links=TRUE, labs=TRUE, cap_fc=8) {
+plot_screen = function(res, sample=NULL, links=TRUE, labs=TRUE, cap_fc=8) {
     res$log2FoldChange = sign(res$log2FoldChange) * pmin(abs(res$log2FoldChange), cap_fc)
     lab = res |> filter(padj<0.1) |> group_by(gene_name) |>
         filter(n_distinct(pep_type)==1 | is.na(pep_type) | pep_type=="alt")
@@ -39,7 +39,7 @@ plot_screen = function(res, sample, links=TRUE, labs=TRUE, cap_fc=8) {
 
 #' @keywords internal
 make_links = function(res, sample) {
-    if (missing(sample))
+    if (is.null(sample))
         sample = unique(res$bc_type)
     arrs = res |> filter(bc_type %in% sample) |>
         select(mut_id, pep_type, baseMean, log2FoldChange, padj)
