@@ -3,9 +3,9 @@ pepitope: extract, qc and screen *pep*tide ep*itope*s
 
 This R package is used to:
 
-* extract peptides with flanking region around mutations ([vignette](https://mschubert.github.io/pepitope/articles/variant.html))
-* run quality control on sequencing of these libraries ([vignette](https://mschubert.github.io/pepitope/articles/qc.html))
-* perform differential abundance testing of co-culture screens ([vignette](https://mschubert.github.io/pepitope/articles/screen.html))
+* [**extract peptides**](#generating-peptide-constructs-vignette-) with flanking region around mutations
+* run [**quality control**](#performing-quality-control-on-construct-library-sequencing-vignette-) on sequencing of these libraries
+* perform [**differential abundance**](#differential-abundance-testing-of-co-culture-screens-vignette-) testing of co-culture screens
 
 Installation
 ------------
@@ -16,6 +16,9 @@ The package is currently only available on Github, use the`remotes` package to
 install:
 
 ```r
+# run this in R
+if (!require(remotes))
+    install.packages("remotes")
 remotes::install_github("mschubert/pepitope")
 ```
 
@@ -25,12 +28,14 @@ programming language and its `cargo` package manager, which we use to install
 [`guide-counter`](https://github.com/fulcrumgenomics/guide-counter):
 
 ```sh
+# run this in your terminal
 cargo install fqtk guide-counter
 ```
 
-We can check if the installation works by running, in R:
+We can check if the installation works by running:
 
 ```r
+# run this in R
 library(pepitope)
 Sys.which(c("fqtk", "guide-counter")) # should print paths, not ""
 ```
@@ -38,13 +43,17 @@ Sys.which(c("fqtk", "guide-counter")) # should print paths, not ""
 Usage
 -----
 
-#### Generating peptide constructs ([vignette](https://mschubert.github.io/pepitope/articles/variant.html))
+### Generating peptide constructs ([vignette 🔗](https://mschubert.github.io/pepitope/articles/variant.html))
+
+Here we have sequenced the DNA (and optionally RNA) of a patient and
+identified the variants in a `.vcf` file. We now want to extract the
+reference and mutated alternative sequences including their flanking
+regions into a summary report.
 
 * Load a genome and annotation, usually GRCh38 and Ensembl
-* Load a VCF variants file as `VRanges` object
-* Annotate the protein-coding mutations
-* Optionally, loading a fusion VCF and annotating those
-* Subsetting the peptide context around each mutation
+* Load a VCF variants file as `VRanges` object and annotate the protein-coding mutations
+* Optionally, load a fusion VCF and annotating those
+* Subset the peptide context around each mutation
 * Make a report of variants, coding changes, and tiled peptides
 
 <details><summary><b>Code example</b></summary>
@@ -85,7 +94,12 @@ writexl::write_xlsx(report, "my_variants.xlsx")
 
 </details>
 
-#### Creating construct library (wetlab)
+### Creating construct library (wetlab)
+
+We want to express the sequences (minigenes) including their flanking regions
+(context) in target cells that will be used in a co-culture screen with T-cells.
+For this, we first need to add a barcode to each construct and then order
+them as gene blocks and transduce them into the target cells.
 
 * Decide on barcodes for each of those constructs
 * Add them in the annotation sheets as `barcode` or `barcode_{1,2}` etc.
@@ -94,7 +108,7 @@ writexl::write_xlsx(report, "my_variants.xlsx")
 
 <details><summary><b>Code example</b></summary>
 
-Normally, we want to create an `xlsx` document with all libraries in use:
+Normally, we want to create an `xlsx` document where each sheet is one librar we use:
 
 ```r
 # this file is manually created from the output of step 1
@@ -103,7 +117,7 @@ sheets = readxl::excel_sheets(fname)
 all_constructs = sapply(sheets, readxl::read_xlsx, path=fname, simplify=FALSE)
 ```
 
-Here, we use our example library instead:
+Here, we use our example libraries instead:
 
 ```r
 # creating barcoded constructs
@@ -114,16 +128,18 @@ all_constructs = example_peptides(valid_barcodes)
 
 </details>
 
-#### Performing quality control on construct library sequencing ([vignette](https://mschubert.github.io/pepitope/articles/qc.html))
+### Performing quality control on construct library sequencing ([vignette 🔗](https://mschubert.github.io/pepitope/articles/qc.html))
+
+In each step of generating the target cells expressing the reference and mutated
+versions of each peptide, we want to make sure our library is well-represented.
+For this, we will check if all constructs that should be in there are, and whether
+they are present in a similar enough amount.
 
 * Check the quality of the construct libraries
 * Check the quality of the transduced target cells
 * Check the quality of the co-culture screens
 
 <details><summary><b>Code example</b></summary>
-
-Quality Control can be performed on the library, the target cells, or
-the co-culture screen:
 
 ```r
 # demultiplexing and counting example data
@@ -140,11 +156,17 @@ plot_distr(dset)
 
 </details>
 
-#### Differential abundance testing of co-culture screens ([vignette](https://mschubert.github.io/pepitope/articles/screen.html))
+### Differential abundance testing of co-culture screens ([vignette 🔗](https://mschubert.github.io/pepitope/articles/screen.html))
+
+Finally, we co-culture our target cells with T-cells expressing a variety of
+TCRs with our expressed peptide libraries to find the reactive ones. Those will
+be visible by decreasing in abundance more than the reference peptides compared
+to a mock-transduced population that was cultured the same way.
+
+* Calculate the differential abundance of peptide barcodes
+* Plot the results to identify peptides recognized by T-cells
 
 <details><summary><b>Code example</b></summary>
-
-Differential abundance testing works the following way:
 
 ```r
 # perform abundance testing and plot results
