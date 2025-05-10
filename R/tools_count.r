@@ -9,9 +9,7 @@
 #' @importFrom SummarizedExperiment SummarizedExperiment
 #' @export
 count_bc = function(tdir, all_constructs, valid_barcodes, reverse_complement=FALSE) {
-    construct_df = bind_rows(all_constructs, .id="bc_type")
-    if (any(duplicated(construct_df$barcode)))
-        stop("Duplicate barcodes are not allowed but found in 'all_constructs'")
+    construct_df = merge_constructs(all_constructs)
     if (missing(valid_barcodes))
         valid_barcodes = construct_df$barcode
 
@@ -40,6 +38,42 @@ count_bc = function(tdir, all_constructs, valid_barcodes, reverse_complement=FAL
         colData = meta,
         rowData = rows
     )
+}
+
+#' Bind the tables of all library annotations together
+#'
+#' @param all_constructs  A named list of all construct libraries
+#' @return  A `data.frame` with all constructs
+#'
+#' @keywords internal
+merge_constructs = function(all_constructs) {
+    if (!is.list(all_constructs) || is.data.frame(all_constructs))
+        stop("'all_constructs' needs to be a named list but is not a list")
+    if (is.null(names(all_constructs)))
+        stop("'all_constructs' needs to be a named list but has no names")
+
+    expand_barcode = function(name, df) {
+        req = c("gene_name", "mut_id", "pep_id", "tiled") # pep_type can be NA
+        bc_fields = grep("^barcode", colnames(df), value=TRUE)
+        if (all(req %in% colnames(df)) && length(bc_fields) > 0) {
+            tidyr::pivot_longer(df, bc_fields, values_to="barcode") |> select(-name)
+        } else {
+            missing = paste(setdiff(req, colnames(df)), collapse=", ")
+            if (length(bc_fields) == 0)
+                missing = c(missing, "barcode")
+            warning("Skipping ", sQuote(name), " because of missing fields: ", missing)
+        }
+    }
+    construct_df = mapply(expand_barcode, name=names(all_constructs),
+                          df=all_constructs, SIMPLIFY=FALSE) |>
+        bind_rows(.id="bc_type")
+
+    if (nrow(construct_df) == 0)
+        stop("No data left after merging 'all_constructs'")
+    if (any(duplicated(construct_df$barcode)))
+        stop("Duplicate barcodes are not allowed but found in 'all_constructs'")
+
+    construct_df
 }
 
 #' Use `guide-counter` via a system call to actually count

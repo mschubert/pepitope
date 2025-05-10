@@ -4,12 +4,12 @@
 \alias{plot_screen}
 \title{Plot screen results}
 \usage{
-plot_screen(res, sample, links = TRUE, labs = TRUE, cap_fc = 8)
+plot_screen(res, sample = NULL, links = TRUE, labs = TRUE, cap_fc = 8)
 }
 \arguments{
 \item{res}{A results `data.frame` from `screen_calc()`}
 
-\item{sample}{Which library to plot}
+\item{sample}{Which library to plot (default: all)}
 
 \item{links}{Whether to draw arrows between ref and significant alt peptides}
 

@@ -3,9 +3,9 @@ pepitope: extract, qc and screen *pep*tide ep*itope*s
 
 This R package is used to:
 
-* [**extract peptides**](#generating-peptide-constructs) with flanking region around mutations
-* run [**quality control**](#performing-quality-control-on-construct-library-sequencing) on sequencing of these libraries
-* perform [**differential abundance**](#differential-abundance-testing-of-co-culture-screens) testing of co-culture screens
+* [**Extract peptides**](#generating-peptide-constructs) with flanking region around mutations
+* Run [**quality control**](#performing-quality-control-on-construct-library-sequencing) on sequencing of these libraries
+* Perform [**differential abundance**](#differential-abundance-testing-of-co-culture-screens) testing of co-culture screens
 
 Installation
 ------------
@@ -103,8 +103,7 @@ We want to express the sequences (minigenes) including their flanking regions
 For this, we first need to add a barcode to each construct and then order
 them as gene blocks and transduce them into the target cells. The steps are:
 
-* Decide on barcodes for each of those constructs
-* Add them in the annotation sheets as `barcode` or `barcode_{1,2}` etc.
+* Add Barcodes in the annotation sheets as `barcode` or `barcode_{1,2}` columns
 * Order these constructs as gene blocks and clone them into expression vectors
 * Transduce target cells with this peptide construct library
 
