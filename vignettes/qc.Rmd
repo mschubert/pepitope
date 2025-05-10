@@ -244,10 +244,13 @@ this barcode on the y axis:
 plot_distr(dset)
 ```
 
-In a perflectly balanced library we would expect a horizonal line that stays
-constant. This, however, is impossible to reach due to the sampling process that
-obtains reads stochastically. As the above plot is sampled from a near-perfect
-library, this distribution is the best you can expect.
+We can make a couple of observations from these plots:
+
+* The `Mock` and `Sample` conditions worked well for `pat1`
+* The sample-specific barcodes for `pat2` show a high read variance and may be
+  unsuitable for a screen
+* About a quarter of the sample-specific barcodes for `pat3` are lost
+* There is a sample contamination of `pat1` in `pat3`
 
 We can also plot this interactively with `plotly`, where we can hover over with
 the mouse to see which barcode is in which position exactly:
