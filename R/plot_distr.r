@@ -42,7 +42,7 @@ plot_distr = function(dset) {
         scale_linetype_manual(values=c("TRUE"="solid", "FALSE"="dashed")) +
         scale_color_manual(values=make_pal(reps$bc_type),
                            guide=guide_legend(override.aes=list(linewidth=0.8))) +
-        scale_y_continuous(trans="log1p", breaks=c("0"=0,"100"=100,"10k"=1e4,"1M"=1e6)) +
+        scale_y_continuous(limits=c(0,NA), trans="log1p", breaks=c("0"=0,"100"=100,"10k"=1e4,"1M"=1e6)) +
         scale_x_continuous(limits=c(0,1), breaks=c(0,0.5,1)) +
         facet_wrap(~ short) +
         labs(x = "Ranked abundance",
