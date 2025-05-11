@@ -1,6 +1,12 @@
 pepitope: extract, qc and screen *pep*tide ep*itope*s
 =====================================================
 
+Peptide-TCR co-culture screens support the development of personalized
+immunotherapies by revealing the specific reactivity of patient-derived T cell
+receptors to patient-specific (neo-)antigens. Here, we provide a software tool
+to assist in the creation of patient-specific antigen libraries, as well as
+in analyzing the resulting co-culture screening data.
+
 This R package is used to:
 
 * [**Extract peptides**](#generating-peptide-constructs) with flanking region around mutations
