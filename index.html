@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Extract, QC and screen peptide epitopes • pepitope</title>
+<title>Extract, QC and Screen Peptide Epitopes • pepitope</title>
 <script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Extract, QC and screen peptide epitopes">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Extract, QC and Screen Peptide Epitopes">
 <meta name="description" content="Given a reference genome and VCF file, this package will provide the upstream/downstream peptide context of a variant. It will generate a summary report for protein-coding variants including the reference and mutated allele, read coverage, amino acid sequence, and other information. It can also be used to remove restriction sites from cDNA, alongside other helper functions.">
 <meta property="og:description" content="Given a reference genome and VCF file, this package will provide the upstream/downstream peptide context of a variant. It will generate a summary report for protein-coding variants including the reference and mutated allele, read coverage, amino acid sequence, and other information. It can also be used to remove restriction sites from cDNA, alongside other helper functions.">
 </head>
@@ -60,6 +60,7 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="pepitope-extract-qc-and-screen-peptide-epitopes">pepitope: extract, qc and screen <em>pep</em>tide ep<em>itope</em>s<a class="anchor" aria-label="anchor" href="#pepitope-extract-qc-and-screen-peptide-epitopes"></a>
 </h1></div>
+<p>Peptide-TCR co-culture screens support the development of personalized immunotherapies by revealing the specific reactivity of patient-derived T cell receptors to patient-specific (neo-)antigens. Here, we provide a software tool to assist in the creation of patient-specific antigen libraries, as well as in analyzing the resulting co-culture screening data.</p>
 <p>This R package is used to:</p>
 <ul>
 <li>
@@ -74,7 +75,7 @@
 <p>The package is currently only available on Github, use the<code>remotes</code> package to install:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># run this in R</span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://remotes.r-lib.org" class="external-link">remotes</a></span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"mschubert/pepitope"</span><span class="op">)</span></span></code></pre></div>
 <p>In addition, we need the <a href="https://www.rust-lang.org/tools/install" class="external-link">Rust</a> programming language and its <code>cargo</code> package manager, which we use to install <a href="https://github.com/fulcrumgenomics/fqtk" class="external-link"><code>fqtk</code></a> and <a href="https://github.com/fulcrumgenomics/guide-counter" class="external-link"><code>guide-counter</code></a>:</p>
@@ -169,7 +170,7 @@
 <li>Check the quality of the transduced target cells</li>
 <li>Check the quality of the co-culture screens</li>
 </ul>
-<p>More information can be found in the <a href="https://mschubert.github.io/pepitope/articles/qc.html" class="external-link"><em>QC</em> vignette 🔗</a></p>
+<p>More information can be found in the <a href="https://mschubert.github.io/pepitope/articles/qc.html" class="external-link"><em>Quality Control</em> vignette 🔗</a></p>
 <details><summary><b>Code example</b>
 </summary><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># demultiplexing and counting example data</span></span>
@@ -192,7 +193,7 @@
 <li>Calculate the differential abundance of peptide barcodes</li>
 <li>Plot the results to identify peptides recognized by T-cells</li>
 </ul>
-<p>More information can be found in the <a href="https://mschubert.github.io/pepitope/articles/screen.html" class="external-link"><em>screen</em> vignette 🔗</a>.</p>
+<p>More information can be found in the <a href="https://mschubert.github.io/pepitope/articles/screen.html" class="external-link"><em>Co-culture screen</em> vignette 🔗</a>.</p>
 <details><summary><b>Code example</b>
 </summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># perform abundance testing and plot results</span></span>
