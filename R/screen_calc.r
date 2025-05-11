@@ -6,6 +6,9 @@
 #' @importFrom stats setNames
 #' @export
 screen_calc = function(dset, comparisons) {
+    if (length(unique(dset$patient)) > 1)
+        stop("The 'patient' column can not span more than one value")
+
     eset = DESeq2::DESeqDataSet(dset, ~ rep + origin)
 
     eset$origin = factor(make.names(eset$origin))
