@@ -30,7 +30,7 @@ doc:
 	$(R) "devtools::document()"
 
 .PHONY: package
-package: rcpp doc vignettes
+package: doc vignettes
 	R CMD build .
 	R CMD check --as-cran pepitope_$(PKGVER).tar.gz
 
