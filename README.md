@@ -17,7 +17,7 @@ install:
 
 ```r
 # run this in R
-if (!require(remotes))
+if (!requireNamespace("remotes"))
     install.packages("remotes")
 remotes::install_github("mschubert/pepitope")
 ```
