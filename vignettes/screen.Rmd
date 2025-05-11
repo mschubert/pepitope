@@ -107,6 +107,6 @@ but we can fine-tune the plot with the following additional arguments:
 plot_screen(res$`Sample vs Mock`)
 ```
 
-As with the `Quality Control` already, we can also create and interactive plot.
+As with the *Quality Control* plots already, we can also create and interactive plot.
 This will not display links between `ref` and `alt` peptides, but instead highlight
 a contruct group (by `mut_id`) when interacting with a data point.

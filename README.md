@@ -140,7 +140,7 @@ they are present in a similar enough amount. The steps are:
 * Check the quality of the transduced target cells
 * Check the quality of the co-culture screens
 
-More information can be found in the [*QC* vignette 🔗](https://mschubert.github.io/pepitope/articles/qc.html)
+More information can be found in the [*Quality Control* vignette 🔗](https://mschubert.github.io/pepitope/articles/qc.html)
 
 <details><summary><b>Code example</b></summary>
 
@@ -169,7 +169,7 @@ to a mock-transduced population that was cultured the same way. The steps are:
 * Calculate the differential abundance of peptide barcodes
 * Plot the results to identify peptides recognized by T-cells
 
-More information can be found in the [*screen* vignette 🔗](https://mschubert.github.io/pepitope/articles/screen.html).
+More information can be found in the [*Co-culture screen* vignette 🔗](https://mschubert.github.io/pepitope/articles/screen.html).
 
 <details><summary><b>Code example</b></summary>
 
