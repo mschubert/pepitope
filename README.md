@@ -113,9 +113,7 @@ them as gene blocks and transduce them into the target cells. The steps are:
 * Order these constructs as gene blocks and clone them into expression vectors
 * Transduce target cells with this peptide construct library
 
-<details><summary><b>Code example</b></summary>
-
-Normally, we want to create an `xlsx` document where each sheet is one librar we use:
+<details><summary><b>Code example</b> (loading from <code>.xlsx</code>)</summary>
 
 ```r
 # this file is manually created from the output of step 1
@@ -124,7 +122,9 @@ sheets = readxl::excel_sheets(fname)
 all_constructs = sapply(sheets, readxl::read_xlsx, path=fname, simplify=FALSE)
 ```
 
-Here, we use our example libraries instead:
+</details>
+
+<details><summary><b>Code example</b> (runnable without external data)</summary>
 
 ```r
 # creating barcoded constructs
