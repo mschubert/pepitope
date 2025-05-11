@@ -1,12 +1,11 @@
 Package: pepitope
-Title: Extract, QC and screen peptide epitopes
+Title: Extract, QC and Screen Peptide Epitopes
 Version: 0.2.991
 Authors@R: c(
     person('Michael', 'Schubert', email='mschu.dev@gmail.com',
            role = c('aut', 'cre'),
            comment = c(ORCID='0000-0002-6862-5221'))
     )
-Maintainer: Michael Schubert <mschu.dev@gmail.com>
 Description: Given a reference genome and VCF file, this package will provide
     the upstream/downstream peptide context of a variant. It will generate a
     summary report for protein-coding variants including the reference and

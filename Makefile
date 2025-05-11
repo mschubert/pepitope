@@ -32,7 +32,8 @@ doc:
 .PHONY: package
 package: doc vignettes
 	R CMD build .
-	R CMD check --as-cran pepitope_$(PKGVER).tar.gz
+	R CMD check pepitope_$(PKGVER).tar.gz
+	$(R) "BiocCheck::BiocCheck()"
 
 .PHONY: deploy
 deploy:
