@@ -25,7 +25,7 @@ install:
 # run this in R
 if (!requireNamespace("remotes"))
     install.packages("remotes")
-remotes::install_github("mschubert/pepitope")
+remotes::install_github("mschubert/pepitope", dependencies=TRUE)
 ```
 
 In addition, we need the [Rust](https://www.rust-lang.org/tools/install)
