@@ -1,6 +1,6 @@
 Package: pepitope
 Title: Extract, QC and Screen Peptide Epitopes
-Version: 0.2.991
+Version: 0.2.992
 Authors@R: c(
     person('Michael', 'Schubert', email='mschu.dev@gmail.com',
            role = c('aut', 'cre'),
@@ -53,12 +53,16 @@ License: GPL-3
 Encoding: UTF-8
 Suggests:
     AnnotationHub,
+    BiocCheck,
     BSgenome.Hsapiens.UCSC.hg38,
     DT,
     knitr,
+    pkgdown,
+    plotly,
+    readxl,
     rmarkdown,
     testthat,
-    BiocCheck
+    writexl
 biocViews: DNASeq, VariantAnnotation, ImmunoOncology
 VignetteBuilder: knitr
 RoxygenNote: 7.3.2
