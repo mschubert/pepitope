@@ -113,17 +113,6 @@ them as gene blocks and transduce them into the target cells. The steps are:
 * Order these constructs as gene blocks and clone them into expression vectors
 * Transduce target cells with this peptide construct library
 
-<details><summary><b>Code example</b> (loading from <code>.xlsx</code>)</summary>
-
-```r
-# this file is manually created from the output of step 1
-fname = "my_combined_barcoded_file.xlsx"
-sheets = readxl::excel_sheets(fname)
-all_constructs = sapply(sheets, readxl::read_xlsx, path=fname, simplify=FALSE)
-```
-
-</details>
-
 <details><summary><b>Code example</b> (runnable without external data)</summary>
 
 ```r
@@ -131,6 +120,19 @@ all_constructs = sapply(sheets, readxl::read_xlsx, path=fname, simplify=FALSE)
 lib = "https://raw.githubusercontent.com/hawkjo/freebarcodes/master/barcodes/barcodes12-1.txt"
 valid_barcodes = readr::read_tsv(lib, col_names=FALSE)$X1
 all_constructs = example_peptides(valid_barcodes)
+plot_barcode_overlap(all_constructs, valid_barcodes)
+```
+
+</details>
+
+<details><summary><b>Code example</b> (loading from <code>.xlsx</code>)</summary>
+
+```r
+# this file is manually created from the output of step 1
+fname = "my_combined_barcoded_file.xlsx"
+sheets = readxl::excel_sheets(fname)
+all_constructs = sapply(sheets, readxl::read_xlsx, path=fname, simplify=FALSE)
+plot_barcode_overlap(all_constructs, valid_barcodes)
 ```
 
 </details>
@@ -158,7 +160,6 @@ temp_dir = demux_fq(fastq_file, sample_sheet, read_structures="7B+T")
 dset = count_bc(temp_dir, all_constructs, valid_barcodes)
 
 # quality control plots
-plot_barcode_overlap(all_constructs, valid_barcodes)
 plot_reads(dset)
 plot_distr(dset)
 ```
