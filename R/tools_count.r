@@ -57,6 +57,10 @@ merge_constructs = function(all_constructs) {
         stop("'all_constructs' needs to be a named list but has no names")
 
     expand_barcode = function(name, df) {
+        if ("mut_id" %in% colnames(df) && ! "gene_name" %in% colnames(df))
+            df$gene_name = sub("_[^_]+$", "", df$mut_id)
+        if ("gene_name" %in% colnames(df) && ! "mut_id" %in% colnames(df))
+            df$mut_id = df$gene_name
         req = c("gene_name", "mut_id", "pep_id", "tiled") # pep_type can be NA
         bc_fields = grep("^barcode", colnames(df), value=TRUE)
         if (all(req %in% colnames(df)) && length(bc_fields) > 0) {
