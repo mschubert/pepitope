@@ -15,7 +15,7 @@ plot_barcode_overlap = function(all_constructs, valid_barcodes) {
         dset = left_join(data.frame(barcode = valid_barcodes), dset)
 
     dset2 = dset |>
-        mutate(barcode = as.integer(factor(barcode))) |>
+        mutate(barcode = as.integer(factor(barcode, levels=unique(barcode)))) |>
         filter(!is.na(bc_type))
 
     ggplot(dset2, aes(x=barcode, y=bc_type)) +
