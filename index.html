@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">pepitope</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.992</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,9 +75,9 @@
 <p>The package is currently only available on Github, use the<code>remotes</code> package to install:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># run this in R</span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"remotes"</span>, quietly<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"mschubert/pepitope"</span>, dependencies<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"mschubert/pepitope"</span>, dependencies<span class="op">=</span><span class="cn">TRUE</span>, timeout<span class="op">=</span><span class="fl">300</span><span class="op">)</span></span></code></pre></div>
 <p>In addition, we need the <a href="https://www.rust-lang.org/tools/install" class="external-link">Rust</a> programming language and its <code>cargo</code> package manager, which we use to install <a href="https://github.com/fulcrumgenomics/fqtk" class="external-link"><code>fqtk</code></a> and <a href="https://github.com/fulcrumgenomics/guide-counter" class="external-link"><code>guide-counter</code></a>:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># run this in your terminal</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="ex">cargo</span> install fqtk guide-counter</span></code></pre></div>
@@ -146,18 +146,20 @@
 <li>Order these constructs as gene blocks and clone them into expression vectors</li>
 <li>Transduce target cells with this peptide construct library</li>
 </ul>
-<details><summary><b>Code example</b> (loading from <code>.xlsx</code>)
+<details><summary><b>Code example</b> (runnable without external data)
 </summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># this file is manually created from the output of step 1</span></span>
-<span><span class="va">fname</span> <span class="op">=</span> <span class="st">"my_combined_barcoded_file.xlsx"</span></span>
-<span><span class="va">sheets</span> <span class="op">=</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/excel_sheets.html" class="external-link">excel_sheets</a></span><span class="op">(</span><span class="va">fname</span><span class="op">)</span></span>
-<span><span class="va">all_constructs</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">sheets</span>, <span class="fu">readxl</span><span class="fu">::</span><span class="va"><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">read_xlsx</a></span>, path<span class="op">=</span><span class="va">fname</span>, simplify<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-</details><details><summary><b>Code example</b> (runnable without external data)
-</summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># creating barcoded constructs</span></span>
 <span><span class="va">lib</span> <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/hawkjo/freebarcodes/master/barcodes/barcodes12-1.txt"</span></span>
 <span><span class="va">valid_barcodes</span> <span class="op">=</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_tsv</a></span><span class="op">(</span><span class="va">lib</span>, col_names<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">X1</span></span>
-<span><span class="va">all_constructs</span> <span class="op">=</span> <span class="fu"><a href="reference/example_peptides.html">example_peptides</a></span><span class="op">(</span><span class="va">valid_barcodes</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">all_constructs</span> <span class="op">=</span> <span class="fu"><a href="reference/example_peptides.html">example_peptides</a></span><span class="op">(</span><span class="va">valid_barcodes</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/plot_barcode_overlap.html">plot_barcode_overlap</a></span><span class="op">(</span><span class="va">all_constructs</span>, <span class="va">valid_barcodes</span><span class="op">)</span></span></code></pre></div>
+</details><details><summary><b>Code example</b> (loading from <code>.xlsx</code>)
+</summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># this file is manually created from the output of step 1</span></span>
+<span><span class="va">fname</span> <span class="op">=</span> <span class="st">"my_combined_barcoded_file.xlsx"</span></span>
+<span><span class="va">sheets</span> <span class="op">=</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/excel_sheets.html" class="external-link">excel_sheets</a></span><span class="op">(</span><span class="va">fname</span><span class="op">)</span></span>
+<span><span class="va">all_constructs</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">sheets</span>, <span class="fu">readxl</span><span class="fu">::</span><span class="va"><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">read_xlsx</a></span>, path<span class="op">=</span><span class="va">fname</span>, simplify<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/plot_barcode_overlap.html">plot_barcode_overlap</a></span><span class="op">(</span><span class="va">all_constructs</span>, <span class="va">valid_barcodes</span><span class="op">)</span></span></code></pre></div>
 </details>
 </div>
 <div class="section level3">
@@ -179,7 +181,6 @@
 <span><span class="va">dset</span> <span class="op">=</span> <span class="fu"><a href="reference/count_bc.html">count_bc</a></span><span class="op">(</span><span class="va">temp_dir</span>, <span class="va">all_constructs</span>, <span class="va">valid_barcodes</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># quality control plots</span></span>
-<span><span class="fu"><a href="reference/plot_barcode_overlap.html">plot_barcode_overlap</a></span><span class="op">(</span><span class="va">all_constructs</span>, <span class="va">valid_barcodes</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/plot_reads.html">plot_reads</a></span><span class="op">(</span><span class="va">dset</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/plot_distr.html">plot_distr</a></span><span class="op">(</span><span class="va">dset</span><span class="op">)</span></span></code></pre></div>
 </details>
