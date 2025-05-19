@@ -5,7 +5,7 @@
 #'
 #' @export
 plot_barcode_overlap = function(all_constructs, valid_barcodes) {
-    dset = merge_constructs(all_constructs) |>
+    dset = merge_constructs(all_constructs, strict=FALSE) |>
         select(bc_type, barcode) |>
         group_by(barcode) |>
             mutate(overlap = factor(n())) |>
