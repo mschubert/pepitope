@@ -6,7 +6,8 @@
 #'
 #' @export
 demux_fq = function(fq, samples, read_structures) {
-    tdir = tempdir()
+    tdir = tempfile()
+    dir.create(tdir)
 
     fname = file.path(tdir, "samples.tsv")
     if (is.character(samples) && length(samples) == 1) {

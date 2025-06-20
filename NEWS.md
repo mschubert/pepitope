@@ -1,5 +1,7 @@
 # git head
 
+* FASTQ demultiplexing is now done in a clean directory (#7)
+
 # pepitope 0.3
 
 * Added QC and screen incl. plotting functionality to the package
