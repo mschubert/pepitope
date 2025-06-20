@@ -111,11 +111,11 @@ count_external = function(tdir, valid_barcodes, reverse_complement) {
         stop("No fastq files found to count in directory ", sQuote(tdir))
 
     cmd = paste("guide-counter count",
-        "--input", paste(fqs, collapse=" "),
-        "--library", lpath,
-        "--offset-min-fraction", "0.2",
+        "--input", paste(shQuote(fqs), collapse=" "),
+        "--library", shQuote(lpath),
+        "--offset-min-fraction", shQuote("0.2"),
 #        "--exact-match",
-        "--output", file.path(tdir, "barcodes"))
+        "--output", shQuote(file.path(tdir, "barcodes")))
     system(cmd)
 
     res = c(counts="barcodes.counts.txt", stats="barcodes.stats.txt") |>

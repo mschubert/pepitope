@@ -26,11 +26,11 @@ demux_fq = function(fq, samples, read_structures) {
     if (length(missing > 0))
         stop("Required columns not found in sample sheet: ", paste(missing, collapse=", "))
 
-    cmd = paste("fqtk demux --inputs", fq,
-        "--max-mismatches", "0",
-        "--read-structures", read_structures,
-        "--sample-metadata", samples,
-        "--output", tdir)
+    cmd = paste("fqtk demux --inputs", shQuote(fq),
+        "--max-mismatches", shQuote("0"),
+        "--read-structures", shQuote(read_structures),
+        "--sample-metadata", shQuote(samples),
+        "--output", shQuote(tdir))
     system(cmd)
 
     tdir
