@@ -110,13 +110,12 @@ count_external = function(tdir, valid_barcodes, reverse_complement) {
     if (length(fqs) == 0)
         stop("No fastq files found to count in directory ", sQuote(tdir))
 
-    cmd = paste("guide-counter count",
-        "--input", paste(shQuote(fqs), collapse=" "),
-        "--library", shQuote(lpath),
-        "--offset-min-fraction", shQuote("0.2"),
-#        "--exact-match",
-        "--output", shQuote(file.path(tdir, "barcodes")))
-    system(cmd)
+    guideCounterWrapper::guidecounter_count(
+        input = fqs,
+        library = lpath,
+        offset_min_fraction = 0.2,
+        output = file.path(tdir, "barcodes")
+    )
 
     res = c(counts="barcodes.counts.txt", stats="barcodes.stats.txt") |>
         lapply(\(f) file.path(tdir, f)) |>

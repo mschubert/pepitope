@@ -1,7 +1,8 @@
 # git head
 
 * FASTQ demultiplexing is now done in a clean directory (#7)
-* Command-line tools now handle spaces in paths correctly (#8)
+* `fqtk` and `guide-counter` are now supplied via R packages
+* `fqtk` and `guide-counter` now handle spaces in paths correctly (#8)
 
 # pepitope 0.3
 

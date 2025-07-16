@@ -1,6 +1,6 @@
 Package: pepitope
 Title: Extract, QC and Screen Peptide Epitopes
-Version: 0.3.0
+Version: 0.3.0.9000
 Authors@R: c(
     person('Michael', 'Schubert', email='mschu.dev@gmail.com',
            role = c('aut', 'cre'),
@@ -24,6 +24,7 @@ Imports:
     DESeq2,
     dplyr,
     ensembldb,
+    fqtkWrapper,
     GenomeInfoDb,
     GenomicFeatures,
     GenomicRanges,
@@ -31,6 +32,7 @@ Imports:
     ggpp,
     ggrepel,
     gtools,
+    guideCounterWrapper,
     IRanges,
     MatrixGenerics,
     methods,
@@ -66,3 +68,6 @@ Suggests:
 biocViews: DNASeq, VariantAnnotation, ImmunoOncology
 VignetteBuilder: knitr
 RoxygenNote: 7.3.2
+Remotes:
+    BrftM/fqtkWrapper,
+    BrftM/guideCounterWrapper
