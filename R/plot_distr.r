@@ -34,7 +34,7 @@ plot_distr = function(dset) {
         mutate(text = sprintf("%s (%s)\n%i reads (%.1f%%)\n%s (%s)",
             ifelse(is.na(pep_id), barcode, pep_id),
             ifelse(is.na(pep_type), "unused", pep_type),
-            as.integer(value), frac,
+            as.integer(value), frac*100,
             ifelse(is_matched, "matched", "contamination"), rlab))
 
     ggplot(reps, aes(x=rnk, y=value, group=bc_type, color=bc_type, text=text)) +
