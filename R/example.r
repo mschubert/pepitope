@@ -67,8 +67,8 @@ example_peptides = function(valid_barcodes, seed=18245) {
 
 #' Simulate sequencing data and write them to a temporary FASTQ file
 #'
-#' @param sample_sheet   The .tsv or data.frame file containing sample information
-#' @param peptide_sheet  A list, each item containing construct information
+#' @param samples   The .tsv or data.frame file containing sample information
+#' @param peptide_sheets  A list, each item containing construct information
 #' @param target_reads   How many reads to simulate on average
 #' @param custom         Whether to add custom modifications to founds
 #' @param seed  The random seed used for sampling the number of reads

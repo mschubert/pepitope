@@ -1,6 +1,7 @@
 #' Plot barcode overlap between different samples
 #'
 #' @param all_constructs  A named list of all constructs
+#' @param valid_barcodes  A character vector of possible barcodes (optional)
 #' @return  A ggplot2 object
 #'
 #' @export

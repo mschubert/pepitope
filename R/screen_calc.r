@@ -1,6 +1,6 @@
 #' Calculate differential abundance of construct barcodes
 #'
-#' @param eset  A `SummarizedExperiment` object from `count_bc()`
+#' @param dset  A `SummarizedExperiment` object from `count_bc()`
 #' @param comparisons  A character vector of sample and reference condition, or list thereof
 #'
 #' @importFrom stats setNames

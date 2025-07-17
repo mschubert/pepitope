@@ -13,9 +13,7 @@ make_report(vars, subs, fus = DataFrame(), tiled)
 
 \item{fus}{Variants within fusion context from `subset_context_fusions()`}
 
-\item{...}{Parameters passed to `pep_tile` (eg. tile_size, tile_ov)}
-
-\item{ctx_codons}{Number of codonds for sequence context}
+\item{tiled}{A data.frame of the tiled peptide sequences}
 }
 \description{
 Make a variants report as named list of tables

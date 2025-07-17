@@ -7,9 +7,9 @@
 screen_calc(dset, comparisons)
 }
 \arguments{
-\item{comparisons}{A character vector of sample and reference condition, or list thereof}
+\item{dset}{A `SummarizedExperiment` object from `count_bc()`}
 
-\item{eset}{A `SummarizedExperiment` object from `count_bc()`}
+\item{comparisons}{A character vector of sample and reference condition, or list thereof}
 }
 \description{
 Calculate differential abundance of construct barcodes

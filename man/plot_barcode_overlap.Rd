@@ -8,6 +8,8 @@ plot_barcode_overlap(all_constructs, valid_barcodes)
 }
 \arguments{
 \item{all_constructs}{A named list of all constructs}
+
+\item{valid_barcodes}{A character vector of possible barcodes (optional)}
 }
 \value{
 A ggplot2 object

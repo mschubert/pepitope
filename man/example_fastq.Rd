@@ -13,15 +13,15 @@ example_fastq(
 )
 }
 \arguments{
+\item{samples}{The .tsv or data.frame file containing sample information}
+
+\item{peptide_sheets}{A list, each item containing construct information}
+
 \item{target_reads}{How many reads to simulate on average}
 
 \item{custom}{Whether to add custom modifications to founds}
 
 \item{seed}{The random seed used for sampling the number of reads}
-
-\item{sample_sheet}{The .tsv or data.frame file containing sample information}
-
-\item{peptide_sheet}{A list, each item containing construct information}
 }
 \value{
 The path to the created FASTQ file

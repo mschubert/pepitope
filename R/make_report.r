@@ -1,10 +1,9 @@
 #' Make a variants report as named list of tables
 #'
 #' @param vars  Variant results from `annotate_coding()`
-#' @param subs  Variants within mutation context from `subset_context()` 
+#' @param subs  Variants within mutation context from `subset_context()`
 #' @param fus   Variants within fusion context from `subset_context_fusions()`
-#' @param ...   Parameters passed to `pep_tile` (eg. tile_size, tile_ov)
-#' @param ctx_codons  Number of codonds for sequence context
+#' @param tiled  A data.frame of the tiled peptide sequences
 #'
 #' @importFrom plyranges select
 #' @export
