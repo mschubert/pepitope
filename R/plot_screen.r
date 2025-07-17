@@ -7,7 +7,6 @@
 #' @param cap_fc  Maximum amount of fold-change to limit values to
 #' @return  A `ggplot2` object of the differential expression results
 #'
-#' @importFrom ggrepel geom_text_repel
 #' @export
 plot_screen = function(res, sample=NULL, links=TRUE, labs=TRUE, cap_fc=8) {
     res$log2FoldChange = sign(res$log2FoldChange) * pmin(abs(res$log2FoldChange), cap_fc)
@@ -31,9 +30,8 @@ plot_screen = function(res, sample=NULL, links=TRUE, labs=TRUE, cap_fc=8) {
                 keep.fraction=1, keep.number=30)
     }
     if (labs && nrow(lab) > 0) {
-        library(ggrepel) #FIXME: should not be required
         p = p + ggpp::stat_dens2d_filter_g(data=lab, aes(label=gene_name, color=bc_type),
-            geom="text_repel", keep.fraction=1, keep.number=45,
+            geom=ggrepel::GeomTextRepel, keep.fraction=1, keep.number=45,
             size=1.5, min.segment.length=0, segment.alpha=0.3, segment.size=0.3)
     }
     p
