@@ -7,8 +7,9 @@
 #' @export
 pep_tile = function(peptides, tile_size=93, tile_ov=45) {
     req = c("var_id", "mut_id", "gene_name", "gene_id", "tx_id", "pep_id", "cDNA")
-    if (!all(req %in% colnames(peptides)))
-        stop("Required column(s) not found: ", paste(setdiff(req, colnames(df)), collapse=", "))
+    missing = setdiff(req, colnames(peptides))
+    if (length(missing) > 0)
+        stop("Required column(s) not found: ", paste(missing, collapse=", "))
 
     # tile peptides to have max `tile_size` nt length
     tile_cDNA = function(p) {
