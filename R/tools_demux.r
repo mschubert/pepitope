@@ -1,7 +1,8 @@
 #' Use fqtk tool to demultiplex fastq files
 #'
 #' @param fq  A path to the fastq file to demultiplex
-#' @param samples  A sample sheet as `data.frame` in tsv format
+#' @param samples  A sample sheet as `data.frame` in tsv format. Requires the
+#'      columns 'sample_id', 'patient', 'rep', 'origin', 'barcode'
 #' @param read_structures  A character string describing the read structure
 #'
 #' @export
@@ -25,6 +26,9 @@ demux_fq = function(fq, samples, read_structures) {
     missing = setdiff(req, colnames(sample_df))
     if (length(missing > 0))
         stop("Required columns not found in sample sheet: ", paste(missing, collapse=", "))
+    for (name in req)
+        if (any(nchar(sample_df[[name]]) == 0))
+            stop(sQuote(name), " must not be empty for any sample in the sample sheet")
 
     fqtkWrapper::fqtk_demux(
         inputs = fq,
