@@ -16,34 +16,14 @@ This R package is used to:
 Installation
 ------------
 
-We require `R>=4.5.0`, as this includes important fixes on Bioconductor.
-
 The package is currently only available on Github, use the`remotes` package to
 install:
 
 ```r
-# run this in R
+# run this in R >= 4.5.0
 if (!requireNamespace("remotes", quietly=TRUE))
     install.packages("remotes")
 remotes::install_github("mschubert/pepitope", dependencies=TRUE, timeout=300)
-```
-
-In addition, we need the [Rust](https://www.rust-lang.org/tools/install)
-programming language and its `cargo` package manager, which we use to install
-[`fqtk`](https://github.com/fulcrumgenomics/fqtk) and
-[`guide-counter`](https://github.com/fulcrumgenomics/guide-counter):
-
-```sh
-# run this in your terminal
-cargo install fqtk guide-counter
-```
-
-We can check if the installation works by running:
-
-```r
-# run this in R
-library(pepitope)
-Sys.which(c("fqtk", "guide-counter")) # should print paths, not ""
 ```
 
 Usage
