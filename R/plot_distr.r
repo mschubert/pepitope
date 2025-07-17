@@ -51,12 +51,12 @@ plot_distr = function(dset) {
 
 #' @keywords internal
 make_pal = function(values) {
-    pats = setdiff(na.omit(values), c("unused", "unmapped"))
+    pats = setdiff(stats::na.omit(values), c("unused", "unmapped"))
     if (length(pats) <= 9) {
         cols = RColorBrewer::brewer.pal(length(pats), "Set1")
         col_pats = setNames(cols, pats)
     } else {
-        col_fun = colorRampPalette(RColorBrewer::brewer.pal(9, "Set1"))
+        col_fun = grDevices::colorRampPalette(RColorBrewer::brewer.pal(9, "Set1"))
         cols = col_fun(length(pats)+1)
         col_pats = setNames(cols[-length(cols)], pats)
     }

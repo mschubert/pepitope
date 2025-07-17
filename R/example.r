@@ -22,7 +22,7 @@ example_peptide_file = function() {
     tiled = make_peptides(subs, fus) |> pep_tile()
 
     outfile = file.path(system.file(package="pepitope"), "my_peptides.tsv")
-    write.table(tiled, outfile, sep="\t", row.names=FALSE, quote=FALSE)
+    utils::write.table(tiled, outfile, sep="\t", row.names=FALSE, quote=FALSE)
 }
 
 #' Create example peptide sheets for multiple samples
@@ -74,6 +74,7 @@ example_peptides = function(valid_barcodes, seed=18245) {
 #' @param seed  The random seed used for sampling the number of reads
 #' @return      The path to the created FASTQ file
 #'
+#' @importFrom stats rnbinom
 #' @keywords internal
 #' @export
 example_fastq = function(samples, peptide_sheets, target_reads=1000, custom=TRUE, seed=91651) {
@@ -120,7 +121,7 @@ example_fastq = function(samples, peptide_sheets, target_reads=1000, custom=TRUE
 
         # lose a quarter of barcodes in pat3 Library and add pat1 contamination
         pat1_bcs = all_seq$bc_type == "pat1"
-        pat3_bcs = which(all_seq$bc_type == "pat3") |> head(15)
+        pat3_bcs = which(all_seq$bc_type == "pat3") |> utils::head(15)
         counts[pat1_bcs, "lib2"] = rnbinom(sum(pat1_bcs), mu=target_reads/5, size=1)
         counts[pat3_bcs, "lib2"] = rnbinom(length(pat3_bcs), mu=1, size=1)
     }

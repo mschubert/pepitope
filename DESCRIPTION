@@ -31,6 +31,7 @@ Imports:
     ggplot2,
     ggpp,
     ggrepel,
+    grDevices,
     gtools,
     guideCounterWrapper,
     IRanges,
@@ -39,16 +40,19 @@ Imports:
     patchwork,
     plyranges,
     purrr,
+    RColorBrewer,
     readr,
     reshape2,
     rlang,
     S4Vectors,
+    stats,
     stringdist,
     stringi,
     stringr,
     SummarizedExperiment,
     tibble,
     tidyr,
+    utils,
     VariantAnnotation,
     XVector
 License: GPL-3
@@ -58,6 +62,7 @@ Suggests:
     BiocCheck,
     BSgenome.Hsapiens.UCSC.hg38,
     DT,
+    htmltools,
     knitr,
     pkgdown,
     plotly,
@@ -67,7 +72,7 @@ Suggests:
     writexl
 biocViews: DNASeq, VariantAnnotation, ImmunoOncology
 VignetteBuilder: knitr
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.2.9000
 Remotes:
     BrftM/fqtkWrapper,
     BrftM/guideCounterWrapper
