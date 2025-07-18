@@ -20,14 +20,14 @@ setMethod("predictCoding", c("IntegerRanges", "ANY", "ANY", "DNAStringSet"),
     function(query, subject, seqSource, varAllele, ..., ignore.strand=FALSE)
 {
     callGeneric(as(query, "GRanges"), subject, seqSource, varAllele, ...,
-                ignore.strand=ignore.strand) 
+                ignore.strand=ignore.strand)
 })
 
 setMethod("predictCoding", c("CollapsedVCF", "ANY", "ANY", "missing"),
     function(query, subject, seqSource, varAllele, ..., ignore.strand=FALSE)
 {
     rd <- rowRanges(query)
-    alt <- alt(query) 
+    alt <- alt(query)
     if (is(alt, "CharacterList")) {
         alt <- .toDNAStringSetList(alt)
         if (sum(elementNROWS(alt)) == 0L) {
@@ -35,12 +35,12 @@ setMethod("predictCoding", c("CollapsedVCF", "ANY", "ANY", "missing"),
         }
     }
     rd <- rep(rowRanges(query), elementNROWS(alt))
-    res <- callGeneric(rd, subject, seqSource, unlist(alt, use.names=FALSE), 
+    res <- callGeneric(rd, subject, seqSource, unlist(alt, use.names=FALSE),
                 ..., ignore.strand=ignore.strand)
     ## adjust QUERYID for expansion of rowRanges
     res$QUERYID <- rep(seq_len(length(alt)),
                        elementNROWS(alt))[res$QUERYID]
-    res 
+    res
 })
 
 setMethod("predictCoding", c("ExpandedVCF", "ANY", "ANY", "missing"),
@@ -49,8 +49,8 @@ setMethod("predictCoding", c("ExpandedVCF", "ANY", "ANY", "missing"),
     if (is(alt(query), "CharacterList")) {
       stop("alt(query) must be a DNAStringSet (not a CharacterList)")
     }
-    callGeneric(rowRanges(query), subject, seqSource, alt(query), ..., 
-                ignore.strand=ignore.strand) 
+    callGeneric(rowRanges(query), subject, seqSource, alt(query), ...,
+                ignore.strand=ignore.strand)
 })
 
 setMethod("predictCoding", c("GRanges", "ANY", "ANY", "DNAStringSet"),
@@ -78,7 +78,7 @@ setMethod("predictCoding", c("VRanges", "ANY", "ANY", "missing"),
 })
 
 .predictCoding <-
-    function(query, subject, seqSource, varAllele, ..., 
+    function(query, subject, seqSource, varAllele, ...,
              cache=new.env(parent=emptyenv()), ignore.strand=FALSE)
 {
     stopifnot(length(varAllele) == length(query))
@@ -91,22 +91,22 @@ setMethod("predictCoding", c("VRanges", "ANY", "ANY", "missing"),
         cache[[".__init__"]] <- TRUE
     }
 
-    map <- data.frame(geneid=rep(names(cache[["txbygene"]]), 
+    map <- data.frame(geneid=rep(names(cache[["txbygene"]]),
                           elementNROWS(cache[["txbygene"]])),
-                      txid=mcols(unlist(cache[["txbygene"]], 
+                      txid=mcols(unlist(cache[["txbygene"]],
                           use.names=FALSE))[["tx_id"]],
                       stringsAsFactors=FALSE)
 
-    txlocal <- .predictCodingGRangesList(query, cache[["cdsbytx"]], 
+    txlocal <- .predictCodingGRangesList(query, cache[["cdsbytx"]],
                    seqSource, varAllele, ..., ignore.strand=ignore.strand)
-    txid <- mcols(txlocal)$TXID 
+    txid <- mcols(txlocal)$TXID
     mcols(txlocal)$GENEID <- map$geneid[match(txid, map$txid)]
     txlocal
 }
 
-.predictCodingGRangesList <- function(query, cdsbytx, seqSource, varAllele, 
+.predictCodingGRangesList <- function(query, cdsbytx, seqSource, varAllele,
                                       ..., genetic.code=GENETIC_CODE,
-                                      if.fuzzy.codon="error", 
+                                      if.fuzzy.codon="error",
                                       ignore.strand=FALSE)
 {
     if (ignore.strand)
@@ -128,7 +128,7 @@ setMethod("predictCoding", c("VRanges", "ANY", "ANY", "missing"),
     ## frameshift
     refwidth <- width(txlocal)
     altallele <- mcols(txlocal)$varAllele
-    fmshift <- abs(width(altallele) - refwidth) %% 3 != 0 
+    fmshift <- abs(width(altallele) - refwidth) %% 3 != 0
     if (any(fmshift))
         valid[fmshift] <- FALSE
 
@@ -136,7 +136,7 @@ setMethod("predictCoding", c("VRanges", "ANY", "ANY", "missing"),
     zwidth <- width(altallele) == 0
     if (any(zwidth)) {
         warning("records with missing 'varAllele' were ignored")
-        valid[zwidth] <- FALSE 
+        valid[zwidth] <- FALSE
         fmshift[zwidth] <- FALSE
     }
 
@@ -149,7 +149,7 @@ setMethod("predictCoding", c("VRanges", "ANY", "ANY", "missing"),
     pattern <- "N|\\.|\\+|\\-"
     altCheck <- grepl(pattern, as.character(altallele, use.names=FALSE))
     refCheck <- grepl(pattern, as.character(refCodon, use.names=FALSE))
-    noTrans <- rep(FALSE, length(txlocal)) 
+    noTrans <- rep(FALSE, length(txlocal))
     noTrans[altCheck | refCheck] <- TRUE
     valid[noTrans] <- FALSE
     if (any(altCheck))
@@ -160,22 +160,22 @@ setMethod("predictCoding", c("VRanges", "ANY", "ANY", "missing"),
                 " were not translated")
 
     ## substitute and translate
-    refAA <- varAA <- AAStringSet(rep("", length(txlocal))) 
+    refAA <- varAA <- AAStringSet(rep("", length(txlocal)))
     if (any(valid)) {
         ## 2 genetic.code versions
         alt.init.codons <- attr(genetic.code, "alt_init_codons")
         gc <- genetic.code
         gc.no.alt.init.codons <- genetic.code
         attr(gc.no.alt.init.codons, "alt_init_codons") <- character()
- 
-        ## ignore alt_init_codons 
+
+        ## ignore alt_init_codons
         subseq(varCodon, altpos, width=refwidth) <- altallele
-        refAA[valid] <- translate(refCodon[valid], 
+        refAA[valid] <- translate(refCodon[valid],
                                   genetic.code=gc.no.alt.init.codons,
                                   if.fuzzy.codon=if.fuzzy.codon)
-        varAA <- AAStringSet(rep("", length(txlocal))) 
-        varAA[valid] <- translate(varCodon[valid], 
-                                  genetic.code=gc.no.alt.init.codons, 
+        varAA <- AAStringSet(rep("", length(txlocal)))
+        varAA[valid] <- translate(varCodon[valid],
+                                  genetic.code=gc.no.alt.init.codons,
                                   if.fuzzy.codon=if.fuzzy.codon)
 
         ## respect alt_init_codons at the start of the CDS
@@ -189,26 +189,26 @@ setMethod("predictCoding", c("VRanges", "ANY", "ANY", "missing"),
     }
 
     ## results
-    nonsynonymous <- as.character(refAA) != as.character(varAA) 
+    nonsynonymous <- as.character(refAA) != as.character(varAA)
     consequence <- rep("synonymous", length(txlocal))
-    consequence[nonsynonymous] <- "nonsynonymous" 
+    consequence[nonsynonymous] <- "nonsynonymous"
     consequence[fmshift] <- "frameshift"
-    consequence[nonsynonymous & (as.character(varAA) %in% "*")] <- "nonsense" 
-    consequence[zwidth | noTrans] <- "not translated" 
-    consequence <- factor(consequence) 
- 
-    mcols(txlocal) <- append(mcols(txlocal), 
+    consequence[nonsynonymous & (as.character(varAA) %in% "*")] <- "nonsense"
+    consequence[zwidth | noTrans] <- "not translated"
+    consequence <- factor(consequence)
+
+    mcols(txlocal) <- append(mcols(txlocal),
         DataFrame(GENEID=rep(NA_character_, nrow(mcols(txlocal))),
-                  CONSEQUENCE=consequence, 
-                  REFCODON=refCodon, 
-                  VARCODON=varCodon, 
+                  CONSEQUENCE=consequence,
+                  REFCODON=refCodon,
+                  VARCODON=varCodon,
                   REFAA=refAA, VARAA=varAA))
-    txlocal 
+    txlocal
 }
 
 .getRefCodons <- function(txlocal, altpos, seqSource, cdsbytx)
-{ 
-    ## adjust codon end for 
+{
+    ## adjust codon end for
     ## - width of the reference sequence
     ## - position of alt allele substitution in the codon
     cstart <- ((start(mcols(txlocal)$CDSLOC) - 1L) %/% 3L) * 3L + 1L
@@ -241,9 +241,9 @@ setMethod("predictCoding", c("VRanges", "ANY", "ANY", "missing"),
                              ignore.strand=ignore.strand)
     cds <- mcols(flat_to)$cds_id[map2$transcriptsHits]
     ## CodingVariants() must fall within a coding region.
-    ## mapToTranscripts() will map ranges that span intron 
-    ## junctions and overlap multiple exons/cds regions. Because 
-    ## of this, it's possible for 'map' to return a hit for a 
+    ## mapToTranscripts() will map ranges that span intron
+    ## junctions and overlap multiple exons/cds regions. Because
+    ## of this, it's possible for 'map' to return a hit for a
     ## query that 'map2' will not. (The subject in
     ## 'map' is a GRangesList and in 'map2' it's unlisted.)
     ## Only ranges identified by 'map' and 'map2' are kept.
@@ -267,10 +267,10 @@ setMethod("predictCoding", c("VRanges", "ANY", "ANY", "missing"),
 
     res <- from[xHits]
     strand(res) <- strand(map)
-    mcols(res) <- append(values(res), 
-        DataFrame(CDSLOC=ranges(map), 
-                  PROTEINLOC=plocs, 
-                  QUERYID=xHits, 
+    mcols(res) <- append(values(res),
+        DataFrame(CDSLOC=ranges(map),
+                  PROTEINLOC=plocs,
+                  QUERYID=xHits,
                   TXID=txid, CDSID=cdsid))
-    res 
+    res
 }
