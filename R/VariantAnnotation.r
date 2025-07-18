@@ -116,6 +116,14 @@ setMethod("predictCoding", c("VRanges", "ANY", "ANY", "missing"),
     mcols(query) <- append(mcols(query), DataFrame(varAllele=varAllele))
     txlocal <- .localCoordinates(query, cdsbytx, ignore.strand=FALSE, ...)
 
+    # exon split leads to invalid reference width
+    # this happens when the ref codon extends into an intron
+    splits = sapply(txlocal$PROTEINLOC, length) > 1
+    if (any(splits)) {
+        warning("variants that span multiple exons ignored")
+        txlocal = txlocal[!splits]
+    }
+
     ## reverse complement "-" strand
     valid <- rep(TRUE, length(txlocal))
     nstrand <- as.vector(strand(txlocal) == "-")
