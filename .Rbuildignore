@@ -7,7 +7,7 @@
 ^README\.md$
 ^CITATION$
 ^_pkgdown\.yml$
-narray_[0-9.]+\.tar\.gz
+\.tar\.gz$
 ^\.github$
 ^windows$
 .BiocCheck
