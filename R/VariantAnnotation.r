@@ -116,14 +116,6 @@ setMethod("predictCoding", c("VRanges", "ANY", "ANY", "missing"),
     mcols(query) <- append(mcols(query), DataFrame(varAllele=varAllele))
     txlocal <- .localCoordinates(query, cdsbytx, ignore.strand=FALSE, ...)
 
-    # exon split leads to invalid reference width
-    # this happens when the ref codon extends into an intron
-    splits = sapply(txlocal$PROTEINLOC, length) > 1
-    if (any(splits)) {
-        warning("variants that span multiple exons ignored")
-        txlocal = txlocal[!splits]
-    }
-
     ## reverse complement "-" strand
     valid <- rep(TRUE, length(txlocal))
     nstrand <- as.vector(strand(txlocal) == "-")
@@ -151,6 +143,22 @@ setMethod("predictCoding", c("VRanges", "ANY", "ANY", "missing"),
     ## reference codon sequences
     altpos <- (start(mcols(txlocal)$CDSLOC) - 1L) %% 3L + 1L
     refCodon <- varCodon <- .getRefCodons(txlocal, altpos, seqSource, cdsbytx)
+
+    # invalid reference width
+    # this happens when the ref codon extends into an intron
+    rwidth <- width(varCodon) < refwidth
+    if (any(rwidth)) {
+        warning("records with invalid reference width ignored")
+        txlocal <- txlocal[!rwidth]
+        refwidth <- refwidth[!rwidth]
+        altallele <- altallele[!rwidth]
+        altpos <- altpos[!rwidth]
+        refCodon <- refCodon[!rwidth]
+        varCodon <- refCodon[!rwidth]
+        valid <- valid[!rwidth]
+        fmshift <- fmshift[!rwidth]
+        zwidth <- zwidth[!rwidth]
+    }
 
     ## allowed characters that can't be translated
     ## "N", ".", "+" and "-"
