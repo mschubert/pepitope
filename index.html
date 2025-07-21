@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">pepitope</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,21 +71,12 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>We require <code>R&gt;=4.5.0</code>, as this includes important fixes on Bioconductor.</p>
 <p>The package is currently only available on Github, use the<code>remotes</code> package to install:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># run this in R</span></span>
+<code class="sourceCode R"><span><span class="co"># run this in R &gt;= 4.5.0</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"remotes"</span>, quietly<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"mschubert/pepitope"</span>, dependencies<span class="op">=</span><span class="cn">TRUE</span>, timeout<span class="op">=</span><span class="fl">300</span><span class="op">)</span></span></code></pre></div>
-<p>In addition, we need the <a href="https://www.rust-lang.org/tools/install" class="external-link">Rust</a> programming language and its <code>cargo</code> package manager, which we use to install <a href="https://github.com/fulcrumgenomics/fqtk" class="external-link"><code>fqtk</code></a> and <a href="https://github.com/fulcrumgenomics/guide-counter" class="external-link"><code>guide-counter</code></a>:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># run this in your terminal</span></span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="ex">cargo</span> install fqtk guide-counter</span></code></pre></div>
-<p>We can check if the installation works by running:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># run this in R</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mschubert/pepitope" class="external-link">pepitope</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Sys.which.html" class="external-link">Sys.which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"fqtk"</span>, <span class="st">"guide-counter"</span><span class="op">)</span><span class="op">)</span> <span class="co"># should print paths, not ""</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
@@ -103,7 +94,7 @@
 </ul>
 <p>More information can be found in the <a href="https://mschubert.github.io/pepitope/articles/variant.html" class="external-link"><em>Variant calling</em> vignette 🔗</a>.</p>
 <details><summary><b>Code example</b>
-</summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mschubert/pepitope" class="external-link">pepitope</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># genome and annotation</span></span>
@@ -147,14 +138,14 @@
 <li>Transduce target cells with this peptide construct library</li>
 </ul>
 <details><summary><b>Code example</b> (runnable without external data)
-</summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># creating barcoded constructs</span></span>
 <span><span class="va">lib</span> <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/hawkjo/freebarcodes/master/barcodes/barcodes12-1.txt"</span></span>
 <span><span class="va">valid_barcodes</span> <span class="op">=</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_tsv</a></span><span class="op">(</span><span class="va">lib</span>, col_names<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">X1</span></span>
 <span><span class="va">all_constructs</span> <span class="op">=</span> <span class="fu"><a href="reference/example_peptides.html">example_peptides</a></span><span class="op">(</span><span class="va">valid_barcodes</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/plot_barcode_overlap.html">plot_barcode_overlap</a></span><span class="op">(</span><span class="va">all_constructs</span>, <span class="va">valid_barcodes</span><span class="op">)</span></span></code></pre></div>
 </details><details><summary><b>Code example</b> (loading from <code>.xlsx</code>)
-</summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># this file is manually created from the output of step 1</span></span>
 <span><span class="va">fname</span> <span class="op">=</span> <span class="st">"my_combined_barcoded_file.xlsx"</span></span>
 <span><span class="va">sheets</span> <span class="op">=</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/excel_sheets.html" class="external-link">excel_sheets</a></span><span class="op">(</span><span class="va">fname</span><span class="op">)</span></span>
@@ -173,7 +164,7 @@
 </ul>
 <p>More information can be found in the <a href="https://mschubert.github.io/pepitope/articles/qc.html" class="external-link"><em>Quality Control</em> vignette 🔗</a></p>
 <details><summary><b>Code example</b>
-</summary><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># demultiplexing and counting example data</span></span>
 <span><span class="va">sample_sheet</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"my_samples.tsv"</span>, package<span class="op">=</span><span class="st">"pepitope"</span><span class="op">)</span></span>
 <span><span class="va">fastq_file</span> <span class="op">=</span> <span class="fu"><a href="reference/example_fastq.html">example_fastq</a></span><span class="op">(</span><span class="va">sample_sheet</span>, <span class="va">all_constructs</span><span class="op">)</span></span>
@@ -195,7 +186,7 @@
 </ul>
 <p>More information can be found in the <a href="https://mschubert.github.io/pepitope/articles/screen.html" class="external-link"><em>Co-culture screen</em> vignette 🔗</a>.</p>
 <details><summary><b>Code example</b>
-</summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># perform abundance testing and plot results</span></span>
 <span><span class="va">res</span> <span class="op">=</span> <span class="fu"><a href="reference/screen_calc.html">screen_calc</a></span><span class="op">(</span><span class="va">dset</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sample"</span>, <span class="st">"Mock"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/plot_screen.html">plot_screen</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">`Sample vs Mock`</span><span class="op">)</span></span></code></pre></div>
@@ -244,7 +235,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>
