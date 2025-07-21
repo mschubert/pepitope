@@ -25,7 +25,7 @@ filter_variants(
 
 \item{pass}{Whether to only include softFilterMatrix PASS}
 
-\item{sample}{Only include if in `sampleNames(vr)`}
+\item{sample}{Only include if in `sampleNames(vr)` (required if more than one present)}
 
 \item{chrs}{Either "default" or a character vector of chromosome names}
 }

@@ -5,7 +5,7 @@
 #' @param min_cov  Minimum number of reads to span the ALT allele
 #' @param min_af   Minimum allele frequency of the ALT allele
 #' @param pass     Whether to only include softFilterMatrix PASS
-#' @param sample   Only include if in `sampleNames(vr)`
+#' @param sample   Only include if in `sampleNames(vr)` (required if more than one present)
 #' @param chrs     Either "default" or a character vector of chromosome names
 #'
 #' @importFrom VariantAnnotation softFilterMatrix altDepth totalDepth
@@ -50,11 +50,14 @@ filter_variants = function(vr, ..., min_cov=2, min_af=0.05, pass=TRUE, sample=NU
         vr = vr[!NAs & vec_af >= min_af]
     }
 
+    sn = sampleNames(vr)
     if (!is.null(sample)) {
-        NAs = is.na(sampleNames(vr))
+        NAs = is.na(sn)
         if (all(NAs))
             stop("Can not apply filter [sampleNames] because all values are NA")
-        vr = vr[!NAs & as.character(sampleNames(vr)) %in% sample]
+        vr = vr[!NAs & as.character(sn) %in% sample]
+    } else if (length(unique(sn)) > 1) {
+        stop("'vr' contains multiple samples but 'sample' argument not provided")
     }
 
     if (!is.null(chrs)) {
