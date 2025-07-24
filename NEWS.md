@@ -1,6 +1,7 @@
 # git head
 
 * Fix a bug where multi-exon dropping could subset incorrectly (#5)
+* Re-introduce filter that CDS width must be equal variant width (#5)
 
 # pepitope 0.3.1
 

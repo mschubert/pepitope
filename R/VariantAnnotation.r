@@ -146,7 +146,7 @@ setMethod("predictCoding", c("VRanges", "ANY", "ANY", "missing"),
 
     # invalid reference width
     # this happens when the ref codon extends into an intron
-    rwidth <- width(varCodon) < refwidth
+    rwidth <- width(txlocal) != width(txlocal$CDSLOC) | width(varCodon) < refwidth
     if (any(rwidth)) {
         warning("records with invalid reference width ignored")
         txlocal <- txlocal[!rwidth]
