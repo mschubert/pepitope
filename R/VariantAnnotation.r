@@ -154,7 +154,7 @@ setMethod("predictCoding", c("VRanges", "ANY", "ANY", "missing"),
         altallele <- altallele[!rwidth]
         altpos <- altpos[!rwidth]
         refCodon <- refCodon[!rwidth]
-        varCodon <- refCodon[!rwidth]
+        varCodon <- varCodon[!rwidth]
         valid <- valid[!rwidth]
         fmshift <- fmshift[!rwidth]
         zwidth <- zwidth[!rwidth]

@@ -1,3 +1,7 @@
+# git head
+
+* Fix a bug where multi-exon dropping could subset incorrectly (#5)
+
 # pepitope 0.3.1
 
 * Multi-exon variants are now dropped with a warning (#5)
