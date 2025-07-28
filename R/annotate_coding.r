@@ -19,6 +19,13 @@
 #' @importFrom methods as
 #' @export
 annotate_coding = function(vr, txdb, asm) {
+    # workaround for EnsDb/BSgenome mismatch: https://github.com/jorainer/ensembldb/issues/159
+    if ("UCSC" %in% seqlevelsStyle(vr) &&
+            all(genome(txdb) == "GRCh38") && "UCSC" %in% seqlevelsStyle(txdb) &&
+            all(genome(asm) == "hg38") && "UCSC" %in% seqlevelsStyle(asm)) {
+        genome(seqinfo(asm))[] = "GRCh38"
+    }
+
     vr$sampleNames = sampleNames(vr)
     vr$AF = unlist(vr$AF)
     vr$ref = ref(vr)
