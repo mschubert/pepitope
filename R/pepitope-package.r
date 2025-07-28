@@ -28,3 +28,23 @@ SummarizedExperiment::rowData
 #' @importFrom SummarizedExperiment assay
 #' @export
 SummarizedExperiment::assay
+
+#' @importFrom GenomeInfoDb seqinfo
+#' @export
+GenomeInfoDb::seqinfo
+
+#' @importFrom GenomeInfoDb genome
+#' @export
+GenomeInfoDb::genome
+
+#' @importFrom GenomeInfoDb seqlevels
+#' @export
+GenomeInfoDb::seqlevels
+
+#' @importFrom GenomeInfoDb seqlevelsStyle
+#' @export
+GenomeInfoDb::seqlevelsStyle
+
+#' @importFrom GenomeInfoDb seqlevelsStyle<-
+#' @export
+GenomeInfoDb::`seqlevelsStyle<-`

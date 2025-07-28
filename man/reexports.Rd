@@ -7,6 +7,11 @@
 \alias{colData}
 \alias{rowData}
 \alias{assay}
+\alias{seqinfo}
+\alias{genome}
+\alias{seqlevels}
+\alias{seqlevelsStyle}
+\alias{seqlevelsStyle<-}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -14,6 +19,8 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
+  \item{GenomeInfoDb}{\code{\link[GenomeInfoDb:seqinfo]{genome}}, \code{\link[GenomeInfoDb]{seqinfo}}, \code{\link[GenomeInfoDb:seqinfo]{seqlevels}}, \code{\link[GenomeInfoDb]{seqlevelsStyle}}, \code{\link[GenomeInfoDb:seqlevelsStyle]{seqlevelsStyle<-}}}
+
   \item{SummarizedExperiment}{\code{\link[SummarizedExperiment:SummarizedExperiment-class]{assay}}, \code{\link[SummarizedExperiment:SummarizedExperiment-class]{colData}}, \code{\link[SummarizedExperiment:SummarizedExperiment-class]{rowData}}}
 
   \item{VariantAnnotation}{\code{\link[VariantAnnotation:VRanges-class]{readVcfAsVRanges}}}
