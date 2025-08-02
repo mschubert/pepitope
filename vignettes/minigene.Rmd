@@ -1,9 +1,9 @@
 ---
-title: "Variant calling"
+title: "Minigene report"
 output:
   rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Variant calling}
+  %\VignetteIndexEntry{Minigene report}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -132,11 +132,13 @@ vr1 = readVcfAsVRanges(variant_vcf_file) |>
     filter_variants(min_cov=2, min_af=0.05, pass=TRUE)
 ```
 
-Here, we are using the following filters:
+Here, we can use the following filters:
 
 * `min_cov = 2` -- a variant needs to be covered by at least 2 reads
 * `min_af = 0.05` -- a variant needs to occur in at leat 5% of reads
 * `pass = TRUE` -- a variant needs to pass the standard QC filters
+* `sample = SAMPLE` -- only annotate the sample `SAMPLE`
+* `chrs = "default"` -- only use the common chromosomes for this organism
 
 The resulting `vr1` object looks like the following:
 

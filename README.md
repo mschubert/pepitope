@@ -29,7 +29,7 @@ remotes::install_github("mschubert/pepitope", dependencies=TRUE, timeout=300)
 Usage
 -----
 
-### Generating peptide constructs
+### Generating minigene constructs
 
 Here we have sequenced the DNA (and optionally RNA) of a patient and
 identified the variants in a `.vcf` file. We now want to extract the
@@ -42,7 +42,7 @@ regions into a summary report. The steps are:
 * Subset the peptide context around each mutation
 * Make a report of variants, coding changes, and tiled peptides
 
-More information can be found in the [*Variant calling* vignette 🔗](https://mschubert.github.io/pepitope/articles/variant.html).
+More information can be found in the [*Minigene report* vignette 🔗](https://mschubert.github.io/pepitope/articles/minigene.html).
 
 <details><summary><b>Code example</b></summary>
 

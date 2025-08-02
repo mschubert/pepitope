@@ -4,13 +4,13 @@ template:
 
 navbar:
     structure:
-        left:  [ intro, variant, qc, screen, reference, news ]
+        left:  [ intro, minigene, qc, screen, reference, news ]
         right: [ search, github, lightswitch ]
 
     components:
         variant:
-            text: Variant calling
-            href: articles/variant.html
+            text: Minigene report
+            href: articles/minigene.html
         qc:
             text: Quality control
             href: articles/qc.html
