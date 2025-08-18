@@ -11,9 +11,9 @@
 count_bc = function(tdir, all_constructs, valid_barcodes, reverse_complement=FALSE) {
     samples = readr::read_tsv(file.path(tdir, "samples.tsv"), show_col_types=FALSE)
     all_samples = strsplit(samples$patient, "+", fixed=TRUE) |> unlist()
-    missing_annots = setdiff(all_samples, names(all_constructs))
-    if (any(missing_annots))
-        stop("Missing construct annotations for: ", paste(missing_annots, collapse=", "))
+    missing = setdiff(all_samples, names(all_constructs))
+    if (length(missing) > 0)
+        stop("Missing construct annotations for: ", paste(missing, collapse=", "))
 
     construct_df = merge_constructs(all_constructs)
     if (missing(valid_barcodes))
