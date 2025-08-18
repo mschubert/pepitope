@@ -3,6 +3,7 @@
 * Add a workaround for `EnsDb`/`BSGenome` mismatch on `UCSC` names (#3)
 * Fix a bug where multi-exon dropping could subset incorrectly (#5)
 * Re-introduce filter that CDS width must be equal variant width (#5)
+* Fix error message when sample sheet does not contain required fields
 
 # pepitope 0.3.1
 
