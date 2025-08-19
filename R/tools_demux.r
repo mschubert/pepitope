@@ -10,31 +10,35 @@ demux_fq = function(fq, samples, read_structures) {
     tdir = tempfile()
     dir.create(tdir)
 
-    fname = file.path(tdir, "samples.tsv")
-    if (is.character(samples) && length(samples) == 1) {
-        file.copy(samples, fname)
-        sample_df = readr::read_tsv(samples, show_col_types=FALSE)
-    } else if (is.data.frame(samples)) {
-        utils::write.table(samples, file=fname, row.names=FALSE, sep="\t")
-        sample_df = samples
-        samples = fname
-    } else {
-        stop("'samples' argument needs to be a single tsv file or a data.frame")
+    if (!is.data.frame(samples)) {
+        if (is.character(samples) && length(samples) == 1)
+            samples = readr::read_tsv(samples, show_col_types=FALSE)
+        else
+            stop("'samples' argument needs to be a single tsv file or a data.frame")
     }
 
     req = c("sample_id", "patient", "rep", "origin", "barcode")
     missing = setdiff(req, colnames(sample_df))
     if (length(missing) > 0)
-        stop("Required columns not found in sample sheet: ", paste(missing, collapse=", "))
+        stop("Required columns not found in sample sheet: ", paste(sQuote(missing), collapse=", "))
+    emptyrow = apply(samples, 1, function(r) all(is.na(r)))
+    if (any(emptyrow)) {
+        remove = paste(which(emptyrow), collapse=", ")
+        warning(paste("Removing rows" , remove, "because they are empty in the sample sheet"))
+        samples = samples[!emptyrow,]
+    }
     for (name in req)
         if (any(nchar(sample_df[[name]]) == 0))
             stop(sQuote(name), " must not be empty for any sample in the sample sheet")
+
+    sample_tsv = file.path(tdir, "samples.tsv")
+    utils::write.table(samples, file=sample_tsv, row.names=FALSE, sep="\t")
 
     fqtkWrapper::fqtk_demux(
         inputs = fq,
         max_mismatches = 0L,
         read_structures = read_structures,
-        sample_metadata = samples,
+        sample_metadata = sample_tsv,
         output = tdir
     )
     tdir

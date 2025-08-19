@@ -13,7 +13,7 @@ count_bc = function(tdir, all_constructs, valid_barcodes, reverse_complement=FAL
     all_samples = strsplit(samples$patient, "+", fixed=TRUE) |> unlist()
     missing = setdiff(all_samples, names(all_constructs))
     if (length(missing) > 0)
-        stop("Missing construct annotations for: ", paste(missing, collapse=", "))
+        stop("Missing minigene annotations for: ", paste(sQuote(missing), collapse=", "))
 
     construct_df = merge_constructs(all_constructs)
     if (missing(valid_barcodes))
