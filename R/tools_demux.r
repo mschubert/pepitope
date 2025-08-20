@@ -18,7 +18,7 @@ demux_fq = function(fq, samples, read_structures) {
     }
 
     req = c("sample_id", "patient", "rep", "origin", "barcode")
-    missing = setdiff(req, colnames(sample_df))
+    missing = setdiff(req, colnames(samples))
     if (length(missing) > 0)
         stop("Required columns not found in sample sheet: ", paste(sQuote(missing), collapse=", "))
     emptyrow = apply(samples, 1, function(r) all(is.na(r)))
@@ -28,7 +28,7 @@ demux_fq = function(fq, samples, read_structures) {
         samples = samples[!emptyrow,]
     }
     for (name in req)
-        if (any(nchar(sample_df[[name]]) == 0))
+        if (any(nchar(samples[[name]]) == 0))
             stop(sQuote(name), " must not be empty for any sample in the sample sheet")
 
     sample_tsv = file.path(tdir, "samples.tsv")
