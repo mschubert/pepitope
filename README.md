@@ -21,6 +21,7 @@ install:
 
 ```r
 # run this in R >= 4.5.0
+# note that we need Rust, Cargo, and cmake to compile the dependencies
 if (!requireNamespace("remotes", quietly=TRUE))
     install.packages("remotes")
 remotes::install_github("mschubert/pepitope", dependencies=TRUE, timeout=300)
