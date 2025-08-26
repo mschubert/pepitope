@@ -9,7 +9,7 @@ in analyzing the result of co-culture screening data.
 
 This R package is used to:
 
-* [**Extract peptides**](#generating-peptide-constructs) with flanking region around mutations
+* [**Extract peptides**](#generating-minigene-constructs) with flanking region around mutations
 * Run [**quality control**](#performing-quality-control-on-construct-library-sequencing) on sequencing of these libraries
 * Perform [**differential abundance**](#differential-abundance-testing-of-co-culture-screens) testing of co-culture screens
 
