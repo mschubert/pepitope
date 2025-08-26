@@ -32,7 +32,7 @@ demux_fq = function(fq, samples, read_structures) {
             stop(sQuote(name), " must not be empty for any sample in the sample sheet")
 
     sample_tsv = file.path(tdir, "samples.tsv")
-    utils::write.table(samples, file=sample_tsv, row.names=FALSE, sep="\t")
+    utils::write.table(samples, file=sample_tsv, row.names=FALSE, sep="\t", quote=FALSE)
 
     fqtkWrapper::fqtk_demux(
         inputs = fq,
