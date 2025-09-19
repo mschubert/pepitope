@@ -5,6 +5,7 @@
 * Re-introduce filter that CDS width must be equal variant width (#5)
 * Fix error message when sample sheet does not contain required fields
 * Add clearer error messages about `seqlevels` mismatches in `annotate_coding` (#11)
+* Barcode counting now uses `--exact-match` by default
 
 # pepitope 0.3.1
 

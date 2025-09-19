@@ -4,14 +4,21 @@
 \alias{count_external}
 \title{Use `guide-counter` via a system call to actually count}
 \usage{
-count_external(tdir, valid_barcodes, reverse_complement)
+count_external(
+  tdir,
+  valid_barcodes,
+  reverse_complement = FALSE,
+  exact_match = TRUE
+)
 }
 \arguments{
 \item{tdir}{Path to the directory with demultiplexed FASTQ files}
 
 \item{valid_barcodes}{A character vector of all possible barcodes}
 
-\item{reverse_complement}{Whether to count the reverse complement of the barcodes instead}
+\item{reverse_complement}{Whether to count the reverse complement of the barcodes instead (default: FALSE)}
+
+\item{exact_match}{Whether the read needs to contain the exact barcode (default: TRUE)}
 }
 \value{
 A list with the data.frame meta and matrix counts

@@ -33,7 +33,7 @@ Imports:
     ggrepel,
     grDevices,
     gtools,
-    guideCounterWrapper,
+    guideCounterWrapper (>= 0.0.2),
     IRanges,
     MatrixGenerics,
     methods,
@@ -72,7 +72,7 @@ Suggests:
     writexl
 biocViews: DNASeq, VariantAnnotation, ImmunoOncology
 VignetteBuilder: knitr
-RoxygenNote: 7.3.2.9000
+RoxygenNote: 7.3.3
 Remotes:
     BrftM/fqtkWrapper,
-    BrftM/guideCounterWrapper
+    mschubert/guideCounterWrapper

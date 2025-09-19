@@ -53,12 +53,13 @@ count_bc = function(tdir, all_constructs, valid_barcodes, reverse_complement=FAL
 #'
 #' @param tdir  Path to the directory with demultiplexed FASTQ files
 #' @param valid_barcodes  A character vector of all possible barcodes
-#' @param reverse_complement  Whether to count the reverse complement of the barcodes instead
+#' @param reverse_complement  Whether to count the reverse complement of the barcodes instead (default: FALSE)
+#' @param exact_match  Whether the read needs to contain the exact barcode (default: TRUE)
 #' @return      A list with the data.frame meta and matrix counts
 #'
 #' @importFrom Biostrings reverseComplement DNAStringSet
 #' @keywords internal
-count_external = function(tdir, valid_barcodes, reverse_complement) {
+count_external = function(tdir, valid_barcodes, reverse_complement=FALSE, exact_match=TRUE) {
     tsv = tibble(name = as.character(valid_barcodes)) |>
         mutate(barcode=name, gene=name)
     if (reverse_complement)
@@ -74,7 +75,8 @@ count_external = function(tdir, valid_barcodes, reverse_complement) {
         input = fqs,
         library = lpath,
         offset_min_fraction = 0.2,
-        output = file.path(tdir, "barcodes")
+        output = file.path(tdir, "barcodes"),
+        exact_match = exact_match
     )
 
     res = c(counts="barcodes.counts.txt", stats="barcodes.stats.txt") |>
