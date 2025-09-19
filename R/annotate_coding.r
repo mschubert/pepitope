@@ -25,6 +25,15 @@ annotate_coding = function(vr, txdb, asm) {
             all(genome(asm) == "hg38") && "UCSC" %in% seqlevelsStyle(asm)) {
         genome(seqinfo(asm))[] = "GRCh38"
     }
+    if (length(intersect(seqlevels(vr), seqlevels(txdb))) == 0) {
+        stop("No common `seqlevels()` in variants and transcript annotation. ",
+            "Are you using the same Ensembl/UCSC styles?")
+    }
+    if (length(setdiff(seqlevels(vr), seqlevels(txdb))) > 0 &&
+            length(setdiff(seqlevels(txdb), seqlevels(vr))) > 0) {
+        stop("Incompatible `seqlevels()` in variants and transcript annotation. ",
+            "Did you forget `chrs=\"default\"` in `filter_variants`?")
+    }
 
     vr$sampleNames = sampleNames(vr)
     vr$AF = unlist(vr$AF)
