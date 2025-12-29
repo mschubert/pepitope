@@ -19,7 +19,7 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{GenomeInfoDb}{\code{\link[GenomeInfoDb:seqinfo]{genome}}, \code{\link[GenomeInfoDb]{seqinfo}}, \code{\link[GenomeInfoDb:seqinfo]{seqlevels}}, \code{\link[GenomeInfoDb]{seqlevelsStyle}}, \code{\link[GenomeInfoDb:seqlevelsStyle]{seqlevelsStyle<-}}}
+  \item{GenomeInfoDb}{\code{\link[GenomeInfoDb]{genome}}, \code{\link[GenomeInfoDb]{seqinfo}}, \code{\link[GenomeInfoDb]{seqlevels}}, \code{\link[GenomeInfoDb]{seqlevelsStyle}}, \code{\link[GenomeInfoDb:seqlevelsStyle]{seqlevelsStyle<-}}}
 
   \item{SummarizedExperiment}{\code{\link[SummarizedExperiment:SummarizedExperiment-class]{assay}}, \code{\link[SummarizedExperiment:SummarizedExperiment-class]{colData}}, \code{\link[SummarizedExperiment:SummarizedExperiment-class]{rowData}}}
 

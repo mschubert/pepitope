@@ -1,4 +1,4 @@
-# git head
+# pepitope 0.3.2
 
 * Add a workaround for `EnsDb`/`BSGenome` mismatch on `UCSC` names (#3)
 * Fix a bug where multi-exon dropping could subset incorrectly (#5)

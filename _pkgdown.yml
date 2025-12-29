@@ -8,7 +8,7 @@ navbar:
         right: [ search, github, lightswitch ]
 
     components:
-        variant:
+        minigene:
             text: Minigene report
             href: articles/minigene.html
         qc:
