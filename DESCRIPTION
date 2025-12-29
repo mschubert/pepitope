@@ -38,7 +38,6 @@ Imports:
     MatrixGenerics,
     methods,
     patchwork,
-    plyranges,
     purrr,
     RColorBrewer,
     readr,
