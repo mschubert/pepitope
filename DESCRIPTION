@@ -73,5 +73,5 @@ biocViews: DNASeq, VariantAnnotation, ImmunoOncology
 VignetteBuilder: knitr
 RoxygenNote: 7.3.3
 Remotes:
-    BrftM/fqtkWrapper,
+    mschubert/fqtkWrapper,
     mschubert/guideCounterWrapper
