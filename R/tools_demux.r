@@ -4,9 +4,10 @@
 #' @param samples  A sample sheet as `data.frame` in tsv format. Requires the
 #'      columns 'sample_id', 'patient', 'rep', 'origin', 'barcode'
 #' @param read_structures  A character string describing the read structure
+#' @param verbose  Whether to print progress messages (default: TRUE)
 #'
 #' @export
-demux_fq = function(fq, samples, read_structures) {
+demux_fq = function(fq, samples, read_structures, verbose=TRUE) {
     tdir = tempfile()
     dir.create(tdir)
 
@@ -40,7 +41,8 @@ demux_fq = function(fq, samples, read_structures) {
         max_mismatches = 0L,
         read_structures = read_structures,
         sample_metadata = sample_tsv,
-        output = tdir
+        output = tdir,
+        verbose = verbose
     )
     tdir
 }

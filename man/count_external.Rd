@@ -8,7 +8,8 @@ count_external(
   tdir,
   valid_barcodes,
   reverse_complement = FALSE,
-  exact_match = TRUE
+  exact_match = TRUE,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -16,9 +17,11 @@ count_external(
 
 \item{valid_barcodes}{A character vector of all possible barcodes}
 
-\item{reverse_complement}{Whether to count the reverse complement of the barcodes instead (default: FALSE)}
+\item{reverse_complement}{Whether to count the reverse complement of the barcodes instead}
 
 \item{exact_match}{Whether the read needs to contain the exact barcode (default: TRUE)}
+
+\item{verbose}{Whether to print progress messages (default: TRUE)}
 }
 \value{
 A list with the data.frame meta and matrix counts

@@ -4,11 +4,12 @@
 #' @param all_constructs  A named list of all construct libraries
 #' @param valid_barcodes  A character vector of all possible barcodes
 #' @param reverse_complement  Whether to count the reverse complement of the barcodes instead
+#' @param verbose  Whether to print progress messages (default: TRUE)
 #' @return      A `SummarizedExperiment` object with counts and metadata
 #'
 #' @importFrom SummarizedExperiment SummarizedExperiment
 #' @export
-count_bc = function(tdir, all_constructs, valid_barcodes, reverse_complement=FALSE) {
+count_bc = function(tdir, all_constructs, valid_barcodes, reverse_complement=FALSE, verbose=TRUE) {
     samples = readr::read_tsv(file.path(tdir, "samples.tsv"), show_col_types=FALSE)
     all_samples = strsplit(samples$patient, "+", fixed=TRUE) |> unlist()
     missing = setdiff(all_samples, names(all_constructs))
@@ -23,7 +24,7 @@ count_bc = function(tdir, all_constructs, valid_barcodes, reverse_complement=FAL
     if (!all(construct_df$barcode %in% valid_barcodes))
         stop("'all_constructs' contains barcodes not in 'valid_barcodes'")
 
-    res = count_external(tdir, valid_barcodes, reverse_complement)
+    res = count_external(tdir, valid_barcodes, reverse_complement, verbose=verbose)
 
     stats = res$stats |> mutate(sample_id = sub("\\.R1$", "", label))
     counts = data.matrix(res$counts[-(1:2)])
@@ -51,15 +52,13 @@ count_bc = function(tdir, all_constructs, valid_barcodes, reverse_complement=FAL
 
 #' Use `guide-counter` via a system call to actually count
 #'
-#' @param tdir  Path to the directory with demultiplexed FASTQ files
-#' @param valid_barcodes  A character vector of all possible barcodes
-#' @param reverse_complement  Whether to count the reverse complement of the barcodes instead (default: FALSE)
+#' @inheritParams count_bc
 #' @param exact_match  Whether the read needs to contain the exact barcode (default: TRUE)
 #' @return      A list with the data.frame meta and matrix counts
 #'
 #' @importFrom Biostrings reverseComplement DNAStringSet
 #' @keywords internal
-count_external = function(tdir, valid_barcodes, reverse_complement=FALSE, exact_match=TRUE) {
+count_external = function(tdir, valid_barcodes, reverse_complement=FALSE, exact_match=TRUE, verbose=TRUE) {
     tsv = tibble(name = as.character(valid_barcodes)) |>
         mutate(barcode=name, gene=name)
     if (reverse_complement)
@@ -76,7 +75,8 @@ count_external = function(tdir, valid_barcodes, reverse_complement=FALSE, exact_
         library = lpath,
         offset_min_fraction = 0.2,
         output = file.path(tdir, "barcodes"),
-        exact_match = exact_match
+        exact_match = exact_match,
+        verbose = verbose
     )
 
     res = c(counts="barcodes.counts.txt", stats="barcodes.stats.txt") |>

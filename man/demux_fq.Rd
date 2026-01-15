@@ -4,7 +4,7 @@
 \alias{demux_fq}
 \title{Use fqtk tool to demultiplex fastq files}
 \usage{
-demux_fq(fq, samples, read_structures)
+demux_fq(fq, samples, read_structures, verbose = TRUE)
 }
 \arguments{
 \item{fq}{A path to the fastq file to demultiplex}
@@ -13,6 +13,8 @@ demux_fq(fq, samples, read_structures)
 columns 'sample_id', 'patient', 'rep', 'origin', 'barcode'}
 
 \item{read_structures}{A character string describing the read structure}
+
+\item{verbose}{Whether to print progress messages (default: TRUE)}
 }
 \description{
 Use fqtk tool to demultiplex fastq files

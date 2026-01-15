@@ -4,7 +4,13 @@
 \alias{count_bc}
 \title{Count barcodes using guide-counter}
 \usage{
-count_bc(tdir, all_constructs, valid_barcodes, reverse_complement = FALSE)
+count_bc(
+  tdir,
+  all_constructs,
+  valid_barcodes,
+  reverse_complement = FALSE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{tdir}{Path to the directory with demultiplexed FASTQ files}
@@ -14,6 +20,8 @@ count_bc(tdir, all_constructs, valid_barcodes, reverse_complement = FALSE)
 \item{valid_barcodes}{A character vector of all possible barcodes}
 
 \item{reverse_complement}{Whether to count the reverse complement of the barcodes instead}
+
+\item{verbose}{Whether to print progress messages (default: TRUE)}
 }
 \value{
 A `SummarizedExperiment` object with counts and metadata

@@ -8,12 +8,12 @@ samples = readr::read_tsv(sample_sheet)
 fastq_file = example_fastq(sample_sheet, all_constructs, target_reads=100)
 
 test_that("demultiplex and count", {
-    temp_dir = demux_fq(fastq_file, sample_sheet, read_structures="7B+T")
+    temp_dir = demux_fq(fastq_file, sample_sheet, read_structures="7B+T", verbose=FALSE)
     fnames = list.files(temp_dir, pattern="\\.fq\\.gz$")
     expect_true(setequal(c(samples$sample_id, "unmatched"),
                          sub(".R1.fq.gz", "", fnames, fixed=TRUE)))
 
-    dset = count_bc(temp_dir, all_constructs, valid_barcodes)
+    dset = count_bc(temp_dir, all_constructs, valid_barcodes, verbose=FALSE)
     expect_true(inherits(dset, "SummarizedExperiment"))
     expect_equal(samples$sample_id, colnames(dset))
     expect_equal(valid_barcodes, rownames(dset))
