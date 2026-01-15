@@ -21,7 +21,7 @@ merge_constructs = function(all_constructs, strict=TRUE) {
         req = c("gene_name", "mut_id", "pep_id", "tiled") # pep_type can be NA
         bc_fields = grep("^barcode", colnames(df), value=TRUE)
         if (all(req %in% colnames(df)) && length(bc_fields) > 0) {
-            tidyr::pivot_longer(df, bc_fields, values_to="barcode") |> select(-name)
+            tidyr::pivot_longer(df, starts_with("barcode"), values_to="barcode") |> select(-name)
         } else {
             missing = paste(setdiff(req, colnames(df)), collapse=", ")
             if (length(bc_fields) == 0)
