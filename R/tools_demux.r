@@ -24,7 +24,8 @@ demux_fq = function(fq, samples, read_structures) {
     emptyrow = apply(samples, 1, function(r) all(is.na(r)))
     if (any(emptyrow)) {
         remove = paste(which(emptyrow), collapse=", ")
-        warning(paste("Removing rows" , remove, "because they are empty in the sample sheet"))
+        msg = paste("Removing rows" , remove, "because they are empty in the sample sheet")
+        warning(msg, immediate.=TRUE)
         samples = samples[!emptyrow,]
     }
     for (name in req)
