@@ -1,3 +1,7 @@
+# pepitope 0.3.3
+
+* Speed up runtime by caching `txdb`-derived objects and reusing them
+
 # pepitope 0.3.2
 
 * Add a workaround for `EnsDb`/`BSGenome` mismatch on `UCSC` names (#3)

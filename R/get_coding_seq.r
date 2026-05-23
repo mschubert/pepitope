@@ -24,7 +24,7 @@ get_coding_seq = function(asm, txdb, ..., include_stop=TRUE) {
 
     # extend readthroughs to 3' UTR
     if (length(nostop) > 0) {
-        utr3 = suppressWarnings(threeUTRsByTranscript(txdb))
+        utr3 = suppressWarnings(.txdb_cache_get(txdb, threeUTRsByTranscript(txdb)))
         tx_id_3p = names(rev(list(...))[[1]])
         if (length(intersect(names(utr3), tx_id_3p)) == 0)
             stop("3' DNAStringSet needs transcript IDs as names")

@@ -79,28 +79,24 @@ setMethod("predictCoding", c("VRanges", "ANY", "ANY", "missing"),
 
 .predictCoding <-
     function(query, subject, seqSource, varAllele, ...,
-             cache=new.env(parent=emptyenv()), ignore.strand=FALSE)
+             ignore.strand=FALSE)
 {
     stopifnot(length(varAllele) == length(query))
     if (!any(seqlevels(query) %in% seqlevels(subject)))
         warning("none of seqlevels(query) match seqlevels(subject)")
 
-    if (!exists(".__init__", cache, inherits=FALSE)) {
-        cache[["cdsbytx"]] <- cdsBy(subject)
-        cache[["txbygene"]] <- transcriptsBy(subject, "gene")
-        cache[[".__init__"]] <- TRUE
-    }
+    cdsbytx <- .txdb_cache_get(subject, cdsBy(subject))
+    txbygene <- .txdb_cache_get(subject, transcriptsBy(subject, "gene"))
+    txid_to_gene <- data.frame(geneid=rep(names(txbygene),
+                                   elementNROWS(txbygene)),
+                               txid=mcols(unlist(txbygene,
+                                   use.names=FALSE))[["tx_id"]],
+                               stringsAsFactors=FALSE)
 
-    map <- data.frame(geneid=rep(names(cache[["txbygene"]]),
-                          elementNROWS(cache[["txbygene"]])),
-                      txid=mcols(unlist(cache[["txbygene"]],
-                          use.names=FALSE))[["tx_id"]],
-                      stringsAsFactors=FALSE)
-
-    txlocal <- .predictCodingGRangesList(query, cache[["cdsbytx"]],
+    txlocal <- .predictCodingGRangesList(query, cdsbytx,
                    seqSource, varAllele, ..., ignore.strand=ignore.strand)
     txid <- mcols(txlocal)$TXID
-    mcols(txlocal)$GENEID <- map$geneid[match(txid, map$txid)]
+    mcols(txlocal)$GENEID <- txid_to_gene$geneid[match(txid, txid_to_gene$txid)]
     txlocal
 }
 

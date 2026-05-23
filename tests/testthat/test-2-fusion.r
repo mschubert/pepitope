@@ -2,8 +2,10 @@ context("fusions")
 
 ens106 = AnnotationHub::AnnotationHub()[["AH100643"]]
 asm = BSgenome.Hsapiens.NCBI.GRCh38::BSgenome.Hsapiens.NCBI.GRCh38
-tx = suppressWarnings(transcripts(ens106))
-cds = suppressWarnings(cdsBy(ens106))
+tx_by_gene = suppressWarnings(.txdb_cache_get(ens106, transcriptsBy(ens106, "gene")))
+tx = unlist(tx_by_gene)
+names(tx) = tx$tx_name
+cds = suppressWarnings(.txdb_cache_get(ens106, cdsBy(ens106)))
 
 # fusions from Mitelman database: EIF2AK2-STRN, NAIP-OCLN, AGO2-PTK2, DNM2-ILF3
 chr = c("2", "5", "8", "19")

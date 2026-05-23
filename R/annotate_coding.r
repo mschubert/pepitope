@@ -7,7 +7,7 @@
 #'
 #' @importFrom BiocGenerics width strand strand<-
 #' @importFrom S4Vectors mcols mcols<-
-#' @importFrom GenomicFeatures transcripts threeUTRsByTranscript cdsBy
+#' @importFrom GenomicFeatures transcriptsBy threeUTRsByTranscript cdsBy
 #'      extractTranscriptSeqs genes
 #' @importFrom VariantAnnotation sampleNames ref alt refDepth altDepth
 #' @importFrom Biostrings subseq nchar reverse translate replaceAt DNAStringSet
@@ -43,19 +43,22 @@ annotate_coding = function(vr, txdb, asm) {
     vr$cov_alt = altDepth(vr)
     codv = predictCoding(vr, txdb, asm)
 
-    gnames = genes(txdb)
+    gnames = .txdb_cache_get(txdb, genes(txdb))
     codv$gene_name = gnames$gene_name[match(codv$GENEID, gnames$gene_id)]
 
 #    codv2 = predictCoding(vcf_tumor, txdb, asm) # 1637 var names @codv, 26k @codv2, 223 common?!
 #    splice = locateVariants(vcf_diff, txdb, SpliceSiteVariants())
 
-    tx = transcripts(txdb)
+    tx_by_gene = .txdb_cache_get(txdb, transcriptsBy(txdb, "gene"))
+    tx = unlist(tx_by_gene)
+    names(tx) = tx$tx_name
     codv$tx_name = tx$tx_name[match(codv$TXID, tx$tx_id)]
     if ("tx_biotype" %in% names(tx)) {
-        tx_coding = names(tx)[tx$tx_biotype=="protein_coding"]
+        tx_coding = tx$tx_name[tx$tx_biotype=="protein_coding"]
         codv = codv[codv$tx_name %in% tx_coding]
     }
-    coding_ranges = cdsBy(txdb)[codv$TXID]
+    cds = .txdb_cache_get(txdb, cdsBy(txdb))
+    coding_ranges = cds[codv$TXID]
     codv$ref_nuc = extractTranscriptSeqs(asm, coding_ranges)
     codv$ref_prot = suppressWarnings(translate(codv$ref_nuc))
     codv = codv[is_proper_orf(codv$ref_prot)]

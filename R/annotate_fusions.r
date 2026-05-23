@@ -5,16 +5,19 @@
 #' @param asm   A Genome sequence package object, eg. ::BSgenome.Hsapiens.NCBI.GRCh38
 #' @return      A DataFrame objects with fusions
 #'
-#' @importFrom GenomicFeatures transcripts cdsBy
+#' @importFrom GenomicFeatures transcriptsBy cdsBy
 #' @export
 annotate_fusions = function(vr, txdb, asm) {
     if (length(vr) == 0)
         return(DataFrame())
 
     # each possible combination of left and right transcripts from break
-    flt = ~ tx_biotype == "protein_coding" #& SeqNameFilter(c(1:22,'X','Y'))
-    tx = suppressWarnings(transcripts(txdb, filter=flt))
-    cds = suppressWarnings(cdsBy(txdb, filter=flt))
+    tx_by_gene = suppressWarnings(.txdb_cache_get(txdb, transcriptsBy(txdb, "gene")))
+    tx = unlist(tx_by_gene)
+    names(tx) = tx$tx_name
+    cds = suppressWarnings(.txdb_cache_get(txdb, cdsBy(txdb)))
+    tx_coding = tx$tx_name[tx$tx_biotype=="protein_coding"]
+    cds = cds[names(cds) %in% tx_coding]
     fr = extract_fusion_ranges(vr)
     get_cds = function(x, type) {
         coords = cds_by_break(x, txdb, cds, type)
