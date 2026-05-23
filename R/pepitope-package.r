@@ -11,6 +11,7 @@
 #' @docType package
 #' @import dplyr
 #' @import ggplot2
+#' @useDynLib pepitope, .registration=TRUE
 "_PACKAGE"
 
 #' @importFrom VariantAnnotation readVcfAsVRanges

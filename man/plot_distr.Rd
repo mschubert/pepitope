@@ -7,7 +7,7 @@
 plot_distr(dset)
 }
 \arguments{
-\item{dset}{The `SummarizedExperiment` object from `count_bc`}
+\item{dset}{The `SummarizedExperiment` object from `count_fastq`}
 }
 \value{
 A `ggplot2` object with cumulative read distribution plots

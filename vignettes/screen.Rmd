@@ -52,8 +52,8 @@ valid_barcodes = readr::read_tsv(lib, col_names=FALSE)$X1
 all_constructs = example_peptides(valid_barcodes)
 sample_sheet = system.file("my_samples.tsv", package="pepitope")
 fastq_file = example_fastq(sample_sheet, all_constructs)
-temp_dir = demux_fq(fastq_file, sample_sheet, read_structures="7B+T")
-dset = count_bc(temp_dir, all_constructs, valid_barcodes)
+dset = count_fastq(fastq_file, sample_sheet, all_constructs, valid_barcodes,
+                   read_structures="7B12M+T")
 ```
 
 However, we need to make sure to perform the screen analysis only on

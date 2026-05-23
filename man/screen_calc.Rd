@@ -7,7 +7,7 @@
 screen_calc(dset, comparisons)
 }
 \arguments{
-\item{dset}{A `SummarizedExperiment` object from `count_bc()`}
+\item{dset}{A `SummarizedExperiment` object from `count_fastq()`}
 
 \item{comparisons}{A character vector of sample and reference condition, or list thereof}
 }

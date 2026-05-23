@@ -26,8 +26,12 @@ inst/doc/%.md: vignettes/%.rmd
 	$(R) "knitr::knit('$<', '$@')"
 
 .PHONY: doc
-doc:
+doc: rcpp
 	$(R) "devtools::document()"
+
+.PHONY: rcpp
+rcpp:
+	$(R) "Rcpp::compileAttributes()"
 
 .PHONY: package
 package: doc vignettes

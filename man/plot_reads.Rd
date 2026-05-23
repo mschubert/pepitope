@@ -7,7 +7,7 @@
 plot_reads(dset)
 }
 \arguments{
-\item{dset}{The `SummarizedExperiment` object from `count_bc`}
+\item{dset}{The `SummarizedExperiment` object from `count_fastq`}
 }
 \description{
 Plot the overall read counts

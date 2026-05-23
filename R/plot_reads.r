@@ -1,6 +1,6 @@
 #' Plot the overall read counts
 #'
-#' @param dset  The `SummarizedExperiment` object from `count_bc`
+#' @param dset  The `SummarizedExperiment` object from `count_fastq`
 #'
 #' @import ggplot2
 #' @importFrom patchwork wrap_plots plot_layout
