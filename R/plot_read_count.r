@@ -5,7 +5,7 @@
 #' @import ggplot2
 #' @importFrom patchwork wrap_plots plot_layout
 #' @export
-plot_reads = function(dset) {
+plot_read_count = function(dset) {
     plot_one = function(rsum, y, position) {
         ggplot(rsum, aes(x=label, y={{ y }}, fill=bc_type)) +
             geom_col(position=position, show.legend=c(unused=TRUE, unmapped=TRUE)) +
@@ -32,4 +32,11 @@ plot_reads = function(dset) {
         plot_one(read_summary, nonzero_bcs, "fill") + noax + ylab("Mapped barcode fraction")
     )
     wrap_plots(plots) + plot_layout(guides="collect") & theme(axis.title.y = element_blank())
+}
+
+#' @rdname plot_read_count
+#' @export
+plot_reads = function(dset) {
+    .Deprecated("plot_read_count")
+    plot_read_count(dset)
 }

@@ -140,7 +140,7 @@ dset = count_fastq(fastq_file, sample_sheet, all_constructs, valid_barcodes,
                    read_structures="7B12M+T")
 
 # quality control plots
-plot_reads(dset)
+plot_read_count(dset)
 plot_distr(dset)
 ```
 

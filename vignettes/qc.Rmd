@@ -201,14 +201,14 @@ from. We can plot this the following way, for total read counts on the left and
 number of barcodes that have 10 or more reads on the right:
 
 ```{r}
-plot_reads(dset)
+plot_read_count(dset)
 ```
 
 We can also plot this interactively with `plotly`:
 
 ```{r}
 library(plotly)
-plot = plot_reads(dset)
+plot = plot_read_count(dset)
 subplot(ggplotly(plot[[1]], height=300),
         ggplotly(plot[[2]], height=300), nrows=1)
 subplot(ggplotly(plot[[3]], height=300),
