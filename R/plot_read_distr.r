@@ -28,7 +28,7 @@ calc_representation = function(lib_counts, bcs, meta) {
 #' @return  A `ggplot2` object with cumulative read distribution plots
 #'
 #' @export
-plot_distr = function(dset) {
+plot_read_distr = function(dset) {
     reps = calc_representation(assay(dset), as_tibble(rowData(dset)), as_tibble(colData(dset))) |>
         filter(is_matched | value > 0) |>
         mutate(text = sprintf("%s (%s)\n%i reads (%.1f%%)\n%s (%s)",
@@ -47,6 +47,13 @@ plot_distr = function(dset) {
         facet_wrap(~ short) +
         labs(x = "Ranked abundance",
              y = "Counts per barcode")
+}
+
+#' @rdname plot_read_distr
+#' @export
+plot_distr = function(dset) {
+    .Deprecated("plot_read_distr")
+    plot_read_distr(dset)
 }
 
 #' @keywords internal

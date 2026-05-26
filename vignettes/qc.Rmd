@@ -224,7 +224,7 @@ abundant (right) and plot a continuous line for how many reads are sequenced of
 this barcode on the y axis:
 
 ```{r}
-plot_distr(dset)
+plot_read_distr(dset)
 ```
 
 We can make a couple of observations from these plots:
@@ -240,7 +240,7 @@ the mouse to see which barcode is in which position exactly:
 
 ```{r}
 library(plotly)
-ggplotly(plot_distr(dset), height=500, tooltip="text")
+ggplotly(plot_read_distr(dset), height=500, tooltip="text")
 ```
 
 <!-- add cor plots here
