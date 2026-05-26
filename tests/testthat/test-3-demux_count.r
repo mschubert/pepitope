@@ -28,3 +28,21 @@ test_that("count source FASTQ directly", {
     expect_equal(SummarizedExperiment::colData(dset)$mapped_reads,
                  unname(colSums(SummarizedExperiment::assay(dset))))
 })
+
+test_that("annotate_read_structure finds barcode positions and orientation", {
+    samples = data.frame(sample_id="sample1", patient="pat1", rep="1", origin="lib", barcode="AAC")
+    constructs = list(pat1 = data.frame(gene_name="gene", mut_id="gene", pep_id="pep",
+                                        tiled=TRUE, barcode="TTAACG"))
+    fq = tempfile(fileext=".fq")
+    writeLines(c(
+        "@read1", "NNNAACNNTTAACG", "+", "IIIIIIIIIIIIIII",
+        "@read2", "NNNGTTNNCGTTAA", "+", "IIIIIIIIIIIIIII"
+    ), fq)
+
+    res = annotate_read_structure(fq, samples, constructs)
+
+    expect_equal(res$sample_fwd[res$position == 4], 1L)
+    expect_equal(res$sample_rev[res$position == 4], 1L)
+    expect_equal(res$construct_fwd[res$position == 9], 1L)
+    expect_equal(res$construct_rev[res$position == 9], 1L)
+})
