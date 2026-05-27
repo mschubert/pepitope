@@ -9,7 +9,7 @@ count_fastq(
   samples,
   all_constructs,
   valid_barcodes,
-  read_structures = "7B12M+T",
+  read_structure,
   verbose = TRUE
 )
 }
@@ -23,7 +23,7 @@ columns 'sample_id', 'patient', 'rep', 'origin', 'barcode'}
 
 \item{valid_barcodes}{A character vector of all possible construct barcodes}
 
-\item{read_structures}{A character string describing the FASTQ read structure. \code{B} segments
+\item{read_structure}{A character string describing the FASTQ read structure. \code{B} segments
 are matched against sample barcodes and \code{M} segments against construct barcodes.}
 
 \item{verbose}{Whether to print progress messages (default: TRUE)}

@@ -165,7 +165,7 @@ Demultiplexing and counting
 ### Counting construct barcodes
 
 This step counts construct barcodes per sample directly from the source FASTQ.
-Here, `read_structures` describes where the sample and construct barcodes occur
+Here, `read_structure` describes where the sample and construct barcodes occur
 in each read. It has the following possible fields, preceded by the number of
 nucleotides in the read. A `+` instead of a number is used to indicate to use
 all remaining nucleotides:
@@ -180,7 +180,7 @@ nucleotides identify the construct:
 
 ```{r}
 dset = count_fastq(fastq_file, sample_sheet, all_constructs, valid_barcodes,
-                   read_structures="7B12M+T")
+                   read_structure="7B12M+T")
 ```
 
 Here, `dset` will be a `SummarizedExperiment` object that you can interact

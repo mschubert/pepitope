@@ -16,7 +16,7 @@ fastq_file = example_fastq(sample_sheet, all_constructs, target_reads=100)
 
 test_that("count source FASTQ directly", {
     dset = count_fastq(fastq_file, sample_sheet, all_constructs, valid_barcodes,
-                       read_structures="7B12M+T", verbose=FALSE)
+                       read_structure="7B12M+T", verbose=FALSE)
     expect_true(inherits(dset, "SummarizedExperiment"))
     expect_equal(samples$sample_id, colnames(dset))
     expect_equal(valid_barcodes, rownames(dset))
@@ -58,6 +58,6 @@ test_that("count_fastq uses read structure orientation", {
     expect_false(parsed$sample$revcomp)
     expect_true(parsed$construct$revcomp)
 
-    dset = count_fastq(fq, samples, constructs, "TTAACG", read_structures="3B5S6M<", verbose=FALSE)
+    dset = count_fastq(fq, samples, constructs, "TTAACG", read_structure="3B5S6M<", verbose=FALSE)
     expect_equal(SummarizedExperiment::assay(dset)[1, 1], 1)
 })

@@ -137,7 +137,7 @@ More information can be found in the [*Quality Control* vignette 🔗](https://m
 sample_sheet = system.file("my_samples.tsv", package="pepitope")
 fastq_file = example_fastq(sample_sheet, all_constructs)
 dset = count_fastq(fastq_file, sample_sheet, all_constructs, valid_barcodes,
-                   read_structures="7B12M+T")
+                   read_structure="7B12M+T")
 
 # quality control plots
 plot_read_count(dset)

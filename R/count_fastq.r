@@ -5,7 +5,7 @@
 #'      columns 'sample_id', 'patient', 'rep', 'origin', 'barcode'
 #' @param all_constructs  A named list of all construct libraries
 #' @param valid_barcodes  A character vector of all possible construct barcodes
-#' @param read_structures  A character string describing the FASTQ read structure. `B` segments
+#' @param read_structure  A character string describing the FASTQ read structure. `B` segments
 #'      are matched against sample barcodes and `M` segments against construct barcodes.
 #' @param verbose  Whether to print progress messages (default: TRUE)
 #' @return      A `SummarizedExperiment` object with counts and metadata
@@ -13,8 +13,7 @@
 #' @importFrom SummarizedExperiment SummarizedExperiment
 #' @importFrom Biostrings reverseComplement DNAStringSet
 #' @export
-count_fastq = function(fq, samples, all_constructs, valid_barcodes, read_structures="7B12M+T",
-                       verbose=TRUE) {
+count_fastq = function(fq, samples, all_constructs, valid_barcodes, read_structure, verbose=TRUE) {
     samples = .read_samples(samples)
     all_samples = strsplit(samples$patient, "+", fixed=TRUE) |> unlist()
     missing = setdiff(all_samples, names(all_constructs))
@@ -32,7 +31,7 @@ count_fastq = function(fq, samples, all_constructs, valid_barcodes, read_structu
         stop("'fq' argument needs to be a single FASTQ file")
     fq = path.expand(fq)
 
-    read_structure = .rs_parse(read_structures)
+    read_structure = .rs_parse(read_structure)
     sample_barcodes = toupper(samples$barcode) |> .check_barcodes("Sample barcodes")
     construct_barcodes = toupper(as.character(valid_barcodes)) |> .check_barcodes("Construct barcodes")
     if (read_structure$sample$revcomp)
@@ -40,9 +39,9 @@ count_fastq = function(fq, samples, all_constructs, valid_barcodes, read_structu
     if (read_structure$construct$revcomp)
         construct_barcodes = as.character(reverseComplement(DNAStringSet(construct_barcodes)))
     if (any(nchar(sample_barcodes) != sum(read_structure$sample$width)))
-        stop("Sample barcode width does not match 'B' segments in 'read_structures'")
+        stop("Sample barcode width does not match 'B' segments in 'read_structure'")
     if (any(nchar(construct_barcodes) != sum(read_structure$construct$width)))
-        stop("Construct barcode width does not match 'M' segments in 'read_structures'")
+        stop("Construct barcode width does not match 'M' segments in 'read_structure'")
 
     res = count_fastq_barcodes_cpp(
         fq = fq,
