@@ -7,7 +7,8 @@
 #' @param nrec  Number of FASTQ records to inspect
 #' @return  A `list` with barcode counts, reads, and inferred read structure
 #'
-#' @importFrom Biostrings readDNAStringSet reverseComplement DNAStringSet subseq
+#' @importFrom Biostrings readDNAStringSet reverseComplement DNAStringSet DNAString PDict
+#'      matchPDict xscat
 #' @export
 annotate_read_structure = function(fq, samples, all_constructs, nrec=100000L) {
     samples = .read_samples(samples)
@@ -38,13 +39,16 @@ annotate_read_structure = function(fq, samples, all_constructs, nrec=100000L) {
 
 .count_positions = function(reads, barcodes) {
     barcodes = DNAStringSet(barcodes)
-    width = BiocGenerics::width(barcodes)[1]
+    bc_width = BiocGenerics::width(barcodes)[1]
     read_width = BiocGenerics::width(reads)[1]
-    counts = integer(read_width)
-    valid_positions = seq_len(read_width - width + 1L)
-    counts[valid_positions] = vapply(valid_positions, function(pos) {
-        sum(subseq(reads, start=pos, width=width) %in% barcodes)
-    }, integer(1))
+
+    sep = DNAString(strrep("N", bc_width - 1L))
+    starts = matchPDict(PDict(barcodes), unlist(xscat(reads, sep))) |>
+        unlist(use.names=FALSE) |>
+        IRanges::start()
+    positions = ((starts - 1L) %% (read_width + bc_width - 1L)) + 1L
+    counts = tabulate(positions, nbins=read_width)
+    counts[(read_width - bc_width + 2L):read_width] = 0L
     counts
 }
 
