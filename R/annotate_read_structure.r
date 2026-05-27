@@ -9,38 +9,36 @@
 #'
 #' @importFrom Biostrings readDNAStringSet reverseComplement DNAStringSet DNAString PDict
 #'      matchPDict xscat
+#' @importFrom BiocGenerics width
 #' @export
 annotate_read_structure = function(fq, samples, all_constructs, nrec=100000L) {
     samples = .read_samples(samples)
     construct_df = merge_constructs(all_constructs)
-
-    sample_barcodes = toupper(samples$barcode)
-    construct_barcodes = toupper(construct_df$barcode)
+    sample_barcodes = DNAStringSet(toupper(samples$barcode))
+    construct_barcodes = DNAStringSet(toupper(construct_df$barcode))
     .check_barcodes(sample_barcodes, "Sample barcodes")
     .check_barcodes(construct_barcodes, "Construct barcodes")
 
     reads = readDNAStringSet(fq, format="fastq", nrec=nrec, use.names=FALSE)
     reads = chartr("acgt", "ACGT", reads)
-    revcomp = function(seq) as.character(reverseComplement(DNAStringSet(seq)))
     counts = data.frame(
         `B` = .count_positions(reads, sample_barcodes),
-        `B<` = .count_positions(reads, revcomp(sample_barcodes)),
+        `B<` = .count_positions(reads, reverseComplement(sample_barcodes)),
         `M` = .count_positions(reads, construct_barcodes),
-        `M<` = .count_positions(reads, revcomp(construct_barcodes)),
+        `M<` = .count_positions(reads, reverseComplement(construct_barcodes)),
         check.names=FALSE
     )
 
     list(
         counts = counts,
         reads = reads,
-        structure = .fmt_read_structure(counts, nchar(sample_barcodes[1]), nchar(construct_barcodes[1]))
+        structure = .fmt_read_structure(counts, width(sample_barcodes)[1], width(construct_barcodes)[1])
     )
 }
 
 .count_positions = function(reads, barcodes) {
-    barcodes = DNAStringSet(barcodes)
-    bc_width = BiocGenerics::width(barcodes)[1]
-    read_width = BiocGenerics::width(reads)[1]
+    bc_width = width(barcodes)[1]
+    read_width = width(reads)[1]
 
     sep = DNAString(strrep("N", bc_width - 1L))
     starts = matchPDict(PDict(barcodes), unlist(xscat(reads, sep))) |>
