@@ -4,7 +4,7 @@
 \alias{annotate_read_structure}
 \title{Annotate barcode positions in source FASTQ reads}
 \usage{
-annotate_read_structure(fq, samples, all_constructs)
+annotate_read_structure(fq, samples, all_constructs, nrec = 100000L)
 }
 \arguments{
 \item{fq}{Path to one FASTQ file}
@@ -13,9 +13,11 @@ annotate_read_structure(fq, samples, all_constructs)
 columns 'sample_id', 'patient', 'rep', 'origin', 'barcode'}
 
 \item{all_constructs}{A named list of all construct libraries}
+
+\item{nrec}{Number of FASTQ records to inspect}
 }
 \value{
-A `data.frame` with barcode matches per position
+A `list` with barcode counts, reads, and inferred read structure
 }
 \description{
 Annotate barcode positions in source FASTQ reads
