@@ -32,7 +32,7 @@ annotate_read_structure = function(fq, samples, all_constructs, nrec=100000L) {
     list(
         counts = counts,
         reads = reads,
-        structure = .fmt_read_structure(counts, width(sample_barcodes)[1], width(construct_barcodes)[1])
+        structure = .rs_format(counts, width(sample_barcodes)[1], width(construct_barcodes)[1])
     )
 }
 
@@ -48,30 +48,4 @@ annotate_read_structure = function(fq, samples, all_constructs, nrec=100000L) {
     counts = tabulate(positions, nbins=read_width)
     counts[(read_width - bc_width + 2L):read_width] = 0L
     counts
-}
-
-.best_position = function(counts, op, width) {
-    cols = c(op, paste0(op, "<"))
-    scores = as.matrix(counts[cols])
-    best = arrayInd(which.max(scores), dim(scores))
-    if (scores[best] == 0)
-        stop("Could not infer read structure because ", op, " barcodes were not found")
-
-    data.frame(start=best[1], width=width, op=cols[best[2]])
-}
-
-.fmt_read_structure = function(counts, sample_width, construct_width) {
-    sample = .best_position(counts, "B", sample_width)
-    construct = .best_position(counts, "M", construct_width)
-    segments = rbind(sample, construct) |> dplyr::arrange(start)
-    if (any(segments$start[-1] < head(segments$start + segments$width, -1)))
-        stop("Could not infer read structure because barcode positions overlap")
-
-    previous_end = c(0L, head(segments$start + segments$width - 1L, -1L))
-    skip = segments$start - previous_end - 1L
-    skip_tokens = ifelse(skip > 0, paste0(skip, "S"), NA_character_)
-    segment_tokens = paste0(segments$width, segments$op)
-    tokens = as.vector(rbind(skip_tokens, segment_tokens))
-    tokens = stats::na.omit(tokens)
-    paste(tokens, collapse="")
 }

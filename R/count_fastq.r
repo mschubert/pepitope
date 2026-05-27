@@ -33,7 +33,7 @@ count_fastq = function(fq, samples, all_constructs, valid_barcodes, read_structu
         stop("'fq' argument needs to be a single FASTQ file")
     fq = path.expand(fq)
 
-    read_structure = .parse_read_structure(read_structures)
+    read_structure = .rs_parse(read_structures)
 
     count_barcodes = as.character(valid_barcodes)
     if (reverse_complement)
@@ -126,50 +126,4 @@ count_fastq = function(fq, samples, all_constructs, valid_barcodes, read_structu
         stop(label, " must all have the same width")
     if (any(duplicated(barcodes)))
         stop(label, " must not contain duplicate values")
-}
-
-.parse_read_structure = function(read_structures) {
-    if (!is.character(read_structures) || length(read_structures) != 1 || is.na(read_structures))
-        stop("'read_structures' must be a single character string")
-
-    operators = c("T", "B", "M", "C", "S")
-    matches = gregexpr("([0-9]+|\\+)([TBMCS])", read_structures, perl=TRUE)[[1]]
-    if (matches[1] == -1)
-        stop("Invalid read structure: ", sQuote(read_structures))
-    tokens = regmatches(read_structures, list(matches))[[1]]
-    if (paste(tokens, collapse="") != read_structures)
-        stop("Invalid read structure: ", sQuote(read_structures))
-
-    starts = attr(matches, "capture.start")
-    lengths = attr(matches, "capture.length")
-    pos = 1L
-    ranges = lapply(seq_along(tokens), function(i) {
-        len_text = substr(read_structures, starts[i, 1], starts[i, 1] + lengths[i, 1] - 1L)
-        op = substr(read_structures, starts[i, 2], starts[i, 2] + lengths[i, 2] - 1L)
-        if (!op %in% operators)
-            stop("Unsupported read structure operator: ", sQuote(op))
-        if (len_text == "+") {
-            if (i != length(tokens))
-                stop("'+' may only be used in the final read structure token")
-            if (op %in% c("B", "M"))
-                stop("'+' cannot be used for barcode operators 'B' or 'M'")
-            len = NA_integer_
-        } else {
-            len = as.integer(len_text)
-            if (is.na(len) || len < 1)
-                stop("Read structure lengths must be positive integers")
-        }
-        res = data.frame(start=pos, width=len, op=op)
-        pos <<- if (is.na(len)) NA_integer_ else pos + len
-        res
-    })
-
-    ranges = do.call(rbind, ranges)
-    sample = ranges[ranges$op == "B", c("start", "width")]
-    construct = ranges[ranges$op == "M", c("start", "width")]
-    if (nrow(sample) == 0)
-        stop("'read_structures' must contain at least one sample barcode ('B') segment")
-    if (nrow(construct) == 0)
-        stop("'read_structures' must contain at least one construct barcode ('M') segment")
-    list(sample=sample, construct=construct)
 }

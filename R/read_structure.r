@@ -1,0 +1,85 @@
+#' Parse a read structure
+#'
+#' @param read_structures  A character string describing the FASTQ read structure
+#' @return  A `list` with sample and construct barcode ranges
+#'
+#' @keywords internal
+.rs_parse = function(read_structures) {
+    if (!is.character(read_structures) || length(read_structures) != 1 || is.na(read_structures))
+        stop("'read_structures' must be a single character string")
+
+    operators = c("T", "B", "M", "C", "S")
+    matches = gregexpr("([0-9]+|\\+)([TBMCS])", read_structures, perl=TRUE)[[1]]
+    if (matches[1] == -1)
+        stop("Invalid read structure: ", sQuote(read_structures))
+    tokens = regmatches(read_structures, list(matches))[[1]]
+    if (paste(tokens, collapse="") != read_structures)
+        stop("Invalid read structure: ", sQuote(read_structures))
+
+    starts = attr(matches, "capture.start")
+    lengths = attr(matches, "capture.length")
+    pos = 1L
+    ranges = lapply(seq_along(tokens), function(i) {
+        len_text = substr(read_structures, starts[i, 1], starts[i, 1] + lengths[i, 1] - 1L)
+        op = substr(read_structures, starts[i, 2], starts[i, 2] + lengths[i, 2] - 1L)
+        if (!op %in% operators)
+            stop("Unsupported read structure operator: ", sQuote(op))
+        if (len_text == "+") {
+            if (i != length(tokens))
+                stop("'+' may only be used in the final read structure token")
+            if (op %in% c("B", "M"))
+                stop("'+' cannot be used for barcode operators 'B' or 'M'")
+            len = NA_integer_
+        } else {
+            len = as.integer(len_text)
+            if (is.na(len) || len < 1)
+                stop("Read structure lengths must be positive integers")
+        }
+        res = data.frame(start=pos, width=len, op=op)
+        pos <<- if (is.na(len)) NA_integer_ else pos + len
+        res
+    })
+
+    ranges = do.call(rbind, ranges)
+    sample = ranges[ranges$op == "B", c("start", "width")]
+    construct = ranges[ranges$op == "M", c("start", "width")]
+    if (nrow(sample) == 0)
+        stop("'read_structures' must contain at least one sample barcode ('B') segment")
+    if (nrow(construct) == 0)
+        stop("'read_structures' must contain at least one construct barcode ('M') segment")
+    list(sample=sample, construct=construct)
+}
+
+#' Format a read structure from barcode position counts
+#'
+#' @param counts  A `data.frame` with `B`, `B<`, `M`, and `M<` count columns
+#' @param sample_width  Width of the sample barcode
+#' @param construct_width  Width of the construct barcode
+#' @return  A read structure string
+#'
+#' @keywords internal
+.rs_format = function(counts, sample_width, construct_width) {
+    best_position = function(op, width) {
+        cols = c(op, paste0(op, "<"))
+        scores = as.matrix(counts[cols])
+        best = arrayInd(which.max(scores), dim(scores))
+        if (scores[best] == 0)
+            stop("Could not infer read structure because ", op, " barcodes were not found")
+
+        data.frame(start=best[1], width=width, op=cols[best[2]])
+    }
+
+    sample = best_position("B", sample_width)
+    construct = best_position("M", construct_width)
+    segments = rbind(sample, construct) |> dplyr::arrange(start)
+    if (any(segments$start[-1] < head(segments$start + segments$width, -1)))
+        stop("Could not infer read structure because barcode positions overlap")
+
+    previous_end = c(0L, head(segments$start + segments$width - 1L, -1L))
+    skip = segments$start - previous_end - 1L
+    skip_tokens = ifelse(skip > 0, paste0(skip, "S"), NA_character_)
+    segment_tokens = paste0(segments$width, segments$op)
+    tokens = as.vector(rbind(skip_tokens, segment_tokens))
+    tokens = stats::na.omit(tokens)
+    paste(tokens, collapse="")
+}
