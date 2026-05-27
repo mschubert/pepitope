@@ -10,7 +10,6 @@ count_fastq(
   all_constructs,
   valid_barcodes,
   read_structures = "7B12M+T",
-  reverse_complement = FALSE,
   verbose = TRUE
 )
 }
@@ -26,8 +25,6 @@ columns 'sample_id', 'patient', 'rep', 'origin', 'barcode'}
 
 \item{read_structures}{A character string describing the FASTQ read structure. \code{B} segments
 are matched against sample barcodes and \code{M} segments against construct barcodes.}
-
-\item{reverse_complement}{Whether to count the reverse complement of the construct barcodes instead}
 
 \item{verbose}{Whether to print progress messages (default: TRUE)}
 }

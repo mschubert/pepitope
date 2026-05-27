@@ -9,7 +9,7 @@
         stop("'read_structures' must be a single character string")
 
     operators = c("T", "B", "M", "C", "S")
-    matches = gregexpr("([0-9]+|\\+)([TBMCS])", read_structures, perl=TRUE)[[1]]
+    matches = gregexpr("([0-9]+|\\+)([TBMCS])(<)?", read_structures, perl=TRUE)[[1]]
     if (matches[1] == -1)
         stop("Invalid read structure: ", sQuote(read_structures))
     tokens = regmatches(read_structures, list(matches))[[1]]
@@ -22,6 +22,7 @@
     ranges = lapply(seq_along(tokens), function(i) {
         len_text = substr(read_structures, starts[i, 1], starts[i, 1] + lengths[i, 1] - 1L)
         op = substr(read_structures, starts[i, 2], starts[i, 2] + lengths[i, 2] - 1L)
+        revcomp = lengths[i, 3] > 0
         if (!op %in% operators)
             stop("Unsupported read structure operator: ", sQuote(op))
         if (len_text == "+") {
@@ -35,18 +36,18 @@
             if (is.na(len) || len < 1)
                 stop("Read structure lengths must be positive integers")
         }
-        res = data.frame(start=pos, width=len, op=op)
+        res = data.frame(start=pos, width=len, op=op, revcomp=revcomp)
         pos <<- if (is.na(len)) NA_integer_ else pos + len
         res
     })
 
     ranges = do.call(rbind, ranges)
-    sample = ranges[ranges$op == "B", c("start", "width")]
-    construct = ranges[ranges$op == "M", c("start", "width")]
-    if (nrow(sample) == 0)
-        stop("'read_structures' must contain at least one sample barcode ('B') segment")
-    if (nrow(construct) == 0)
-        stop("'read_structures' must contain at least one construct barcode ('M') segment")
+    sample = ranges[ranges$op == "B", c("start", "width", "revcomp")]
+    construct = ranges[ranges$op == "M", c("start", "width", "revcomp")]
+    if (nrow(sample) != 1)
+        stop("'read_structures' must contain exactly one sample barcode ('B') segment")
+    if (nrow(construct) != 1)
+        stop("'read_structures' must contain exactly one construct barcode ('M') segment")
     list(sample=sample, construct=construct)
 }
 
