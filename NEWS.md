@@ -1,3 +1,11 @@
+# pepitope 0.4.0
+
+* Added `plot_read_structure()` to identify and visualize read features
+* Read feature positions and strand are now identified automatically by default
+* Deprecate `plot_reads()`, rename to `plot_read_count()`
+* Deprecate `plot_distr()`, rename to `plot_read_distr()`
+* Replace `fqtk` and `guide-counter` tools with internal one-pass `count_fastq()`
+
 # pepitope 0.3.3
 
 * Speed up runtime by caching `txdb`-derived objects and reusing them
@@ -8,7 +16,7 @@
 * Fix a bug where multi-exon dropping could subset incorrectly (#5)
 * Re-introduce filter that CDS width must be equal variant width (#5)
 * Fix error message when sample sheet does not contain required fields
-* Add clearer error messages about `seqlevels` mismatches in `annotate_coding` (#11)
+* Add clearer error messages about `seqlevels` mismatches in `annotate_coding()` (#11)
 * Barcode counting now uses `--exact-match` by default
 
 # pepitope 0.3.1
