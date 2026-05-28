@@ -9,6 +9,9 @@ is_proper_orf(x)
 \arguments{
 \item{x}{A DNAStringSet or AAStringSet object}
 }
+\value{
+A logical vector indicating whether each sequence has a proper ORF
+}
 \description{
 Logical vector whether sequence has START and STOP codon
 }

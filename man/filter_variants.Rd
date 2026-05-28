@@ -29,6 +29,9 @@ filter_variants(
 
 \item{chrs}{Either "default" or a character vector of chromosome names}
 }
+\value{
+A filtered VRanges object
+}
 \description{
 Make results report to save as xlsx sheets (full, filtered, peptides)
 }

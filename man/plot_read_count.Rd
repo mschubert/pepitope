@@ -14,6 +14,9 @@ plot_reads(dset)
 
 \item{n_cutoff}{Minimum reads for counting a barcode as represented}
 }
+\value{
+A patchwork object containing the read count summary plots
+}
 \description{
 Plot the overall read counts
 }

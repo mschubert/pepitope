@@ -13,6 +13,9 @@ pep_tile(peptides, tile_size = 93, tile_ov = 45)
 
 \item{tile_ov}{Oligo tiling overlap}
 }
+\value{
+A data.frame with tiled nucleotide and peptide sequences
+}
 \description{
 Tile cDNA into peptide sequences
 }

@@ -6,6 +6,9 @@
 \usage{
 example_peptide_file()
 }
+\value{
+Invisibly returns `NULL` after writing the example peptide file
+}
 \description{
 Create a my_peptides.tsv in the inst directory
 }

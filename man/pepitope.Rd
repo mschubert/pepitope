@@ -5,6 +5,9 @@
 \alias{pepitope-package}
 \alias{pepitope}
 \title{Pepitope: peptide epitopes from reference genome and variant (VCF) file}
+\value{
+Package documentation for pepitope
+}
 \description{
 Given a reference genome and VCF file, this package will provide
 the upstream/downstream peptide context of a variant. It will generate a

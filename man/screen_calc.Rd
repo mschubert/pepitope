@@ -11,6 +11,9 @@ screen_calc(dset, comparisons)
 
 \item{comparisons}{A character vector of sample and reference condition, or list thereof}
 }
+\value{
+A data.frame of DESeq2 results, or a named list of data.frames
+}
 \description{
 Calculate differential abundance of construct barcodes
 }

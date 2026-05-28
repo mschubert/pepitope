@@ -15,6 +15,9 @@ make_report(vars, subs, fus = DataFrame(), tiled)
 
 \item{tiled}{A data.frame of the tiled peptide sequences}
 }
+\value{
+A named list of data.frames for report output
+}
 \description{
 Make a variants report as named list of tables
 }
