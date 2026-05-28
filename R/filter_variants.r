@@ -7,6 +7,7 @@
 #' @param pass     Whether to only include softFilterMatrix PASS
 #' @param sample   Only include if in `sampleNames(vr)` (required if more than one present)
 #' @param chrs     Either "default" or a character vector of chromosome names
+#' @return         A filtered VRanges object
 #'
 #' @importFrom VariantAnnotation softFilterMatrix altDepth totalDepth
 #' @importFrom Biobase sampleNames

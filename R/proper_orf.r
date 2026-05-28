@@ -1,6 +1,7 @@
 #' Logical vector whether sequence has START and STOP codon
 #'
 #' @param x  A DNAStringSet or AAStringSet object
+#' @return  A logical vector indicating whether each sequence has a proper ORF
 #'
 #' @keywords internal
 is_proper_orf = function(x) {

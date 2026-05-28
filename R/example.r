@@ -1,5 +1,7 @@
 #' Create a my_peptides.tsv in the inst directory
 #'
+#' @return  Invisibly returns `NULL` after writing the example peptide file
+#'
 #' @keywords internal
 example_peptide_file = function() {
     variant_vcf_file = system.file("my_variants.vcf", package="pepitope")

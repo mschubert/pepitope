@@ -4,6 +4,7 @@
 #' @param subs  Variants within mutation context from `subset_context()`
 #' @param fus   Variants within fusion context from `subset_context_fusions()`
 #' @param tiled  A data.frame of the tiled peptide sequences
+#' @return  A named list of data.frames for report output
 #'
 #' @export
 make_report = function(vars, subs, fus=DataFrame(), tiled) {

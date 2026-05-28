@@ -2,6 +2,7 @@
 #'
 #' @param dset  A `SummarizedExperiment` object from `count_fastq()`
 #' @param comparisons  A character vector of sample and reference condition, or list thereof
+#' @return  A data.frame of DESeq2 results, or a named list of data.frames
 #'
 #' @importFrom stats setNames
 #' @export

@@ -2,6 +2,7 @@
 #'
 #' @param dset  The `SummarizedExperiment` object from `count_fastq`
 #' @param n_cutoff  Minimum reads for counting a barcode as represented
+#' @return  A patchwork object containing the read count summary plots
 #'
 #' @import ggplot2
 #' @importFrom patchwork wrap_plots plot_layout

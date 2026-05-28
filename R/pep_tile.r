@@ -3,6 +3,7 @@
 #' @param peptides   A `data.frame` with context-subset peptide/minigene data
 #' @param tile_size  Oligo tiling size
 #' @param tile_ov    Oligo tiling overlap
+#' @return           A data.frame with tiled nucleotide and peptide sequences
 #'
 #' @export
 pep_tile = function(peptides, tile_size=93, tile_ov=45) {
