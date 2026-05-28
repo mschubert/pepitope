@@ -24,4 +24,9 @@ Useful links:
 \author{
 \strong{Maintainer}: Michael Schubert \email{mschu.dev@gmail.com} (\href{https://orcid.org/0000-0002-6862-5221}{ORCID})
 
+Authors:
+\itemize{
+  \item Michael Schubert \email{mschu.dev@gmail.com} (\href{https://orcid.org/0000-0002-6862-5221}{ORCID})
+}
+
 }

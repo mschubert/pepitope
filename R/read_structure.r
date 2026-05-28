@@ -7,8 +7,7 @@
 #' @param nrec  Number of FASTQ records to inspect
 #' @return  A `list` with barcode counts, reads, and inferred read structure
 #'
-#' @importFrom Biostrings readDNAStringSet reverseComplement DNAStringSet DNAString PDict
-#'      matchPDict xscat
+#' @importFrom Biostrings readDNAStringSet reverseComplement DNAStringSet DNAString PDict matchPDict xscat
 #' @importFrom BiocGenerics width
 #' @keywords internal
 .rs_annotate = function(fq, samples, all_constructs, nrec=100000L) {

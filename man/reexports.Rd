@@ -19,10 +19,10 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{GenomeInfoDb}{\code{\link[GenomeInfoDb]{genome}}, \code{\link[GenomeInfoDb]{seqinfo}}, \code{\link[GenomeInfoDb]{seqlevels}}, \code{\link[GenomeInfoDb]{seqlevelsStyle}}, \code{\link[GenomeInfoDb:seqlevelsStyle]{seqlevelsStyle<-}}}
+  \item{GenomeInfoDb}{\code{\link[GenomeInfoDb:genome]{genome}}, \code{\link[GenomeInfoDb:seqinfo]{seqinfo}}, \code{\link[GenomeInfoDb:seqlevels]{seqlevels}}, \code{\link[GenomeInfoDb:seqlevelsStyle]{seqlevelsStyle()}}, \code{\link[GenomeInfoDb:seqlevelsStyle<-]{seqlevelsStyle<-()}}}
 
-  \item{SummarizedExperiment}{\code{\link[SummarizedExperiment:SummarizedExperiment-class]{assay}}, \code{\link[SummarizedExperiment:SummarizedExperiment-class]{colData}}, \code{\link[SummarizedExperiment:SummarizedExperiment-class]{rowData}}}
+  \item{SummarizedExperiment}{\code{\link[SummarizedExperiment:assay]{assay()}}, \code{\link[SummarizedExperiment:colData]{colData()}}, \code{\link[SummarizedExperiment:rowData]{rowData()}}}
 
-  \item{VariantAnnotation}{\code{\link[VariantAnnotation:VRanges-class]{readVcfAsVRanges}}}
+  \item{VariantAnnotation}{\code{\link[VariantAnnotation:readVcfAsVRanges]{readVcfAsVRanges()}}}
 }}
 

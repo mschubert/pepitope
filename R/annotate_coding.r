@@ -7,14 +7,11 @@
 #'
 #' @importFrom BiocGenerics width strand strand<-
 #' @importFrom S4Vectors mcols mcols<-
-#' @importFrom GenomicFeatures transcriptsBy threeUTRsByTranscript cdsBy
-#'      extractTranscriptSeqs genes
+#' @importFrom GenomicFeatures transcriptsBy threeUTRsByTranscript cdsBy extractTranscriptSeqs genes
 #' @importFrom VariantAnnotation sampleNames ref alt refDepth altDepth
-#' @importFrom Biostrings subseq nchar reverse translate replaceAt DNAStringSet
-#'      xscat vcountPattern
+#' @importFrom Biostrings subseq nchar reverse translate replaceAt DNAStringSet xscat vcountPattern
 #' @importFrom BSgenome getSeq
-#' @importFrom GenomeInfoDb seqnames seqnames<- genome genome<-
-#'      isCircular isCircular<- seqinfo seqinfo<-
+#' @importFrom GenomeInfoDb seqnames seqnames<- genome genome<- isCircular isCircular<- seqinfo seqinfo<-
 #' @importFrom stringi stri_locate_first
 #' @importFrom methods as
 #' @export

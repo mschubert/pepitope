@@ -27,8 +27,7 @@ remove_cutsite = function(pep, ...) {
 #' @param seed  Set random seed to select same changes on multiple runs
 #' @return      cDNA with minimal changes to no longer contain the cut site
 #'
-#' @importFrom Biostrings subseq getGeneticCode DNAString translate replaceAt
-#'      DNAStringSet reverseComplement vmatchPattern vcountPattern
+#' @importFrom Biostrings subseq getGeneticCode DNAString translate replaceAt DNAStringSet reverseComplement vmatchPattern vcountPattern
 #' @keywords internal
 remove_cutsite_nuc = function(nuc, site, seed=NULL) {
     set.seed(seed)
