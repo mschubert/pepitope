@@ -7,36 +7,22 @@
 #' It can also be used to remove restriction sites from cDNA, alongside other
 #' helper functions.
 #'
+#' @return Package documentation for pepitope
 #' @name pepitope
 #' @docType package
 #' @import dplyr
 #' @import ggplot2
+#' @importFrom VariantAnnotation readVcfAsVRanges
+#' @importFrom SummarizedExperiment colData rowData assay
+#' @importFrom GenomeInfoDb seqlevelsStyle seqlevelsStyle<-
+#' @rawNamespace export(readVcfAsVRanges)
+#' @rawNamespace export(colData)
+#' @rawNamespace export(rowData)
+#' @rawNamespace export(assay)
 #' @rawNamespace export(genome)
 #' @rawNamespace export(seqinfo)
 #' @rawNamespace export(seqlevels)
+#' @rawNamespace export(seqlevelsStyle)
+#' @rawNamespace export("seqlevelsStyle<-")
 #' @useDynLib pepitope, .registration=TRUE
 "_PACKAGE"
-
-#' @importFrom VariantAnnotation readVcfAsVRanges
-#' @export
-VariantAnnotation::readVcfAsVRanges
-
-#' @importFrom SummarizedExperiment colData
-#' @export
-SummarizedExperiment::colData
-
-#' @importFrom SummarizedExperiment rowData
-#' @export
-SummarizedExperiment::rowData
-
-#' @importFrom SummarizedExperiment assay
-#' @export
-SummarizedExperiment::assay
-
-#' @importFrom GenomeInfoDb seqlevelsStyle
-#' @export
-GenomeInfoDb::seqlevelsStyle
-
-#' @importFrom GenomeInfoDb seqlevelsStyle<-
-#' @export
-GenomeInfoDb::`seqlevelsStyle<-`
