@@ -23,8 +23,8 @@ columns 'sample_id', 'patient', 'rep', 'origin', 'barcode'}
 
 \item{valid_barcodes}{A character vector of all possible construct barcodes}
 
-\item{read_structure}{A character string describing the FASTQ read structure. \code{B} segments
-are matched against sample barcodes and \code{M} segments against construct barcodes.}
+\item{read_structure}{A character string describing the FASTQ read structure. If missing,
+this will be inferred from the first reads in `fq`.}
 
 \item{verbose}{Whether to print progress messages (default: TRUE)}
 }

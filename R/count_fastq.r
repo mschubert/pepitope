@@ -5,8 +5,8 @@
 #'      columns 'sample_id', 'patient', 'rep', 'origin', 'barcode'
 #' @param all_constructs  A named list of all construct libraries
 #' @param valid_barcodes  A character vector of all possible construct barcodes
-#' @param read_structure  A character string describing the FASTQ read structure. `B` segments
-#'      are matched against sample barcodes and `M` segments against construct barcodes.
+#' @param read_structure  A character string describing the FASTQ read structure. If missing,
+#'      this will be inferred from the first reads in `fq`.
 #' @param verbose  Whether to print progress messages (default: TRUE)
 #' @return      A `SummarizedExperiment` object with counts and metadata
 #'
@@ -31,6 +31,8 @@ count_fastq = function(fq, samples, all_constructs, valid_barcodes, read_structu
         stop("'fq' argument needs to be a single FASTQ file")
     fq = path.expand(fq)
 
+    if (missing(read_structure))
+        read_structure = .rs_annotate(fq, samples, all_constructs)$structure
     read_structure = .rs_parse(read_structure)
     sample_barcodes = toupper(samples$barcode) |> .check_barcodes("Sample barcodes")
     construct_barcodes = toupper(as.character(valid_barcodes)) |> .check_barcodes("Construct barcodes")

@@ -29,7 +29,7 @@ test_that("count source FASTQ directly", {
                  unname(colSums(SummarizedExperiment::assay(dset))))
 })
 
-test_that("annotate_read_structure finds barcode positions and orientation", {
+test_that("rs_annotate finds barcode positions and orientation", {
     samples = data.frame(sample_id="sample1", patient="pat1", rep="1", origin="lib", barcode="GGG")
     constructs = list(pat1 = data.frame(gene_name="gene", mut_id="gene", pep_id="pep",
                                         tiled=TRUE, barcode="TTAACG"))
@@ -39,7 +39,7 @@ test_that("annotate_read_structure finds barcode positions and orientation", {
         "@read2", "GGGNNNNNTTAACG", "+", "IIIIIIIIIIIIII"
     ), fq)
 
-    res = annotate_read_structure(fq, samples, constructs, nrec=1)
+    res = .rs_annotate(fq, samples, constructs, nrec=1)
 
     expect_equal(length(res$reads), 1L)
     expect_equal(res$counts[["B"]][1], 1L)
@@ -59,5 +59,16 @@ test_that("count_fastq uses read structure orientation", {
     expect_true(parsed$construct$revcomp)
 
     dset = count_fastq(fq, samples, constructs, "TTAACG", read_structure="3B5S6M<", verbose=FALSE)
+    expect_equal(SummarizedExperiment::assay(dset)[1, 1], 1)
+})
+
+test_that("count_fastq infers missing read structure", {
+    samples = data.frame(sample_id="sample1", patient="pat1", rep="1", origin="lib", barcode="GGG")
+    constructs = list(pat1 = data.frame(gene_name="gene", mut_id="gene", pep_id="pep",
+                                        tiled=TRUE, barcode="TTAACG"))
+    fq = tempfile(fileext=".fq")
+    writeLines(c("@read1", "GGGNNNNNCGTTAA", "+", "IIIIIIIIIIIIII"), fq)
+
+    dset = count_fastq(fq, samples, constructs, "TTAACG", verbose=FALSE)
     expect_equal(SummarizedExperiment::assay(dset)[1, 1], 1)
 })
