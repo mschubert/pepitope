@@ -11,6 +11,9 @@
 #' @docType package
 #' @import dplyr
 #' @import ggplot2
+#' @rawNamespace export(genome)
+#' @rawNamespace export(seqinfo)
+#' @rawNamespace export(seqlevels)
 #' @useDynLib pepitope, .registration=TRUE
 "_PACKAGE"
 
@@ -29,18 +32,6 @@ SummarizedExperiment::rowData
 #' @importFrom SummarizedExperiment assay
 #' @export
 SummarizedExperiment::assay
-
-#' @importFrom GenomeInfoDb seqinfo
-#' @export
-GenomeInfoDb::seqinfo
-
-#' @importFrom GenomeInfoDb genome
-#' @export
-GenomeInfoDb::genome
-
-#' @importFrom GenomeInfoDb seqlevels
-#' @export
-GenomeInfoDb::seqlevels
 
 #' @importFrom GenomeInfoDb seqlevelsStyle
 #' @export

@@ -124,10 +124,10 @@
     sample = best_position("B", sample_width)
     construct = best_position("M", construct_width)
     segments = rbind(sample, construct) |> dplyr::arrange(start)
-    if (any(segments$start[-1] < head(segments$start + segments$width, -1)))
+    if (any(segments$start[-1] < utils::head(segments$start + segments$width, -1)))
         stop("Could not infer read structure because barcode positions overlap")
 
-    previous_end = c(0L, head(segments$start + segments$width - 1L, -1L))
+    previous_end = c(0L, utils::head(segments$start + segments$width - 1L, -1L))
     skip = segments$start - previous_end - 1L
     skip_tokens = ifelse(skip > 0, paste0(skip, "S"), NA_character_)
     segment_tokens = paste0(segments$width, segments$op)

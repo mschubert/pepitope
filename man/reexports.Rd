@@ -7,9 +7,6 @@
 \alias{colData}
 \alias{rowData}
 \alias{assay}
-\alias{seqinfo}
-\alias{genome}
-\alias{seqlevels}
 \alias{seqlevelsStyle}
 \alias{seqlevelsStyle<-}
 \title{Objects exported from other packages}
@@ -19,7 +16,7 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{GenomeInfoDb}{\code{\link[GenomeInfoDb:genome]{genome}}, \code{\link[GenomeInfoDb:seqinfo]{seqinfo}}, \code{\link[GenomeInfoDb:seqlevels]{seqlevels}}, \code{\link[GenomeInfoDb:seqlevelsStyle]{seqlevelsStyle()}}, \code{\link[GenomeInfoDb:seqlevelsStyle<-]{seqlevelsStyle<-()}}}
+  \item{GenomeInfoDb}{\code{\link[GenomeInfoDb:seqlevelsStyle]{seqlevelsStyle()}}, \code{\link[GenomeInfoDb:seqlevelsStyle<-]{seqlevelsStyle<-()}}}
 
   \item{SummarizedExperiment}{\code{\link[SummarizedExperiment:assay]{assay()}}, \code{\link[SummarizedExperiment:colData]{colData()}}, \code{\link[SummarizedExperiment:rowData]{rowData()}}}
 
