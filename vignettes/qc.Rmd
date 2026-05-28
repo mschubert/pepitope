@@ -159,10 +159,10 @@ file instead:
 fastq_file = example_fastq(sample_sheet, all_constructs)
 ```
 
-Demultiplexing and counting
+Read structure and counting
 ---------------------------
 
-### Counting construct barcodes
+### Read structure definition
 
 This step counts construct barcodes per sample directly from the source FASTQ.
 Here, `read_structure` describes where the sample and construct barcodes occur
@@ -175,12 +175,13 @@ all remaining nucleotides:
 * `T` -- the template read sequence (optional)
 * `S` -- skip these nucleotides and do not include in output (optional)
 
+### Counting sample and construct barcodes
+
 In this example, the first 7 nucleotides identify the sample and the next 12
 nucleotides identify the construct:
 
 ```{r}
-dset = count_fastq(fastq_file, sample_sheet, all_constructs, valid_barcodes,
-                   read_structure="7B12M+T")
+dset = count_fastq(fastq_file, sample_sheet, all_constructs, valid_barcodes)
 ```
 
 Here, `dset` will be a `SummarizedExperiment` object that you can interact
@@ -197,11 +198,11 @@ Quality Control plots
 
 The first overview that we want to get is to know how many barcodes are in which
 demultiplexed FASTQ, and whether they match the sample we expect them to be
-from. We can plot this the following way, for total read counts on the left and
-number of barcodes that have 10 or more reads on the right:
+from. We can plot this the following way, for total read counts on the top and
+number of barcodes that have 10 (default) or more reads on the bottom:
 
 ```{r}
-plot_read_count(dset)
+plot_read_count(dset, 10)
 ```
 
 We can also plot this interactively with `plotly`:

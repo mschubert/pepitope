@@ -5,12 +5,14 @@
 \alias{plot_reads}
 \title{Plot the overall read counts}
 \usage{
-plot_read_count(dset)
+plot_read_count(dset, n_cutoff = 10)
 
 plot_reads(dset)
 }
 \arguments{
 \item{dset}{The `SummarizedExperiment` object from `count_fastq`}
+
+\item{n_cutoff}{Minimum reads for counting a barcode as represented}
 }
 \description{
 Plot the overall read counts

@@ -1,14 +1,14 @@
 #' Count barcodes directly from source FASTQ files
 #'
 #' @param fq  Path to one FASTQ file
-#' @param samples  A sample sheet as `data.frame` in tsv format. Requires the
+#' @param samples  A sample sheet as \code{data.frame} in tsv format. Requires the
 #'      columns 'sample_id', 'patient', 'rep', 'origin', 'barcode'
 #' @param all_constructs  A named list of all construct libraries
 #' @param valid_barcodes  A character vector of all possible construct barcodes
 #' @param read_structure  A character string describing the FASTQ read structure. If missing,
 #'      this will be inferred from the first reads in `fq`.
 #' @param verbose  Whether to print progress messages (default: TRUE)
-#' @return      A `SummarizedExperiment` object with counts and metadata
+#' @return      A \code{SummarizedExperiment} object with counts and metadata
 #'
 #' @importFrom SummarizedExperiment SummarizedExperiment
 #' @importFrom Biostrings reverseComplement DNAStringSet
