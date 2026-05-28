@@ -174,11 +174,22 @@ all remaining nucleotides:
 * `M` -- the construct barcode to count (required)
 * `T` -- the template read sequence (optional)
 * `S` -- skip these nucleotides and do not include in output (optional)
+* `<` after each letter to denote a reverse complement sequence
+
+In our example data, the sample barcode is followed directly by a reverse
+complement of the construct barcode, so the read structure is identified as
+`7B12M<`:
+
+```{r}
+plot_read_structure(fastq_file, sample_sheet, all_constructs)
+```
 
 ### Counting sample and construct barcodes
 
 In this example, the first 7 nucleotides identify the sample and the next 12
-nucleotides identify the construct:
+nucleotides identify the construct are automatically inferred from the read
+sequences. However, we could also specify it via the `read_structure`
+argument:
 
 ```{r}
 dset = count_fastq(fastq_file, sample_sheet, all_constructs, valid_barcodes)
