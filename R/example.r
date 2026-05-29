@@ -158,7 +158,13 @@ example_fastq = function(samples, peptide_sheets, target_reads=1000, custom=TRUE
         return(integer())
 
     seed = if (is.null(seed)) 0 else seed
-    probs = seq(0.025, 0.975, length.out=n)
-    probs = probs[.pseudorandom_order(n, seed)]
+    mod = 2^31
+    state = (abs(seed) + 1) %% mod
+    probs = numeric(n)
+    for (i in seq_len(n)) {
+        state = (1103515245 * state + 12345) %% mod
+        probs[i] = (state + 0.5) / mod
+    }
+    probs = pmin(pmax(probs, 0.001), 0.999)
     as.integer(qnbinom(probs, mu=mu, size=size))
 }
