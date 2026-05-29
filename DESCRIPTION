@@ -1,6 +1,6 @@
 Package: pepitope
 Title: Extract, QC and Screen Peptide Epitopes
-Version: 0.3.9000
+Version: 0.99.0
 Authors@R: c(
     person('Michael', 'Schubert', email='mschu.dev@gmail.com',
            role = c('aut', 'cre'),
