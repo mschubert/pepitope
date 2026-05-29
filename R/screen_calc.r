@@ -20,7 +20,7 @@ screen_calc = function(dset, comparisons) {
     eset$origin = factor(make.names(eset$origin))
     eset$rep = factor(eset$rep)
     DESeq2::sizeFactors(eset) = colSums(assay(dset)) / max(colSums(assay(dset)))
-    mod = DESeq2::DESeq(eset)
+    mod = DESeq2::DESeq(eset, fitType="local")
 
     get_result = function(comp) {
         DESeq2::results(mod, contrast=c("origin", comp)) |>
