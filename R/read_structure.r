@@ -69,7 +69,6 @@
 
     starts = attr(matches, "capture.start")
     lengths = attr(matches, "capture.length")
-    pos = 1L
     ranges = lapply(seq_along(tokens), function(i) {
         len_text = substr(read_structures, starts[i, 1], starts[i, 1] + lengths[i, 1] - 1L)
         op = substr(read_structures, starts[i, 2], starts[i, 2] + lengths[i, 2] - 1L)
@@ -87,12 +86,12 @@
             if (is.na(len) || len < 1)
                 stop("Read structure lengths must be positive integers")
         }
-        res = data.frame(start=pos, width=len, op=op, revcomp=revcomp)
-        pos <<- if (is.na(len)) NA_integer_ else pos + len
-        res
+        data.frame(width=len, op=op, revcomp=revcomp)
     })
 
     ranges = do.call(rbind, ranges)
+    ranges$start = c(1L, utils::head(cumsum(ranges$width) + 1L, -1L))
+    ranges = ranges[c("start", "width", "op", "revcomp")]
     sample = ranges[ranges$op == "B", c("start", "width", "revcomp")]
     construct = ranges[ranges$op == "M", c("start", "width", "revcomp")]
     if (nrow(sample) != 1)

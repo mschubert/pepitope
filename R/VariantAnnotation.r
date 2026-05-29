@@ -69,8 +69,8 @@ setMethod("predictCoding", c("VRanges", "ANY", "ANY", "missing"),
         tryCatch({
             varAllele <- DNAStringSet(varAllele)
         }, error=function(e) {
-            stop(paste0("attempt to coerce 'alt' to DNAStringSet failed with ",
-                 "error: ", conditionMessage(e)))
+            stop("attempt to coerce 'alt' to DNAStringSet failed with ",
+                 "error: ", conditionMessage(e))
         })
     }
     .predictCoding(query, subject, seqSource, varAllele, ...,
