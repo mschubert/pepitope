@@ -6,12 +6,12 @@ Authors@R: c(
            role = c('aut', 'cre'),
            comment = c(ORCID='0000-0002-6862-5221'))
     )
-Description: Given a reference genome and VCF file, this package will provide
-    the upstream/downstream peptide context of a variant. It will generate a
-    summary report for protein-coding variants including the reference and
-    mutated allele, read coverage, amino acid sequence, and other information.
-    It can also be used to remove restriction sites from cDNA, alongside other
-    helper functions.
+Description: Supports T cell receptor neoantigen co-culture screen analysis
+    from peptide library design to sequencing quality control and differential
+    abundance testing. The package annotates somatic variants and RNA fusions,
+    extracts mutant and reference peptide context, prepares barcoded minigene
+    construct tables, counts sample and construct barcodes from sequencing
+    data, and identifies immunogenic epitopes in dropout screens.
 URL: https://github.com/mschubert/pepitope
 BugReports: https://github.com/mschubert/pepitope/issues
 Depends:
