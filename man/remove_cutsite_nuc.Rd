@@ -11,7 +11,7 @@ remove_cutsite_nuc(nuc, site, seed = NULL)
 
 \item{site}{Recognition site to be replaced (fwd+rev comp)}
 
-\item{seed}{Set random seed to select same changes on multiple runs}
+\item{seed}{Seed for deterministic pseudo-random candidate ordering}
 }
 \value{
 cDNA with minimal changes to no longer contain the cut site

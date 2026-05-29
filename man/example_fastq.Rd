@@ -21,7 +21,7 @@ example_fastq(
 
 \item{custom}{Whether to add custom modifications to founds}
 
-\item{seed}{The random seed used for sampling the number of reads}
+\item{seed}{Seed for deterministic pseudo-random count generation}
 }
 \value{
 The path to the created FASTQ file

@@ -4,7 +4,7 @@
 \alias{example_peptides}
 \title{Create example peptide sheets for multiple samples}
 \usage{
-example_peptides(valid_barcodes, seed = 18245)
+example_peptides(valid_barcodes)
 }
 \arguments{
 \item{valid_barcodes}{A character vector of valid barcodes}

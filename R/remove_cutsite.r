@@ -28,13 +28,12 @@ remove_cutsite = function(pep, ...) {
 #'
 #' @param nuc   cDNA nucleotide string
 #' @param site  Recognition site to be replaced (fwd+rev comp)
-#' @param seed  Set random seed to select same changes on multiple runs
+#' @param seed  Seed for deterministic pseudo-random candidate ordering
 #' @return      cDNA with minimal changes to no longer contain the cut site
 #'
 #' @importFrom Biostrings subseq getGeneticCode DNAString translate replaceAt DNAStringSet reverseComplement vmatchPattern vcountPattern
 #' @keywords internal
 remove_cutsite_nuc = function(nuc, site, seed=NULL) {
-    set.seed(seed)
     revtrans = function(aa) {
         aa_split = strsplit(as.character(aa), "+")[[1]]
         tr = getGeneticCode()
@@ -66,5 +65,15 @@ remove_cutsite_nuc = function(nuc, site, seed=NULL) {
     nchange = mapply(function(i) stringdist::stringdist(subseq(nuc, m[i]), subseq(nucs, m[i])),
                      i=seq_along(m)) |> as.matrix() |> rowSums()
     min_valid = which(valid & nchange == min(nchange[valid]))
-    as.character(nucs[sample(min_valid, 1)])
+    pick = .pseudorandom_order(length(min_valid), seed)[1]
+    as.character(nucs[min_valid[pick]])
+}
+
+.pseudorandom_order = function(n, seed=0) {
+    if (n < 1)
+        return(integer())
+
+    seed = if (is.null(seed)) 0 else seed
+    key = ((seq_len(n) + seed) * 1103515245 + 12345) %% 2^31
+    order(key, seq_len(n))
 }

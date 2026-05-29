@@ -41,13 +41,14 @@ example_peptide_file = function() {
 #'
 #' @keywords internal
 #' @export
-example_peptides = function(valid_barcodes, seed=18245) {
+example_peptides = function(valid_barcodes) {
     constructs = system.file("my_peptides.tsv", package="pepitope") |>
         readr::read_tsv(show_col_types=FALSE)
 
     mut_ids = unique(constructs$mut_id)
-    if (!is.null(seed))
-        set.seed(seed)
+    seed = 18245
+    select_mut_ids = function(seed_offset)
+        mut_ids[.pseudorandom_order(length(mut_ids), seed + seed_offset)[seq_len(15)]]
 
     pat1 = constructs |>
         mutate(barcode_1 = valid_barcodes[seq_len(n())],
@@ -55,19 +56,19 @@ example_peptides = function(valid_barcodes, seed=18245) {
 
     offset = 2 * nrow(pat1)
     pat2 = constructs |>
-        filter(mut_id %in% sample(mut_ids, 15)) |>
+        filter(mut_id %in% select_mut_ids(1)) |>
         mutate(barcode_1 = valid_barcodes[seq_len(n()) + offset],
                barcode_2 = valid_barcodes[seq_len(n()) + n() + offset])
 
     offset = offset + 2 * nrow(pat2)
     pat3 = constructs |>
-        filter(mut_id %in% sample(mut_ids, 15)) |>
+        filter(mut_id %in% select_mut_ids(2)) |>
         mutate(barcode_1 = valid_barcodes[seq_len(n()) + offset],
                barcode_2 = valid_barcodes[seq_len(n()) + n() + offset])
 
     offset = offset + 2 * nrow(pat3)
     common = constructs |>
-        filter(mut_id %in% sample(mut_ids, 15)) |>
+        filter(mut_id %in% select_mut_ids(3)) |>
         mutate(barcode_1 = valid_barcodes[seq_len(n()) + offset],
                barcode_2 = valid_barcodes[seq_len(n()) + n() + offset])
 
@@ -80,7 +81,7 @@ example_peptides = function(valid_barcodes, seed=18245) {
 #' @param peptide_sheets  A list, each item containing construct information
 #' @param target_reads   How many reads to simulate on average
 #' @param custom         Whether to add custom modifications to founds
-#' @param seed  The random seed used for sampling the number of reads
+#' @param seed  Seed for deterministic pseudo-random count generation
 #' @return      The path to the created FASTQ file
 #'
 #' @examples
@@ -90,7 +91,7 @@ example_peptides = function(valid_barcodes, seed=18245) {
 #'     pep_id="GENE1_A1V", pep_type="alt", tiled="ATGGCCGCC", barcode_1="AAAA"))
 #' example_fastq(samples, constructs, target_reads=2, custom=FALSE)
 #'
-#' @importFrom stats rnbinom
+#' @importFrom stats qnbinom
 #' @keywords internal
 #' @export
 example_fastq = function(samples, peptide_sheets, target_reads=1000, custom=TRUE, seed=91651) {
@@ -110,36 +111,35 @@ example_fastq = function(samples, peptide_sheets, target_reads=1000, custom=TRUE
     all_seq = merge_constructs(peptide_sheets)
     counts = matrix(0, nrow=nrow(all_seq), ncol=length(samples$sample_id),
         dimnames=list(barcode=all_seq$barcode, sample_id=samples$sample_id))
+    seed = if (is.null(seed)) 0 else seed
 
     # fill all expected barcodes (i.e., has an entry in the sample sheet)
-    if (!is.null(seed))
-        set.seed(seed)
     smp_file = samples |> select(sample_id, patient) |>
         mutate(patient = strsplit(patient, "+", fixed=TRUE)) |>
         tidyr::unnest(patient)
     for (i in seq_len(nrow(smp_file))) {
         matches = all_seq$bc_type == smp_file$patient[i]
-        counts[matches, smp_file$sample_id[i]] = rnbinom(sum(matches), mu=target_reads, size=3)
+        counts[matches, smp_file$sample_id[i]] = .rnbinom(sum(matches), mu=target_reads, size=3, seed=seed + i)
     }
 
     if (custom) {
         # derive Sample from Mock + noise
-        counts[,"screen1"] = counts[,"mock1"] + rnbinom(nrow(counts), mu=counts[,"mock1"], size=5)
-        counts[,"screen2"] = counts[,"mock2"] + rnbinom(nrow(counts), mu=counts[,"mock2"], size=5)
+        counts[,"screen1"] = counts[,"mock1"] + .rnbinom(nrow(counts), mu=counts[,"mock1"], size=5, seed=seed + 101)
+        counts[,"screen2"] = counts[,"mock2"] + .rnbinom(nrow(counts), mu=counts[,"mock2"], size=5, seed=seed + 102)
 
         # add specific dropout for NRAS_Q61L in Sample
         bcs = with(all_seq, barcode[bc_type == "pat1" & pep_type == "alt" & mut_id == "NRAS_Q61L"])
-        counts[bcs, c("screen1", "screen2")] = rnbinom(4, mu=target_reads/5, size=5)
+        counts[bcs, c("screen1", "screen2")] = .rnbinom(4, mu=target_reads/5, size=5, seed=seed + 103)
 
         # high variance pat2 lib
         pat2_bcs = all_seq$bc_type == "pat2"
-        counts[pat2_bcs, "lib1"] = rnbinom(sum(pat2_bcs), mu=target_reads, size=1)
+        counts[pat2_bcs, "lib1"] = .rnbinom(sum(pat2_bcs), mu=target_reads, size=1, seed=seed + 104)
 
         # lose a quarter of barcodes in pat3 Library and add pat1 contamination
         pat1_bcs = all_seq$bc_type == "pat1"
         pat3_bcs = which(all_seq$bc_type == "pat3") |> utils::head(15)
-        counts[pat1_bcs, "lib2"] = rnbinom(sum(pat1_bcs), mu=target_reads/5, size=1)
-        counts[pat3_bcs, "lib2"] = rnbinom(length(pat3_bcs), mu=1, size=1)
+        counts[pat1_bcs, "lib2"] = .rnbinom(sum(pat1_bcs), mu=target_reads/5, size=1, seed=seed + 105)
+        counts[pat3_bcs, "lib2"] = .rnbinom(length(pat3_bcs), mu=1, size=1, seed=seed + 106)
     }
 
     # add all non-zero read entries in fastq format
@@ -151,4 +151,14 @@ example_fastq = function(samples, peptide_sheets, target_reads=1000, custom=TRUE
     outfile = file.path(tdir, "my_seqdata.fq")
     do.call(cat, c(do.call(c, res), list(file=outfile, sep="\n")))
     outfile
+}
+
+.rnbinom = function(n, mu, size, seed=0) {
+    if (n < 1)
+        return(integer())
+
+    seed = if (is.null(seed)) 0 else seed
+    probs = seq(0.025, 0.975, length.out=n)
+    probs = probs[.pseudorandom_order(n, seed)]
+    as.integer(qnbinom(probs, mu=mu, size=size))
 }
