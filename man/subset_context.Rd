@@ -17,3 +17,9 @@ GRanges object with sequence information of only context
 \description{
 Subset nucleotide/protein sequences to codon +/- 45 bp context
 }
+\examples{
+if (interactive()) {
+    subset_context(codv, ctx_codons=15)
+}
+
+}

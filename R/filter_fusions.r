@@ -6,6 +6,13 @@
 #' @param min_tools  The minimum number of tools that identify a fusion
 #' @return      A filtered VRanges object
 #'
+#' @examples
+#' vr = VariantAnnotation::VRanges("chr1", IRanges::IRanges(1, 1), ref="A", alt="T")
+#' vr$DV = 3L
+#' vr$RV = 2L
+#' vr$TOOL_HITS = IRanges::IntegerList(2L)
+#' filter_fusions(vr, min_reads=4, min_split_reads=2, min_tools=1)
+#'
 #' @export
 filter_fusions = function(vr, min_reads=NULL, min_split_reads=NULL, min_tools=NULL) {
     # GT: ref allele/i alt allele (always './1'?)

@@ -4,6 +4,11 @@
 #' @param fus   Variants within fusion context from `subset_context_fusions()`
 #' @return      A data.frame with cDNA and peptide sequences
 #'
+#' @examples
+#' if (interactive()) {
+#'     peptides = make_peptides(subs)
+#' }
+#'
 #' @export
 make_peptides = function(subs, fus=DataFrame()) {
     # changes peptide, is unique and is expressed

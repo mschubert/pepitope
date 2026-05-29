@@ -7,6 +7,14 @@
 #' @param cap_fc  Maximum amount of fold-change to limit values to
 #' @return  A `ggplot2` object of the differential expression results
 #'
+#' @examples
+#' if (interactive()) {
+#'     res = data.frame(baseMean=c(20, 30), log2FoldChange=c(-1, 1), padj=c(0.2, 0.05),
+#'         gene_name=c("GENE1", "GENE1"), pep_type=c("ref", "alt"),
+#'         bc_type=c("pat1", "pat1"), mut_id=c("GENE1_A1", "GENE1_A1"))
+#'     plot_screen(res, links=FALSE, labs=FALSE)
+#' }
+#'
 #' @export
 plot_screen = function(res, sample=NULL, links=TRUE, labs=TRUE, cap_fc=8) {
     res$log2FoldChange = sign(res$log2FoldChange) * pmin(abs(res$log2FoldChange), cap_fc)

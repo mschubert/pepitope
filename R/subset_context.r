@@ -4,6 +4,11 @@
 #' @param ctx_codons  How many flanking codons each to include in the context
 #' @return  GRanges object with sequence information of only context
 #'
+#' @examples
+#' if (interactive()) {
+#'     subset_context(codv, ctx_codons=15)
+#' }
+#'
 #' @importFrom Biostrings vmatchPattern nchar
 #' @export
 subset_context = function(codv, ctx_codons) {

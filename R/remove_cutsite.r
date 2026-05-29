@@ -4,6 +4,10 @@
 #' @param ...   Named argumennts of cut sites, e.g. `BbsI="GAAGAC"`
 #' @return      A data.frame with replace nucleotides and number of replacements
 #'
+#' @examples
+#' pep = data.frame(pep_id="p1", tiled="ATGGCCGCC")
+#' remove_cutsite(pep, BbsI="GAAGAC")
+#'
 #' @export
 remove_cutsite = function(pep, ...) {
     req = c("pep_id", "tiled")

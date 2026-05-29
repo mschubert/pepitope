@@ -17,3 +17,8 @@ A data.frame with replace nucleotides and number of replacements
 \description{
 Remove a Restriction Enzyme cut site but keep AA in a tiled peptide data.frame
 }
+\examples{
+pep = data.frame(pep_id="p1", tiled="ATGGCCGCC")
+remove_cutsite(pep, BbsI="GAAGAC")
+
+}

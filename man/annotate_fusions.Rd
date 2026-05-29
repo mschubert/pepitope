@@ -19,3 +19,13 @@ A DataFrame objects with fusions
 \description{
 Aggregate fusion VCFs into a table
 }
+\examples{
+if (interactive()) {
+    vcf = system.file("my_fusions.vcf", package="pepitope")
+    vr = readVcfAsVRanges(vcf)
+    txdb = AnnotationHub::AnnotationHub()[["AH100643"]]
+    asm = BSgenome.Hsapiens.NCBI.GRCh38::BSgenome.Hsapiens.NCBI.GRCh38
+    annotate_fusions(vr, txdb, asm)
+}
+
+}

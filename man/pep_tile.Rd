@@ -19,3 +19,9 @@ A data.frame with tiled nucleotide and peptide sequences
 \description{
 Tile cDNA into peptide sequences
 }
+\examples{
+peptides = data.frame(var_id="v1", mut_id="M1_A1V", gene_name="M1",
+    gene_id="gene1", tx_id="tx1", pep_id="M1_A1V", cDNA="ATGGCCGCCGCC")
+pep_tile(peptides, tile_size=9, tile_ov=3)
+
+}

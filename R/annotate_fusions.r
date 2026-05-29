@@ -5,6 +5,15 @@
 #' @param asm   A Genome sequence package object, eg. ::BSgenome.Hsapiens.NCBI.GRCh38
 #' @return      A DataFrame objects with fusions
 #'
+#' @examples
+#' if (interactive()) {
+#'     vcf = system.file("my_fusions.vcf", package="pepitope")
+#'     vr = readVcfAsVRanges(vcf)
+#'     txdb = AnnotationHub::AnnotationHub()[["AH100643"]]
+#'     asm = BSgenome.Hsapiens.NCBI.GRCh38::BSgenome.Hsapiens.NCBI.GRCh38
+#'     annotate_fusions(vr, txdb, asm)
+#' }
+#'
 #' @importFrom GenomicFeatures transcriptsBy cdsBy
 #' @export
 annotate_fusions = function(vr, txdb, asm) {

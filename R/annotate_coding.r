@@ -5,6 +5,15 @@
 #' @param asm   Genomic sequence BSGenome object
 #' @return      A GRanges object with annotated variants
 #'
+#' @examples
+#' if (interactive()) {
+#'     vcf = system.file("my_variants.vcf", package="pepitope")
+#'     vr = readVcfAsVRanges(vcf)
+#'     txdb = AnnotationHub::AnnotationHub()[["AH100643"]]
+#'     asm = BSgenome.Hsapiens.NCBI.GRCh38::BSgenome.Hsapiens.NCBI.GRCh38
+#'     annotate_coding(vr, txdb, asm)
+#' }
+#'
 #' @importFrom BiocGenerics width strand strand<-
 #' @importFrom S4Vectors mcols mcols<-
 #' @importFrom GenomicFeatures transcriptsBy threeUTRsByTranscript cdsBy extractTranscriptSeqs genes

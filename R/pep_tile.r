@@ -5,6 +5,11 @@
 #' @param tile_ov    Oligo tiling overlap
 #' @return           A data.frame with tiled nucleotide and peptide sequences
 #'
+#' @examples
+#' peptides = data.frame(var_id="v1", mut_id="M1_A1V", gene_name="M1",
+#'     gene_id="gene1", tx_id="tx1", pep_id="M1_A1V", cDNA="ATGGCCGCCGCC")
+#' pep_tile(peptides, tile_size=9, tile_ov=3)
+#'
 #' @export
 pep_tile = function(peptides, tile_size=93, tile_ov=45) {
     req = c("var_id", "mut_id", "gene_name", "gene_id", "tx_id", "pep_id", "cDNA")

@@ -9,6 +9,11 @@
 #' @param chrs     Either "default" or a character vector of chromosome names
 #' @return         A filtered VRanges object
 #'
+#' @examples
+#' vcf = system.file("my_variants.vcf", package="pepitope")
+#' vr = readVcfAsVRanges(vcf)
+#' filter_variants(vr, min_cov=2, min_af=0.05, pass=TRUE)
+#'
 #' @importFrom VariantAnnotation softFilterMatrix altDepth totalDepth
 #' @importFrom Biobase sampleNames
 #' @importFrom GenomicRanges seqnames

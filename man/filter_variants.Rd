@@ -35,3 +35,9 @@ A filtered VRanges object
 \description{
 Make results report to save as xlsx sheets (full, filtered, peptides)
 }
+\examples{
+vcf = system.file("my_variants.vcf", package="pepitope")
+vr = readVcfAsVRanges(vcf)
+filter_variants(vr, min_cov=2, min_af=0.05, pass=TRUE)
+
+}

@@ -4,6 +4,11 @@
 #' @param comparisons  A character vector of sample and reference condition, or list thereof
 #' @return  A data.frame of DESeq2 results, or a named list of data.frames
 #'
+#' @examples
+#' if (interactive()) {
+#'     screen_calc(dset, c("screen", "library"))
+#' }
+#'
 #' @importFrom stats setNames
 #' @export
 screen_calc = function(dset, comparisons) {

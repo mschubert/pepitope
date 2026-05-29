@@ -17,3 +17,9 @@ A data.frame of DESeq2 results, or a named list of data.frames
 \description{
 Calculate differential abundance of construct barcodes
 }
+\examples{
+if (interactive()) {
+    screen_calc(dset, c("screen", "library"))
+}
+
+}

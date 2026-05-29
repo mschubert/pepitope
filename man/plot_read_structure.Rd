@@ -22,3 +22,15 @@ A `ggplot2` object
 \description{
 Plot annotated read structure examples
 }
+\examples{
+if (interactive()) {
+    samples = data.frame(sample_id="sample1", patient="pat1", rep="1",
+        origin="library", barcode="GGG")
+    constructs = list(pat1=data.frame(gene_name="GENE1", mut_id="GENE1_A1V",
+        pep_id="GENE1_A1V", pep_type="alt", tiled="ATGGCCGCC", barcode_1="AAAA"))
+    fq = tempfile(fileext=".fq")
+    writeLines(c("@r1", "GGGAAAA", "+", "IIIIIII", "@r2", "GGGAAAA", "+", "IIIIIII"), fq)
+    plot_read_structure(fq, samples, constructs, nrec=10)
+}
+
+}

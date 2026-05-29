@@ -21,3 +21,9 @@ A named list of data.frames for report output
 \description{
 Make a variants report as named list of tables
 }
+\examples{
+if (interactive()) {
+    make_report(vars, subs, fus, tiled)
+}
+
+}

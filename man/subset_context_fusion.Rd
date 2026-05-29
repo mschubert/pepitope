@@ -17,3 +17,9 @@ A DataFrame object of gene fusions
 \description{
 Subset the peptide context for gene fusions
 }
+\examples{
+if (interactive()) {
+    subset_context_fusion(fusions, ctx_codons=15)
+}
+
+}

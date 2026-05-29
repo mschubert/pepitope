@@ -6,6 +6,11 @@
 #' @param tiled  A data.frame of the tiled peptide sequences
 #' @return  A named list of data.frames for report output
 #'
+#' @examples
+#' if (interactive()) {
+#'     make_report(vars, subs, fus, tiled)
+#' }
+#'
 #' @export
 make_report = function(vars, subs, fus=DataFrame(), tiled) {
     gr2df = function(gr) {

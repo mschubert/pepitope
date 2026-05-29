@@ -32,6 +32,13 @@ example_peptide_file = function() {
 #' @param valid_barcodes  A character vector of valid barcodes
 #' @return  A named list of peptide/minigene constructs with barcodes
 #'
+#' @examples
+#' bases = expand.grid(rep(list(c("A", "C", "G", "T")), 4))
+#' valid_barcodes = apply(bases, 1, paste0, collapse="")
+#' if (interactive()) {
+#'     example_peptides(valid_barcodes)
+#' }
+#'
 #' @keywords internal
 #' @export
 example_peptides = function(valid_barcodes, seed=18245) {
@@ -75,6 +82,13 @@ example_peptides = function(valid_barcodes, seed=18245) {
 #' @param custom         Whether to add custom modifications to founds
 #' @param seed  The random seed used for sampling the number of reads
 #' @return      The path to the created FASTQ file
+#'
+#' @examples
+#' samples = data.frame(sample_id="sample1", patient="pat1", rep="1",
+#'     origin="library", barcode="GGG")
+#' constructs = list(pat1=data.frame(gene_name="GENE1", mut_id="GENE1_A1V",
+#'     pep_id="GENE1_A1V", pep_type="alt", tiled="ATGGCCGCC", barcode_1="AAAA"))
+#' example_fastq(samples, constructs, target_reads=2, custom=FALSE)
 #'
 #' @importFrom stats rnbinom
 #' @keywords internal

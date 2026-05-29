@@ -4,6 +4,13 @@
 #' @param valid_barcodes  A character vector of possible barcodes (optional)
 #' @return  A ggplot2 object
 #'
+#' @examples
+#' if (interactive()) {
+#'     constructs = list(pat1=data.frame(gene_name="GENE1", mut_id="GENE1_A1V",
+#'         pep_id="GENE1_A1V", pep_type="alt", tiled="ATGGCCGCC", barcode_1="AAAA"))
+#'     plot_barcode_overlap(constructs, valid_barcodes=c("AAAA", "CCCC"))
+#' }
+#'
 #' @export
 plot_barcode_overlap = function(all_constructs, valid_barcodes) {
     dset = merge_constructs(all_constructs, strict=FALSE) |>

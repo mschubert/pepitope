@@ -17,3 +17,11 @@ A ggplot2 object
 \description{
 Plot barcode overlap between different samples
 }
+\examples{
+if (interactive()) {
+    constructs = list(pat1=data.frame(gene_name="GENE1", mut_id="GENE1_A1V",
+        pep_id="GENE1_A1V", pep_type="alt", tiled="ATGGCCGCC", barcode_1="AAAA"))
+    plot_barcode_overlap(constructs, valid_barcodes=c("AAAA", "CCCC"))
+}
+
+}

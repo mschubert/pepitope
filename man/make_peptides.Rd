@@ -17,3 +17,9 @@ A data.frame with cDNA and peptide sequences
 \description{
 Make a variants report as named list of tables
 }
+\examples{
+if (interactive()) {
+    peptides = make_peptides(subs)
+}
+
+}

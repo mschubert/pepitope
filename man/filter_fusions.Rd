@@ -21,3 +21,11 @@ A filtered VRanges object
 \description{
 Filter a fusion VRanges object by number of reads and tools
 }
+\examples{
+vr = VariantAnnotation::VRanges("chr1", IRanges::IRanges(1, 1), ref="A", alt="T")
+vr$DV = 3L
+vr$RV = 2L
+vr$TOOL_HITS = IRanges::IntegerList(2L)
+filter_fusions(vr, min_reads=4, min_split_reads=2, min_tools=1)
+
+}
