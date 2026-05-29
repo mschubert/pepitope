@@ -64,7 +64,7 @@ plot_read_distr = function(dset) {
 #' @rdname plot_read_distr
 #' @export
 plot_distr = function(dset) {
-    .Deprecated("plot_read_distr")
+    warning("This function will be removed. Use plot_read_distr() instead")
     plot_read_distr(dset)
 }
 

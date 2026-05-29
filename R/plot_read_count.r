@@ -51,6 +51,6 @@ plot_read_count = function(dset, n_cutoff=10) {
 #' @rdname plot_read_count
 #' @export
 plot_reads = function(dset) {
-    .Deprecated("plot_read_count")
+    warning("This function will be removed. Use plot_read_count() instead")
     plot_read_count(dset)
 }
