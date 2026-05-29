@@ -1,5 +1,22 @@
 # Changelog
 
+## pepitope 0.4.0
+
+- Added [`plot_read_structure()`](../reference/plot_read_structure.md)
+  to identify and visualize read features
+- Read feature positions and strand are now identified automatically by
+  default
+- Deprecate [`plot_reads()`](../reference/plot_read_count.md), rename to
+  [`plot_read_count()`](../reference/plot_read_count.md)
+- Deprecate [`plot_distr()`](../reference/plot_read_distr.md), rename to
+  [`plot_read_distr()`](../reference/plot_read_distr.md)
+- Replace `fqtk` and `guide-counter` tools with internal one-pass
+  [`count_fastq()`](../reference/count_fastq.md)
+
+## pepitope 0.3.3
+
+- Speed up runtime by caching `txdb`-derived objects and reusing them
+
 ## pepitope 0.3.2
 
 - Add a workaround for `EnsDb`/`BSGenome` mismatch on `UCSC` names
@@ -10,7 +27,7 @@
   ([\#5](https://github.com/mschubert/pepitope/issues/5))
 - Fix error message when sample sheet does not contain required fields
 - Add clearer error messages about `seqlevels` mismatches in
-  `annotate_coding`
+  [`annotate_coding()`](../reference/annotate_coding.md)
   ([\#11](https://github.com/mschubert/pepitope/issues/11))
 - Barcode counting now uses `--exact-match` by default
 

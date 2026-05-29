@@ -21,3 +21,11 @@ subset_context_fusion(res, ctx_codons)
 ## Value
 
 A DataFrame object of gene fusions
+
+## Examples
+
+``` r
+if (interactive()) {
+    subset_context_fusion(fusions, ctx_codons=15)
+}
+```

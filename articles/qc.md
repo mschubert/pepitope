@@ -114,52 +114,43 @@ FASTQ file instead:
 fastq_file = example_fastq(sample_sheet, all_constructs)
 ```
 
-## Demultiplexing and counting
+## Read structure and counting
 
-### Sample demultiplexing
+### Read structure definition
 
-This step is using the `fqtk` toolkit to split the multi-sample FASTQ
-file into individual sample files, separated by their sample barcode and
-save to a temporary directory.
+This step counts construct barcodes per sample directly from the source
+FASTQ. Here, `read_structure` describes where the sample and construct
+barcodes occur in each read. It has the following possible fields,
+preceded by the number of nucleotides in the read. A `+` instead of a
+number is used to indicate to use all remaining nucleotides:
 
-Here, `read_structures` describes how the split these samples. It has
-the following possible fields, preceded by the number of nucleotides in
-the read. A `+` instead of a number is used to indicated to use all
-remaining nucleotides:
-
-- `B` – the sample barcode to split on (required)
-- `T` – the read sequence with the construct barcode and sequence
-  (required)
+- `B` – the sample barcode to identify the sample (required)
+- `M` – the construct barcode to count (required)
+- `T` – the template read sequence (optional)
 - `S` – skip these nucleotides and do not include in output (optional)
+- `<` after each letter to denote a reverse complement sequence
 
-In this example, we use a 7-nucleotide barcode for the samples and keep
-the rest of the read in the split files:
+In our example data, the sample barcode is followed directly by a
+reverse complement of the construct barcode, so the read structure is
+identified as `7B12M<`:
 
 ``` r
-temp_dir = demux_fq(fastq_file, sample_sheet, read_structures="7B+T")
-list.files(temp_dir, pattern="\\.fq\\.gz$")
-#> [1] "lib1.R1.fq.gz"      "lib2.R1.fq.gz"      "mock1.R1.fq.gz"    
-#> [4] "mock2.R1.fq.gz"     "screen1.R1.fq.gz"   "screen2.R1.fq.gz"  
-#> [7] "unmatched.R1.fq.gz"
+plot_read_structure(fastq_file, sample_sheet, all_constructs)
 ```
 
-You can perform additional quality control steps on the sample-level
-FASTQ files, e.g. using `fastqc` or `multiqc` (not included in this
-package).
+![](qc_files/figure-html/unnamed-chunk-11-1.png)
 
-### Counting construct barcodes
+### Counting sample and construct barcodes
 
-The next step is to count the construct barcodes in each individual
-FASTQ file after demultiplexing. Internally, we use the `guide-counter`
-tool to identify the position the construct barcodes occur in the
-library reads and subsequently count the number of occurrences. Here we
-pass the directory containing the demultiplexed FASTQ files and the
-barcode library file with all possible (not only the used) barcodes:
+In this example, the first 7 nucleotides identify the sample and the
+next 12 nucleotides identify the construct are automatically inferred
+from the read sequences. However, we could also specify it via the
+`read_structure` argument:
 
 ``` r
-dset = count_bc(temp_dir, all_constructs, valid_barcodes)
-#> Joining with `by = join_by(sample_id)`
-#> Joining with `by = join_by(barcode)`
+dset = count_fastq(fastq_file, sample_sheet, all_constructs, valid_barcodes)
+#> Counting barcodes in /tmp/Rtmp9z0aLT/my_seqdata.fq
+#> Processed 1000000 reads
 ```
 
 Here, `dset` will be a `SummarizedExperiment` object that you can
@@ -176,11 +167,11 @@ interact with the following way:
 The first overview that we want to get is to know how many barcodes are
 in which demultiplexed FASTQ, and whether they match the sample we
 expect them to be from. We can plot this the following way, for total
-read counts on the left and number of barcodes that have 10 or more
-reads on the right:
+read counts on the top and number of barcodes that have 10 (default) or
+more reads on the bottom:
 
 ``` r
-plot_reads(dset)
+plot_read_count(dset, 10)
 #> Joining with `by = join_by(barcode)`
 #> Joining with `by = join_by(sample_id)`
 ```
@@ -191,7 +182,7 @@ We can also plot this interactively with `plotly`:
 
 ``` r
 library(plotly)
-plot = plot_reads(dset)
+plot = plot_read_count(dset)
 #> Joining with `by = join_by(barcode)`
 #> Joining with `by = join_by(sample_id)`
 subplot(ggplotly(plot[[1]], height=300),
@@ -212,7 +203,7 @@ least abundant (left) to most abundant (right) and plot a continuous
 line for how many reads are sequenced of this barcode on the y axis:
 
 ``` r
-plot_distr(dset)
+plot_read_distr(dset)
 #> Joining with `by = join_by(barcode)`
 #> Joining with `by = join_by(sample_id)`
 ```
@@ -232,7 +223,7 @@ over with the mouse to see which barcode is in which position exactly:
 
 ``` r
 library(plotly)
-ggplotly(plot_distr(dset), height=500, tooltip="text")
+ggplotly(plot_read_distr(dset), height=500, tooltip="text")
 #> Joining with `by = join_by(barcode)`
 #> Joining with `by = join_by(sample_id)`
 ```

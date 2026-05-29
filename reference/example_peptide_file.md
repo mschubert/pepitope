@@ -7,3 +7,7 @@ Create a my_peptides.tsv in the inst directory
 ``` r
 example_peptide_file()
 ```
+
+## Value
+
+Invisibly returns \`NULL\` after writing the example peptide file

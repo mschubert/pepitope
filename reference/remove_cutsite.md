@@ -22,3 +22,12 @@ remove_cutsite(pep, ...)
 ## Value
 
 A data.frame with replace nucleotides and number of replacements
+
+## Examples
+
+``` r
+pep = data.frame(pep_id="p1", tiled="ATGGCCGCC")
+remove_cutsite(pep, BbsI="GAAGAC")
+#>   pep_id     tiled BbsI_replaced
+#> 1     p1 ATGGCCGCC             0
+```

@@ -21,3 +21,11 @@ make_peptides(subs, fus = DataFrame())
 ## Value
 
 A data.frame with cDNA and peptide sequences
+
+## Examples
+
+``` r
+if (interactive()) {
+    peptides = make_peptides(subs)
+}
+```

@@ -13,3 +13,7 @@ is_proper_orf(x)
 - x:
 
   A DNAStringSet or AAStringSet object
+
+## Value
+
+A logical vector indicating whether each sequence has a proper ORF

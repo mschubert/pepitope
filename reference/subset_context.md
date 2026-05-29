@@ -21,3 +21,11 @@ subset_context(codv, ctx_codons)
 ## Value
 
 GRanges object with sequence information of only context
+
+## Examples
+
+``` r
+if (interactive()) {
+    subset_context(codv, ctx_codons=15)
+}
+```

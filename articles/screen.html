@@ -6,8 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Co-culture screen • pepitope</title>
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Co-culture screen">
 </head>
@@ -19,7 +19,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pepitope</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -102,20 +102,20 @@ relevant samples, otherwise the model may mis-estimate the
 variability:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dset</span> <span class="op">=</span> <span class="va">dset</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"pat1"</span>, <span class="va">dset</span><span class="op">$</span><span class="va">patient</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">colData</a></span><span class="op">(</span><span class="va">dset</span><span class="op">)</span></span>
+<span><span class="fu">colData</span><span class="op">(</span><span class="va">dset</span><span class="op">)</span></span>
 <span><span class="co">#&gt; DataFrame with 4 rows and 10 columns</span></span>
 <span><span class="co">#&gt;           sample_id     patient       rep      origin     barcode total_reads</span></span>
 <span><span class="co">#&gt;         &lt;character&gt;    &lt;factor&gt; &lt;numeric&gt; &lt;character&gt; &lt;character&gt;   &lt;numeric&gt;</span></span>
-<span><span class="co">#&gt; mock1         mock1 pat1+common         1        Mock     TGAGTCC      224687</span></span>
-<span><span class="co">#&gt; mock2         mock2 pat1+common         2        Mock     CAAGATG      223935</span></span>
-<span><span class="co">#&gt; screen1     screen1 pat1+common         1      Sample     AACCGAC      454355</span></span>
-<span><span class="co">#&gt; screen2     screen2 pat1+common         2      Sample     AGAATCG      450164</span></span>
+<span><span class="co">#&gt; mock1         mock1 pat1+common         1        Mock     TGAGTCC      209496</span></span>
+<span><span class="co">#&gt; mock2         mock2 pat1+common         2        Mock     CAAGATG      198822</span></span>
+<span><span class="co">#&gt; screen1     screen1 pat1+common         1      Sample     AACCGAC      407724</span></span>
+<span><span class="co">#&gt; screen2     screen2 pat1+common         2      Sample     AGAATCG      395252</span></span>
 <span><span class="co">#&gt;         mapped_reads         smp                short                  label</span></span>
 <span><span class="co">#&gt;            &lt;numeric&gt; &lt;character&gt;          &lt;character&gt;            &lt;character&gt;</span></span>
-<span><span class="co">#&gt; mock1         224687      Mock-1   pat1+common Mock-1 pat1+common Mock-1 (..</span></span>
-<span><span class="co">#&gt; mock2         223935      Mock-2   pat1+common Mock-2 pat1+common Mock-2 (..</span></span>
-<span><span class="co">#&gt; screen1       454355    Sample-1 pat1+common Sample-1 pat1+common Sample-1..</span></span>
-<span><span class="co">#&gt; screen2       450164    Sample-2 pat1+common Sample-2 pat1+common Sample-2..</span></span></code></pre></div>
+<span><span class="co">#&gt; mock1         209496      Mock-1   pat1+common Mock-1 pat1+common Mock-1 (..</span></span>
+<span><span class="co">#&gt; mock2         198822      Mock-2   pat1+common Mock-2 pat1+common Mock-2 (..</span></span>
+<span><span class="co">#&gt; screen1       407724    Sample-1 pat1+common Sample-1 pat1+common Sample-1..</span></span>
+<span><span class="co">#&gt; screen2       395252    Sample-2 pat1+common Sample-2 pat1+common Sample-2..</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="calculating-differential-abundance">Calculating differential abundance<a class="anchor" aria-label="anchor" href="#calculating-differential-abundance"></a>
@@ -147,26 +147,29 @@ supplied in a list of character vectors, the result will be a list of
 <span><span class="co">#&gt; estimating dispersions</span></span>
 <span><span class="co">#&gt; gene-wise dispersion estimates</span></span>
 <span><span class="co">#&gt; mean-dispersion relationship</span></span>
+<span><span class="co">#&gt; -- note: fitType='parametric', but the dispersion trend was not well captured by the</span></span>
+<span><span class="co">#&gt;    function: y = a/x + b, and a local regression fit was automatically substituted.</span></span>
+<span><span class="co">#&gt;    specify fitType='local' or 'mean' to avoid this message next time.</span></span>
 <span><span class="co">#&gt; final dispersion estimates</span></span>
 <span><span class="co">#&gt; fitting model and testing</span></span>
 <span><span class="co">#&gt; Joining with `by = join_by(barcode)`</span></span></code></pre></div>
 <p>The result will look like the following:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 212 × 19</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 206 × 19</span></span></span>
 <span><span class="co">#&gt;    barcode baseMean log2FoldChange lfcSE   stat   pvalue     padj bc_type var_id</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> AACAAC…     884.         -<span style="color: #BB0000;">3.27</span>  0.300 -<span style="color: #BB0000;">10.9</span>  1.63<span style="color: #949494;">e</span><span style="color: #BB0000;">-27</span> 3.45<span style="color: #949494;">e</span><span style="color: #BB0000;">-25</span> pat1    chr1:…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> AACACC…    <span style="text-decoration: underline;">1</span>015.         -<span style="color: #BB0000;">2.09</span>  0.352  -<span style="color: #BB0000;">5.94</span> 2.80<span style="color: #949494;">e</span><span style="color: #BB0000;">- 9</span> 2.97<span style="color: #949494;">e</span><span style="color: #BB0000;">- 7</span> pat1    chr1:…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> AACAAC…    <span style="text-decoration: underline;">1</span>766.         -<span style="color: #BB0000;">0.708</span> 0.239  -<span style="color: #BB0000;">2.96</span> 3.09<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span> 2.19<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> pat1    chr7:…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> AACGCG…    <span style="text-decoration: underline;">2</span>802.          0.565 0.236   2.40 1.66<span style="color: #949494;">e</span><span style="color: #BB0000;">- 2</span> 8.13<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> common  chr18…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> AACAAC…     961.         -<span style="color: #BB0000;">0.605</span> 0.261  -<span style="color: #BB0000;">2.31</span> 2.07<span style="color: #949494;">e</span><span style="color: #BB0000;">- 2</span> 8.13<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> pat1    chr7:…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> AACAAC…     693.         -<span style="color: #BB0000;">0.633</span> 0.278  -<span style="color: #BB0000;">2.27</span> 2.30<span style="color: #949494;">e</span><span style="color: #BB0000;">- 2</span> 8.13<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> pat1    chr2:…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> AACGCT…    <span style="text-decoration: underline;">1</span>838.         -<span style="color: #BB0000;">0.534</span> 0.244  -<span style="color: #BB0000;">2.19</span> 2.87<span style="color: #949494;">e</span><span style="color: #BB0000;">- 2</span> 8.59<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> common  CD74-…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> AACAGT…    <span style="text-decoration: underline;">1</span>463.         -<span style="color: #BB0000;">0.527</span> 0.246  -<span style="color: #BB0000;">2.14</span> 3.24<span style="color: #949494;">e</span><span style="color: #BB0000;">- 2</span> 8.59<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> pat1    RET--…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> AACGCG…    <span style="text-decoration: underline;">1</span>638.         -<span style="color: #BB0000;">0.472</span> 0.242  -<span style="color: #BB0000;">1.95</span> 5.09<span style="color: #949494;">e</span><span style="color: #BB0000;">- 2</span> 9.27<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> common  chr18…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> AACGAC…     613.         -<span style="color: #BB0000;">0.540</span> 0.285  -<span style="color: #BB0000;">1.89</span> 5.86<span style="color: #949494;">e</span><span style="color: #BB0000;">- 2</span> 9.27<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> common  chr7:…</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 202 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> AACAAC…    <span style="text-decoration: underline;">1</span>740.         -<span style="color: #BB0000;">3.96</span>  0.199 -<span style="color: #BB0000;">19.9</span>  7.10<span style="color: #949494;">e</span><span style="color: #BB0000;">-88</span> 1.46<span style="color: #949494;">e</span><span style="color: #BB0000;">-85</span> pat1    chr1:…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> AACGCC…    <span style="text-decoration: underline;">3</span>450.          0.662 0.192   3.44 5.71<span style="color: #949494;">e</span><span style="color: #BB0000;">- 4</span> 5.89<span style="color: #949494;">e</span><span style="color: #BB0000;">- 2</span> common  chr18…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> AACACA…    <span style="text-decoration: underline;">1</span>104.          0.502 0.167   3.00 2.68<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span> 1.84<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> pat1    chr15…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> AACAAG…    <span style="text-decoration: underline;">2</span>306.          0.626 0.220   2.84 4.52<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span> 1.84<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> pat1    chr7:…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> AACACG…    <span style="text-decoration: underline;">1</span>291.         -<span style="color: #BB0000;">0.438</span> 0.156  -<span style="color: #BB0000;">2.82</span> 4.85<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span> 1.84<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> pat1    chr4:…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> AACGAT…    <span style="text-decoration: underline;">1</span>042.          0.488 0.176   2.78 5.47<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span> 1.84<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> common  chr1:…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> AACAAG…    <span style="text-decoration: underline;">2</span>660.          0.423 0.158   2.68 7.42<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span> 1.84<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> pat1    chr7:…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> AACGAC…    <span style="text-decoration: underline;">2</span>155.          0.426 0.160   2.66 7.87<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span> 1.84<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> common  chr9:…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> AACAGA…    <span style="text-decoration: underline;">1</span>852.         -<span style="color: #BB0000;">0.461</span> 0.174  -<span style="color: #BB0000;">2.65</span> 8.12<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span> 1.84<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> pat1    chr9:…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> AACGAT…    <span style="text-decoration: underline;">2</span>303.         -<span style="color: #BB0000;">0.421</span> 0.162  -<span style="color: #BB0000;">2.60</span> 9.38<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span> 1.84<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> common  ETV6-…</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 196 more rows</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 10 more variables: mut_id &lt;chr&gt;, pep_id &lt;chr&gt;, pep_type &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   gene_name &lt;chr&gt;, gene_id &lt;chr&gt;, tx_id &lt;chr&gt;, tiled &lt;chr&gt;, n_tiles &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   nt &lt;dbl&gt;, peptide &lt;chr&gt;</span></span></span></code></pre></div>
@@ -197,7 +200,7 @@ value to bound data points to</li>
 <span><span class="co">#&gt; Joining with `by = join_by(bc_type, mut_id)`</span></span>
 <span><span class="co">#&gt; Registered S3 methods overwritten by 'ggpp': method from</span></span>
 <span><span class="co">#&gt; heightDetails.titleGrob ggplot2 widthDetails.titleGrob ggplot2</span></span></code></pre></div>
-<p><img src="screen_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" width="700"></p>
+<p><img src="screen_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="" width="700"></p>
 <p>As with the <em>Quality Control</em> plots already, we can also
 create and interactive plot. This will not display links between
 <code>ref</code> and <code>alt</code> peptides, but instead highlight a

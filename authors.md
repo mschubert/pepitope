@@ -10,13 +10,13 @@
 Source:
 [`DESCRIPTION`](https://github.com/mschubert/pepitope/blob/HEAD/DESCRIPTION)
 
-Schubert M (2025). *pepitope: Extract, QC and Screen Peptide Epitopes*.
-R package version 0.3.2, <https://github.com/mschubert/pepitope>.
+Schubert M (2026). *pepitope: Extract, QC and Screen Peptide Epitopes*.
+R package version 0.3.9000, <https://github.com/mschubert/pepitope>.
 
     @Manual{,
       title = {pepitope: Extract, QC and Screen Peptide Epitopes},
       author = {Michael Schubert},
-      year = {2025},
-      note = {R package version 0.3.2},
+      year = {2026},
+      note = {R package version 0.3.9000},
       url = {https://github.com/mschubert/pepitope},
     }

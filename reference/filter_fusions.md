@@ -29,3 +29,26 @@ filter_fusions(vr, min_reads = NULL, min_split_reads = NULL, min_tools = NULL)
 ## Value
 
 A filtered VRanges object
+
+## Examples
+
+``` r
+vr = VariantAnnotation::VRanges("chr1", IRanges::IRanges(1, 1), ref="A", alt="T")
+vr$DV = 3L
+vr$RV = 2L
+vr$TOOL_HITS = IRanges::IntegerList(2L)
+filter_fusions(vr, min_reads=4, min_split_reads=2, min_tools=1)
+#> VRanges object with 1 range and 3 metadata columns:
+#>       seqnames    ranges strand         ref              alt     totalDepth
+#>          <Rle> <IRanges>  <Rle> <character> <characterOrRle> <integerOrRle>
+#>   [1]     chr1         1      *           A                T           <NA>
+#>             refDepth       altDepth   sampleNames softFilterMatrix |        DV
+#>       <integerOrRle> <integerOrRle> <factorOrRle>         <matrix> | <integer>
+#>   [1]           <NA>           <NA>          <NA>                  |         3
+#>              RV     TOOL_HITS
+#>       <integer> <IntegerList>
+#>   [1]         2             2
+#>   -------
+#>   seqinfo: 1 sequence from an unspecified genome; no seqlengths
+#>   hardFilters: NULL
+```

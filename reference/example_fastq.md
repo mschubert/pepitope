@@ -34,8 +34,19 @@ example_fastq(
 
 - seed:
 
-  The random seed used for sampling the number of reads
+  Seed for deterministic pseudo-random count generation
 
 ## Value
 
 The path to the created FASTQ file
+
+## Examples
+
+``` r
+samples = data.frame(sample_id="sample1", patient="pat1", rep="1",
+    origin="library", barcode="GGG")
+constructs = list(pat1=data.frame(gene_name="GENE1", mut_id="GENE1_A1V",
+    pep_id="GENE1_A1V", pep_type="alt", tiled="ATGGCCGCC", barcode_1="AAAA"))
+example_fastq(samples, constructs, target_reads=2, custom=FALSE)
+#> [1] "/tmp/RtmphuvFfx/my_seqdata.fq"
+```

@@ -25,3 +25,15 @@ make_report(vars, subs, fus = DataFrame(), tiled)
 - tiled:
 
   A data.frame of the tiled peptide sequences
+
+## Value
+
+A named list of data.frames for report output
+
+## Examples
+
+``` r
+if (interactive()) {
+    make_report(vars, subs, fus, tiled)
+}
+```

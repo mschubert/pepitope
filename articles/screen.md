@@ -27,16 +27,16 @@ colData(dset)
 #> DataFrame with 4 rows and 10 columns
 #>           sample_id     patient       rep      origin     barcode total_reads
 #>         <character>    <factor> <numeric> <character> <character>   <numeric>
-#> mock1         mock1 pat1+common         1        Mock     TGAGTCC      224687
-#> mock2         mock2 pat1+common         2        Mock     CAAGATG      223935
-#> screen1     screen1 pat1+common         1      Sample     AACCGAC      454355
-#> screen2     screen2 pat1+common         2      Sample     AGAATCG      450164
+#> mock1         mock1 pat1+common         1        Mock     TGAGTCC      209496
+#> mock2         mock2 pat1+common         2        Mock     CAAGATG      198822
+#> screen1     screen1 pat1+common         1      Sample     AACCGAC      407724
+#> screen2     screen2 pat1+common         2      Sample     AGAATCG      395252
 #>         mapped_reads         smp                short                  label
 #>            <numeric> <character>          <character>            <character>
-#> mock1         224687      Mock-1   pat1+common Mock-1 pat1+common Mock-1 (..
-#> mock2         223935      Mock-2   pat1+common Mock-2 pat1+common Mock-2 (..
-#> screen1       454355    Sample-1 pat1+common Sample-1 pat1+common Sample-1..
-#> screen2       450164    Sample-2 pat1+common Sample-2 pat1+common Sample-2..
+#> mock1         209496      Mock-1   pat1+common Mock-1 pat1+common Mock-1 (..
+#> mock2         198822      Mock-2   pat1+common Mock-2 pat1+common Mock-2 (..
+#> screen1       407724    Sample-1 pat1+common Sample-1 pat1+common Sample-1..
+#> screen2       395252    Sample-2 pat1+common Sample-2 pat1+common Sample-2..
 ```
 
 ## Calculating differential abundance
@@ -68,6 +68,9 @@ res = screen_calc(dset, list(c("Sample", "Mock")))
 #> estimating dispersions
 #> gene-wise dispersion estimates
 #> mean-dispersion relationship
+#> -- note: fitType='parametric', but the dispersion trend was not well captured by the
+#>    function: y = a/x + b, and a local regression fit was automatically substituted.
+#>    specify fitType='local' or 'mean' to avoid this message next time.
 #> final dispersion estimates
 #> fitting model and testing
 #> Joining with `by = join_by(barcode)`
@@ -77,20 +80,20 @@ The result will look like the following:
 
 ``` r
 res[[1]]
-#> # A tibble: 212 × 19
+#> # A tibble: 206 × 19
 #>    barcode baseMean log2FoldChange lfcSE   stat   pvalue     padj bc_type var_id
 #>    <chr>      <dbl>          <dbl> <dbl>  <dbl>    <dbl>    <dbl> <fct>   <chr> 
-#>  1 AACAAC…     884.         -3.27  0.300 -10.9  1.63e-27 3.45e-25 pat1    chr1:…
-#>  2 AACACC…    1015.         -2.09  0.352  -5.94 2.80e- 9 2.97e- 7 pat1    chr1:…
-#>  3 AACAAC…    1766.         -0.708 0.239  -2.96 3.09e- 3 2.19e- 1 pat1    chr7:…
-#>  4 AACGCG…    2802.          0.565 0.236   2.40 1.66e- 2 8.13e- 1 common  chr18…
-#>  5 AACAAC…     961.         -0.605 0.261  -2.31 2.07e- 2 8.13e- 1 pat1    chr7:…
-#>  6 AACAAC…     693.         -0.633 0.278  -2.27 2.30e- 2 8.13e- 1 pat1    chr2:…
-#>  7 AACGCT…    1838.         -0.534 0.244  -2.19 2.87e- 2 8.59e- 1 common  CD74-…
-#>  8 AACAGT…    1463.         -0.527 0.246  -2.14 3.24e- 2 8.59e- 1 pat1    RET--…
-#>  9 AACGCG…    1638.         -0.472 0.242  -1.95 5.09e- 2 9.27e- 1 common  chr18…
-#> 10 AACGAC…     613.         -0.540 0.285  -1.89 5.86e- 2 9.27e- 1 common  chr7:…
-#> # ℹ 202 more rows
+#>  1 AACAAC…    1740.         -3.96  0.199 -19.9  7.10e-88 1.46e-85 pat1    chr1:…
+#>  2 AACGCC…    3450.          0.662 0.192   3.44 5.71e- 4 5.89e- 2 common  chr18…
+#>  3 AACACA…    1104.          0.502 0.167   3.00 2.68e- 3 1.84e- 1 pat1    chr15…
+#>  4 AACAAG…    2306.          0.626 0.220   2.84 4.52e- 3 1.84e- 1 pat1    chr7:…
+#>  5 AACACG…    1291.         -0.438 0.156  -2.82 4.85e- 3 1.84e- 1 pat1    chr4:…
+#>  6 AACGAT…    1042.          0.488 0.176   2.78 5.47e- 3 1.84e- 1 common  chr1:…
+#>  7 AACAAG…    2660.          0.423 0.158   2.68 7.42e- 3 1.84e- 1 pat1    chr7:…
+#>  8 AACGAC…    2155.          0.426 0.160   2.66 7.87e- 3 1.84e- 1 common  chr9:…
+#>  9 AACAGA…    1852.         -0.461 0.174  -2.65 8.12e- 3 1.84e- 1 pat1    chr9:…
+#> 10 AACGAT…    2303.         -0.421 0.162  -2.60 9.38e- 3 1.84e- 1 common  ETV6-…
+#> # ℹ 196 more rows
 #> # ℹ 10 more variables: mut_id <chr>, pep_id <chr>, pep_type <chr>,
 #> #   gene_name <chr>, gene_id <chr>, tx_id <chr>, tiled <chr>, n_tiles <dbl>,
 #> #   nt <dbl>, peptide <chr>

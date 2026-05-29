@@ -20,7 +20,7 @@ remove_cutsite_nuc(nuc, site, seed = NULL)
 
 - seed:
 
-  Set random seed to select same changes on multiple runs
+  Seed for deterministic pseudo-random candidate ordering
 
 ## Value
 

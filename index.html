@@ -6,8 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Extract, QC and Screen Peptide Epitopes • pepitope</title>
 <script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Extract, QC and Screen Peptide Epitopes">
 <meta name="description" content="Given a reference genome and VCF file, this package will provide the upstream/downstream peptide context of a variant. It will generate a summary report for protein-coding variants including the reference and mutated allele, read coverage, amino acid sequence, and other information. It can also be used to remove restriction sites from cDNA, alongside other helper functions.">
@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="index.html">pepitope</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,7 +73,6 @@
 <p>The package is currently only available on Github, use the<code>remotes</code> package to install:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># run this in R &gt;= 4.5.0</span></span>
-<span><span class="co"># note that we need Rust, Cargo, and cmake to compile the dependencies</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"remotes"</span>, quietly<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"mschubert/pepitope"</span>, dependencies<span class="op">=</span><span class="cn">TRUE</span>, timeout<span class="op">=</span><span class="fl">300</span><span class="op">)</span></span></code></pre></div>
@@ -100,11 +99,11 @@
 <span><span class="co"># genome and annotation</span></span>
 <span><span class="va">ens106</span> <span class="op">=</span> <span class="fu">AnnotationHub</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/AnnotationHub/man/AnnotationHub-class.html" class="external-link">AnnotationHub</a></span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="st">"AH100643"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="va">asm</span> <span class="op">=</span> <span class="fu">BSgenome.Hsapiens.UCSC.hg38</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/BSgenome.Hsapiens.UCSC.hg38/man/package.html" class="external-link">BSgenome.Hsapiens.UCSC.hg38</a></span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/GenomeInfoDb/man/seqlevelsStyle.html" class="external-link">seqlevelsStyle</a></span><span class="op">(</span><span class="va">ens106</span><span class="op">)</span> <span class="op">=</span> <span class="st">"UCSC"</span></span>
+<span><span class="fu">seqlevelsStyle</span><span class="op">(</span><span class="va">ens106</span><span class="op">)</span> <span class="op">=</span> <span class="st">"UCSC"</span></span>
 <span></span>
 <span><span class="co"># read variants from VCF file, apply filters and annotate</span></span>
 <span><span class="va">variant_vcf_file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"my_variants.vcf"</span>, package<span class="op">=</span><span class="st">"pepitope"</span><span class="op">)</span></span>
-<span><span class="va">vr</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/VariantAnnotation/man/VRanges-class.html" class="external-link">readVcfAsVRanges</a></span><span class="op">(</span><span class="va">variant_vcf_file</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span><span class="va">vr</span> <span class="op">=</span> <span class="fu">readVcfAsVRanges</span><span class="op">(</span><span class="va">variant_vcf_file</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="reference/filter_variants.html">filter_variants</a></span><span class="op">(</span>min_cov<span class="op">=</span><span class="fl">2</span>, min_af<span class="op">=</span><span class="fl">0.05</span>, pass<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">ann</span> <span class="op">=</span> <span class="fu"><a href="reference/annotate_coding.html">annotate_coding</a></span><span class="op">(</span><span class="va">vr</span>, <span class="va">ens106</span>, <span class="va">asm</span><span class="op">)</span></span>
 <span><span class="va">subs</span> <span class="op">=</span> <span class="va">ann</span> <span class="op">|&gt;</span></span>
@@ -113,9 +112,9 @@
 <span></span>
 <span><span class="co"># read fusion variants, apply filters and annotate</span></span>
 <span><span class="va">fusion_vcf_file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"my_fusions.vcf"</span>, package<span class="op">=</span><span class="st">"pepitope"</span><span class="op">)</span></span>
-<span><span class="va">vr2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/VariantAnnotation/man/VRanges-class.html" class="external-link">readVcfAsVRanges</a></span><span class="op">(</span><span class="va">fusion_vcf_file</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span><span class="va">vr2</span> <span class="op">=</span> <span class="fu">readVcfAsVRanges</span><span class="op">(</span><span class="va">fusion_vcf_file</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="reference/filter_fusions.html">filter_fusions</a></span><span class="op">(</span>min_reads<span class="op">=</span><span class="fl">2</span>, min_split_reads<span class="op">=</span><span class="fl">1</span>, min_tools<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/GenomeInfoDb/man/seqlevelsStyle.html" class="external-link">seqlevelsStyle</a></span><span class="op">(</span><span class="va">vr2</span><span class="op">)</span> <span class="op">=</span> <span class="st">"UCSC"</span></span>
+<span><span class="fu">seqlevelsStyle</span><span class="op">(</span><span class="va">vr2</span><span class="op">)</span> <span class="op">=</span> <span class="st">"UCSC"</span></span>
 <span><span class="va">fus</span> <span class="op">=</span> <span class="fu"><a href="reference/annotate_fusions.html">annotate_fusions</a></span><span class="op">(</span><span class="va">vr2</span>, <span class="va">ens106</span>, <span class="va">asm</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="reference/subset_context_fusion.html">subset_context_fusion</a></span><span class="op">(</span><span class="fl">15</span><span class="op">)</span></span>
 <span></span>
@@ -165,15 +164,15 @@
 <p>More information can be found in the <a href="https://mschubert.github.io/pepitope/articles/qc.html" class="external-link"><em>Quality Control</em> vignette 🔗</a></p>
 <details><summary><b>Code example</b>
 </summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># demultiplexing and counting example data</span></span>
+<code class="sourceCode R"><span><span class="co"># counting example data</span></span>
 <span><span class="va">sample_sheet</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"my_samples.tsv"</span>, package<span class="op">=</span><span class="st">"pepitope"</span><span class="op">)</span></span>
 <span><span class="va">fastq_file</span> <span class="op">=</span> <span class="fu"><a href="reference/example_fastq.html">example_fastq</a></span><span class="op">(</span><span class="va">sample_sheet</span>, <span class="va">all_constructs</span><span class="op">)</span></span>
-<span><span class="va">temp_dir</span> <span class="op">=</span> <span class="fu"><a href="reference/demux_fq.html">demux_fq</a></span><span class="op">(</span><span class="va">fastq_file</span>, <span class="va">sample_sheet</span>, read_structures<span class="op">=</span><span class="st">"7B+T"</span><span class="op">)</span></span>
-<span><span class="va">dset</span> <span class="op">=</span> <span class="fu"><a href="reference/count_bc.html">count_bc</a></span><span class="op">(</span><span class="va">temp_dir</span>, <span class="va">all_constructs</span>, <span class="va">valid_barcodes</span><span class="op">)</span></span>
+<span><span class="va">dset</span> <span class="op">=</span> <span class="fu"><a href="reference/count_fastq.html">count_fastq</a></span><span class="op">(</span><span class="va">fastq_file</span>, <span class="va">sample_sheet</span>, <span class="va">all_constructs</span>, <span class="va">valid_barcodes</span>,</span>
+<span>                   read_structure<span class="op">=</span><span class="st">"7B12M+T"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># quality control plots</span></span>
-<span><span class="fu"><a href="reference/plot_reads.html">plot_reads</a></span><span class="op">(</span><span class="va">dset</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/plot_distr.html">plot_distr</a></span><span class="op">(</span><span class="va">dset</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/plot_read_count.html">plot_read_count</a></span><span class="op">(</span><span class="va">dset</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/plot_read_distr.html">plot_read_distr</a></span><span class="op">(</span><span class="va">dset</span><span class="op">)</span></span></code></pre></div>
 </details>
 </div>
 <div class="section level3">

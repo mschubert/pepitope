@@ -6,8 +6,8 @@
   coding changes
 - [`annotate_fusions()`](annotate_fusions.md) : Aggregate fusion VCFs
   into a table
-- [`count_bc()`](count_bc.md) : Count barcodes using guide-counter
-- [`demux_fq()`](demux_fq.md) : Use fqtk tool to demultiplex fastq files
+- [`count_fastq()`](count_fastq.md) : Count barcodes directly from
+  source FASTQ files
 - [`filter_fusions()`](filter_fusions.md) : Filter a fusion VRanges
   object by number of reads and tools
 - [`filter_variants()`](filter_variants.md) : Make results report to
@@ -22,9 +22,13 @@
   file
 - [`plot_barcode_overlap()`](plot_barcode_overlap.md) : Plot barcode
   overlap between different samples
-- [`plot_distr()`](plot_distr.md) : Plot the read distribution across
-  barcodes
-- [`plot_reads()`](plot_reads.md) : Plot the overall read counts
+- [`plot_read_count()`](plot_read_count.md)
+  [`plot_reads()`](plot_read_count.md) : Plot the overall read counts
+- [`plot_read_distr()`](plot_read_distr.md)
+  [`plot_distr()`](plot_read_distr.md) : Plot the read distribution
+  across barcodes
+- [`plot_read_structure()`](plot_read_structure.md) : Plot annotated
+  read structure examples
 - [`plot_screen()`](plot_screen.md) : Plot screen results
 - [`remove_cutsite()`](remove_cutsite.md) : Remove a Restriction Enzyme
   cut site but keep AA in a tiled peptide data.frame

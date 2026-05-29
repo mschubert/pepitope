@@ -25,7 +25,6 @@ package to install:
 
 ``` r
 # run this in R >= 4.5.0
-# note that we need Rust, Cargo, and cmake to compile the dependencies
 if (!requireNamespace("remotes", quietly=TRUE))
     install.packages("remotes")
 remotes::install_github("mschubert/pepitope", dependencies=TRUE, timeout=300)
@@ -138,15 +137,15 @@ More information can be found in the [*Quality Control* vignette
 **Code example**
 
 ``` r
-# demultiplexing and counting example data
+# counting example data
 sample_sheet = system.file("my_samples.tsv", package="pepitope")
 fastq_file = example_fastq(sample_sheet, all_constructs)
-temp_dir = demux_fq(fastq_file, sample_sheet, read_structures="7B+T")
-dset = count_bc(temp_dir, all_constructs, valid_barcodes)
+dset = count_fastq(fastq_file, sample_sheet, all_constructs, valid_barcodes,
+                   read_structure="7B12M+T")
 
 # quality control plots
-plot_reads(dset)
-plot_distr(dset)
+plot_read_count(dset)
+plot_read_distr(dset)
 ```
 
 ### Differential abundance testing of co-culture screens

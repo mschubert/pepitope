@@ -7,6 +7,10 @@ mutated allele, read coverage, amino acid sequence, and other
 information. It can also be used to remove restriction sites from cDNA,
 alongside other helper functions.
 
+## Value
+
+Package documentation for pepitope
+
 ## See also
 
 Useful links:
@@ -19,3 +23,8 @@ Useful links:
 
 **Maintainer**: Michael Schubert <mschu.dev@gmail.com>
 ([ORCID](https://orcid.org/0000-0002-6862-5221))
+
+Authors:
+
+- Michael Schubert <mschu.dev@gmail.com>
+  ([ORCID](https://orcid.org/0000-0002-6862-5221))
