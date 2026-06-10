@@ -26,12 +26,19 @@ make_peptides = function(subs, fus=DataFrame()) {
     any_con = sapply(seq_along(ac2), contained_in)
     subs = subs[!any_con]
 
+    alt_label = function(varaa, consequence) {
+        stop_pos = regexpr("*", varaa, fixed=TRUE)
+        end = ifelse(stop_pos == -1L, nchar(varaa), stop_pos)
+        ifelse(consequence == "frameshift", "fs", substr(varaa, 1L, end))
+    }
+
     pep = as.data.frame(subs) |>
         select(var_id, mut_id, gene_name, gene_id=GENEID, tx_id=tx_name,
-               ref=ref_nuc, alt=alt_nuc) |>
+               consequence=CONSEQUENCE, varaa=VARAA, ref=ref_nuc, alt=alt_nuc) |>
+        mutate(pep_alt = alt_label(varaa, consequence)) |>
         tidyr::pivot_longer(c(ref, alt), names_to="pep_type", values_to="cDNA") |>
-        mutate(pep_id = ifelse(pep_type == "alt", mut_id, sub("([0-9]+)[a-zA-Z*]+$", "\\1", mut_id))) |>
-        select(var_id, mut_id, pep_id, pep_type, everything())
+        mutate(pep_id = ifelse(pep_type == "alt", paste0(mut_id, pep_alt), mut_id)) |>
+        select(var_id, mut_id, pep_id, pep_type, gene_name, gene_id, tx_id, cDNA)
 
     if (nrow(fus) == 0)
         return(pep)

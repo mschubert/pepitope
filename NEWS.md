@@ -2,6 +2,7 @@
 
 * Added `plot_read_structure()` to identify and visualize read features
 * Read feature positions and strand are now identified automatically by default
+* `mut_id` is now shared among variants on the same position (#6)
 * Deprecate `plot_reads()`, rename to `plot_read_count()`
 * Deprecate `plot_distr()`, rename to `plot_read_distr()`
 * Replace `fqtk` and `guide-counter` tools with internal one-pass `count_fastq()`

@@ -45,7 +45,6 @@ Imports:
     S4Vectors,
     stats,
     stringdist,
-    stringi,
     stringr,
     SummarizedExperiment,
     tibble,

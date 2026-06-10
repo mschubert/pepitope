@@ -128,7 +128,7 @@ example_fastq = function(samples, peptide_sheets, target_reads=1000, custom=TRUE
         counts[,"screen2"] = counts[,"mock2"] + .rnbinom(nrow(counts), mu=counts[,"mock2"], size=5, seed=seed + 102)
 
         # add specific dropout for NRAS_Q61L in Sample
-        bcs = with(all_seq, barcode[bc_type == "pat1" & pep_type == "alt" & mut_id == "NRAS_Q61L"])
+        bcs = with(all_seq, barcode[bc_type == "pat1" & pep_type == "alt" & pep_id == "NRAS_Q61L"])
         dropout_mu = counts[bcs, c("mock1", "mock2"), drop=FALSE] / 5
         counts[bcs, c("screen1", "screen2")] = .rnbinom(
             length(dropout_mu), mu=as.vector(dropout_mu), size=20, seed=seed + 103)

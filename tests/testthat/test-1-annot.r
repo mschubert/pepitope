@@ -152,3 +152,10 @@ test_that("context shifts", {
     expect_equal(ctx[ctx$tx_name == "ENST00000672715"]$alt_shift, -138)
     expect_equal(ctx[ctx$tx_name == "ENST00000368130"]$alt_shift, -324)
 })
+
+test_that("peptide identifiers separate mutation groups and peptide alleles", {
+    pep = make_peptides(subset_context(ann, ctx_codons=15))
+    expect_true(all(pep$pep_id[pep$pep_type == "ref"] == pep$mut_id[pep$pep_type == "ref"]))
+    expect_true(all(startsWith(pep$pep_id[pep$pep_type == "alt"], pep$mut_id[pep$pep_type == "alt"])))
+    expect_true(any(pep$pep_type == "alt" & pep$pep_id != pep$mut_id))
+})
