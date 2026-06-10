@@ -7,7 +7,7 @@
 .rs_format(counts, sample_width, construct_width)
 }
 \arguments{
-\item{counts}{A `data.frame` with `B`, `B<`, `M`, and `M<` count columns}
+\item{counts}{A `data.frame` with `B`, `^B`, `M`, and `^M` count columns}
 
 \item{sample_width}{Width of the sample barcode}
 

@@ -22,9 +22,9 @@
     reads = chartr("acgt", "ACGT", reads)
     counts = data.frame(
         `B` = .rs_count(reads, sample_barcodes),
-        `B<` = .rs_count(reads, reverseComplement(sample_barcodes)),
+        `^B` = .rs_count(reads, reverseComplement(sample_barcodes)),
         `M` = .rs_count(reads, construct_barcodes),
-        `M<` = .rs_count(reads, reverseComplement(construct_barcodes)),
+        `^M` = .rs_count(reads, reverseComplement(construct_barcodes)),
         check.names=FALSE
     )
 
@@ -60,7 +60,7 @@
         stop("'read_structures' must be a single character string")
 
     operators = c("T", "B", "M", "C", "S")
-    matches = gregexpr("([0-9]+|\\+)([TBMCS])(<)?", read_structures, perl=TRUE)[[1]]
+    matches = gregexpr("([0-9]+|\\+)(\\^)?([TBMCS])", read_structures, perl=TRUE)[[1]]
     if (matches[1] == -1)
         stop("Invalid read structure: ", sQuote(read_structures))
     tokens = regmatches(read_structures, list(matches))[[1]]
@@ -71,8 +71,8 @@
     lengths = attr(matches, "capture.length")
     ranges = lapply(seq_along(tokens), function(i) {
         len_text = substr(read_structures, starts[i, 1], starts[i, 1] + lengths[i, 1] - 1L)
-        op = substr(read_structures, starts[i, 2], starts[i, 2] + lengths[i, 2] - 1L)
-        revcomp = lengths[i, 3] > 0
+        revcomp = lengths[i, 2] > 0
+        op = substr(read_structures, starts[i, 3], starts[i, 3] + lengths[i, 3] - 1L)
         if (!op %in% operators)
             stop("Unsupported read structure operator: ", sQuote(op))
         if (len_text == "+") {
@@ -103,7 +103,7 @@
 
 #' Format a read structure from barcode position counts
 #'
-#' @param counts  A `data.frame` with `B`, `B<`, `M`, and `M<` count columns
+#' @param counts  A `data.frame` with `B`, `^B`, `M`, and `^M` count columns
 #' @param sample_width  Width of the sample barcode
 #' @param construct_width  Width of the construct barcode
 #' @return  A read structure string
@@ -111,7 +111,7 @@
 #' @keywords internal
 .rs_format = function(counts, sample_width, construct_width) {
     best_position = function(op, width) {
-        cols = c(op, paste0(op, "<"))
+        cols = c(op, paste0("^", op))
         scores = as.matrix(counts[cols])
         best = arrayInd(which.max(scores), dim(scores))
         if (scores[best] == 0)

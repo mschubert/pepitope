@@ -37,8 +37,8 @@ plot_read_structure = function(fq, samples, all_constructs, nrec=100000L) {
     read_structure = ann$structure
     structure = .rs_parse(read_structure)
     features = rbind(
-        data.frame(structure$sample, op=ifelse(structure$sample$revcomp, "B<", "B")),
-        data.frame(structure$construct, op=ifelse(structure$construct$revcomp, "M<", "M"))
+        data.frame(structure$sample, op=ifelse(structure$sample$revcomp, "^B", "B")),
+        data.frame(structure$construct, op=ifelse(structure$construct$revcomp, "^M", "M"))
     )
     rects = merge(rows, features)
 

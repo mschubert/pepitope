@@ -43,8 +43,8 @@ test_that("rs_annotate finds barcode positions and orientation", {
 
     expect_equal(length(res$reads), 1L)
     expect_equal(res$counts[["B"]][1], 1L)
-    expect_equal(res$counts[["M<"]][9], 1L)
-    expect_equal(res$structure, "3B5S6M<")
+    expect_equal(res$counts[["^M"]][9], 1L)
+    expect_equal(res$structure, "3B5S6^M")
 })
 
 test_that("count_fastq uses read structure orientation", {
@@ -54,11 +54,11 @@ test_that("count_fastq uses read structure orientation", {
     fq = tempfile(fileext=".fq")
     writeLines(c("@read1", "GGGNNNNNCGTTAA", "+", "IIIIIIIIIIIIII"), fq)
 
-    parsed = .rs_parse("3B5S6M<")
+    parsed = .rs_parse("3B5S6^M")
     expect_false(parsed$sample$revcomp)
     expect_true(parsed$construct$revcomp)
 
-    dset = count_fastq(fq, samples, constructs, "TTAACG", read_structure="3B5S6M<", verbose=FALSE)
+    dset = count_fastq(fq, samples, constructs, "TTAACG", read_structure="3B5S6^M", verbose=FALSE)
     expect_equal(SummarizedExperiment::assay(dset)[1, 1], 1)
 })
 

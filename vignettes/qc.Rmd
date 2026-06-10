@@ -174,7 +174,7 @@ all remaining nucleotides:
 * `M` -- the construct barcode to count (required)
 * `T` -- the template read sequence (optional)
 * `S` -- skip these nucleotides and do not include in output (optional)
-* `<` after each letter to denote a reverse complement sequence
+* `^` before a letter to denote a reverse complement sequence
 
 In our example data, the sample barcode is followed directly by a reverse
 complement of the construct barcode, so the read structure is identified:
