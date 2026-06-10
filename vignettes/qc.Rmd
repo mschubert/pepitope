@@ -177,8 +177,7 @@ all remaining nucleotides:
 * `<` after each letter to denote a reverse complement sequence
 
 In our example data, the sample barcode is followed directly by a reverse
-complement of the construct barcode, so the read structure is identified as
-`7B12M<`:
+complement of the construct barcode, so the read structure is identified:
 
 ```{r}
 plot_read_structure(fastq_file, sample_sheet, all_constructs)

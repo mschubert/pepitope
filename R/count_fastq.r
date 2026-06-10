@@ -40,8 +40,11 @@ count_fastq = function(fq, samples, all_constructs, valid_barcodes, read_structu
         stop("'fq' argument needs to be a single FASTQ file")
     fq = path.expand(fq)
 
-    if (missing(read_structure))
+    if (missing(read_structure)) {
         read_structure = .rs_annotate(fq, samples, all_constructs)$structure
+        if (verbose)
+            message("Read structure identified as ", sQuote(read_structure))
+    }
     read_structure = .rs_parse(read_structure)
     sample_barcodes = toupper(samples$barcode) |> .check_barcodes("Sample barcodes")
     construct_barcodes = toupper(as.character(valid_barcodes)) |> .check_barcodes("Construct barcodes")

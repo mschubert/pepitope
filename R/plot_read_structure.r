@@ -34,7 +34,8 @@ plot_read_structure = function(fq, samples, all_constructs, nrec=100000L) {
     }, rows$read, as.character(reads)))
     bases = merge(bases, rows[c("read", "y")])
 
-    structure = .rs_parse(ann$structure)
+    read_structure = ann$structure
+    structure = .rs_parse(read_structure)
     features = rbind(
         data.frame(structure$sample, op=ifelse(structure$sample$revcomp, "B<", "B")),
         data.frame(structure$construct, op=ifelse(structure$construct$revcomp, "M<", "M"))
@@ -52,6 +53,7 @@ plot_read_structure = function(fq, samples, all_constructs, nrec=100000L) {
         scale_y_reverse(breaks=rows$y, labels=paste0("read ", rows$read_idx),
                         expand=expansion(add=0.15)) +
         scale_x_continuous(breaks=seq.int(1L, read_width, by=max(1L, floor(read_width / 10L)))) +
-        labs(x="Position", y=NULL, fill="Feature") +
+        labs(x="Position", y=NULL, fill="Feature",
+             title=paste("Read structure identified as:", read_structure)) +
         theme_minimal()
 }
