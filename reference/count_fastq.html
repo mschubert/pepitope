@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pepitope</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -102,7 +102,14 @@ this will be inferred from the first reads in `fq`.</p></dd>
 <span class="r-in"><span><span class="va">fq</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext<span class="op">=</span><span class="st">".fq"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"@r1"</span>, <span class="st">"GGGAAAA"</span>, <span class="st">"+"</span>, <span class="st">"IIIIIII"</span>, <span class="st">"@r2"</span>, <span class="st">"GGGAAAA"</span>, <span class="st">"+"</span>, <span class="st">"IIIIIII"</span><span class="op">)</span>, <span class="va">fq</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">count_fastq</span><span class="op">(</span><span class="va">fq</span>, <span class="va">samples</span>, <span class="va">constructs</span>, read_structure<span class="op">=</span><span class="st">"3B4M"</span>, verbose<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in count_fastq_barcodes_cpp(fq = fq, sample_barcodes = sample_barcodes,     construct_barcodes = construct_barcodes, sample_start = read_structure$sample$start,     sample_width = read_structure$sample$width, construct_start = read_structure$construct$start,     construct_width = read_structure$construct$width, verbose = verbose):</span> function 'enterRNGScope' not provided by package 'Rcpp'</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> class: SummarizedExperiment </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dim: 1 1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> metadata(0):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> assays(1): counts</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rownames(1): AAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rowData names(7): barcode bc_type ... pep_type tiled</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> colnames(1): sample1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> colData names(10): sample_id patient ... short label</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

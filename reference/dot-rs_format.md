@@ -12,7 +12,7 @@ Format a read structure from barcode position counts
 
 - counts:
 
-  A \`data.frame\` with \`B\`, \`B\<\`, \`M\`, and \`M\<\` count columns
+  A \`data.frame\` with \`B\`, \`^B\`, \`M\`, and \`^M\` count columns
 
 - sample_width:
 

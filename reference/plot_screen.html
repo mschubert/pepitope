@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pepitope</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,15 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plot_screen</span><span class="op">(</span><span class="va">res</span>, sample <span class="op">=</span> <span class="cn">NULL</span>, links <span class="op">=</span> <span class="cn">TRUE</span>, labs <span class="op">=</span> <span class="cn">TRUE</span>, cap_fc <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plot_screen</span><span class="op">(</span></span>
+<span>  <span class="va">res</span>,</span>
+<span>  sample <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  links <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  labs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  min_reads <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  cap_fc <span class="op">=</span> <span class="fl">8</span>,</span>
+<span>  p_sig <span class="op">=</span> <span class="fl">0.05</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -71,8 +79,16 @@
 <dd><p>Whether to label genes in less dense areas</p></dd>
 
 
+<dt id="arg-min-reads">min_reads<a class="anchor" aria-label="anchor" href="#arg-min-reads"></a></dt>
+<dd><p>Minimum number of reads to show as points (default: 10)</p></dd>
+
+
 <dt id="arg-cap-fc">cap_fc<a class="anchor" aria-label="anchor" href="#arg-cap-fc"></a></dt>
 <dd><p>Maximum amount of fold-change to limit values to</p></dd>
+
+
+<dt id="arg-p-sig">p_sig<a class="anchor" aria-label="anchor" href="#arg-p-sig"></a></dt>
+<dd><p>Maximum adjusted p-value to consider significant (default: 0.05)</p></dd>
 
 </dl></div>
     <div class="section level2">

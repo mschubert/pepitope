@@ -6,6 +6,8 @@
   to identify and visualize read features
 - Read feature positions and strand are now identified automatically by
   default
+- `mut_id` is now shared among variants on the same position
+  ([\#6](https://github.com/mschubert/pepitope/issues/6))
 - Deprecate [`plot_reads()`](../reference/plot_read_count.md), rename to
   [`plot_read_count()`](../reference/plot_read_count.md)
 - Deprecate [`plot_distr()`](../reference/plot_read_distr.md), rename to

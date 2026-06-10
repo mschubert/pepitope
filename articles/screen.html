@@ -19,7 +19,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pepitope</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -102,20 +102,20 @@ relevant samples, otherwise the model may mis-estimate the
 variability:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dset</span> <span class="op">=</span> <span class="va">dset</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"pat1"</span>, <span class="va">dset</span><span class="op">$</span><span class="va">patient</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="fu">colData</span><span class="op">(</span><span class="va">dset</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">colData</a></span><span class="op">(</span><span class="va">dset</span><span class="op">)</span></span>
 <span><span class="co">#&gt; DataFrame with 4 rows and 10 columns</span></span>
 <span><span class="co">#&gt;           sample_id     patient       rep      origin     barcode total_reads</span></span>
 <span><span class="co">#&gt;         &lt;character&gt;    &lt;factor&gt; &lt;numeric&gt; &lt;character&gt; &lt;character&gt;   &lt;numeric&gt;</span></span>
-<span><span class="co">#&gt; mock1         mock1 pat1+common         1        Mock     TGAGTCC      209496</span></span>
-<span><span class="co">#&gt; mock2         mock2 pat1+common         2        Mock     CAAGATG      198822</span></span>
-<span><span class="co">#&gt; screen1     screen1 pat1+common         1      Sample     AACCGAC      407724</span></span>
-<span><span class="co">#&gt; screen2     screen2 pat1+common         2      Sample     AGAATCG      395252</span></span>
+<span><span class="co">#&gt; mock1         mock1 pat1+common         1        Mock     TGAGTCC      228629</span></span>
+<span><span class="co">#&gt; mock2         mock2 pat1+common         2        Mock     CAAGATG      219012</span></span>
+<span><span class="co">#&gt; screen1     screen1 pat1+common         1      Sample     AACCGAC      450998</span></span>
+<span><span class="co">#&gt; screen2     screen2 pat1+common         2      Sample     AGAATCG      431578</span></span>
 <span><span class="co">#&gt;         mapped_reads         smp                short                  label</span></span>
 <span><span class="co">#&gt;            &lt;numeric&gt; &lt;character&gt;          &lt;character&gt;            &lt;character&gt;</span></span>
-<span><span class="co">#&gt; mock1         209496      Mock-1   pat1+common Mock-1 pat1+common Mock-1 (..</span></span>
-<span><span class="co">#&gt; mock2         198822      Mock-2   pat1+common Mock-2 pat1+common Mock-2 (..</span></span>
-<span><span class="co">#&gt; screen1       407724    Sample-1 pat1+common Sample-1 pat1+common Sample-1..</span></span>
-<span><span class="co">#&gt; screen2       395252    Sample-2 pat1+common Sample-2 pat1+common Sample-2..</span></span></code></pre></div>
+<span><span class="co">#&gt; mock1         228629      Mock-1   pat1+common Mock-1 pat1+common Mock-1 (..</span></span>
+<span><span class="co">#&gt; mock2         219012      Mock-2   pat1+common Mock-2 pat1+common Mock-2 (..</span></span>
+<span><span class="co">#&gt; screen1       450998    Sample-1 pat1+common Sample-1 pat1+common Sample-1..</span></span>
+<span><span class="co">#&gt; screen2       431578    Sample-2 pat1+common Sample-2 pat1+common Sample-2..</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="calculating-differential-abundance">Calculating differential abundance<a class="anchor" aria-label="anchor" href="#calculating-differential-abundance"></a>
@@ -139,37 +139,29 @@ supplied in a list of character vectors, the result will be a list of
 <span><span class="co">#&gt; converting counts to integer mode</span></span>
 <span><span class="co">#&gt; Warning in DESeq2::DESeqDataSet(dset, ~rep + origin): some variables in design</span></span>
 <span><span class="co">#&gt; formula are characters, converting to factors</span></span>
-<span><span class="co">#&gt;   the design formula contains one or more numeric variables with integer values,</span></span>
-<span><span class="co">#&gt;   specifying a model with increasing fold change for higher values.</span></span>
-<span><span class="co">#&gt;   did you mean for this to be a factor? if so, first convert</span></span>
-<span><span class="co">#&gt;   this variable to a factor using the factor() function</span></span>
 <span><span class="co">#&gt; using pre-existing size factors</span></span>
 <span><span class="co">#&gt; estimating dispersions</span></span>
 <span><span class="co">#&gt; gene-wise dispersion estimates</span></span>
 <span><span class="co">#&gt; mean-dispersion relationship</span></span>
-<span><span class="co">#&gt; -- note: fitType='parametric', but the dispersion trend was not well captured by the</span></span>
-<span><span class="co">#&gt;    function: y = a/x + b, and a local regression fit was automatically substituted.</span></span>
-<span><span class="co">#&gt;    specify fitType='local' or 'mean' to avoid this message next time.</span></span>
 <span><span class="co">#&gt; final dispersion estimates</span></span>
-<span><span class="co">#&gt; fitting model and testing</span></span>
-<span><span class="co">#&gt; Joining with `by = join_by(barcode)`</span></span></code></pre></div>
+<span><span class="co">#&gt; fitting model and testing</span></span></code></pre></div>
 <p>The result will look like the following:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 206 × 19</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 226 × 19</span></span></span>
 <span><span class="co">#&gt;    barcode baseMean log2FoldChange lfcSE   stat   pvalue     padj bc_type var_id</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> AACAAC…    <span style="text-decoration: underline;">1</span>740.         -<span style="color: #BB0000;">3.96</span>  0.199 -<span style="color: #BB0000;">19.9</span>  7.10<span style="color: #949494;">e</span><span style="color: #BB0000;">-88</span> 1.46<span style="color: #949494;">e</span><span style="color: #BB0000;">-85</span> pat1    chr1:…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> AACGCC…    <span style="text-decoration: underline;">3</span>450.          0.662 0.192   3.44 5.71<span style="color: #949494;">e</span><span style="color: #BB0000;">- 4</span> 5.89<span style="color: #949494;">e</span><span style="color: #BB0000;">- 2</span> common  chr18…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> AACACA…    <span style="text-decoration: underline;">1</span>104.          0.502 0.167   3.00 2.68<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span> 1.84<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> pat1    chr15…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> AACAAG…    <span style="text-decoration: underline;">2</span>306.          0.626 0.220   2.84 4.52<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span> 1.84<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> pat1    chr7:…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> AACACG…    <span style="text-decoration: underline;">1</span>291.         -<span style="color: #BB0000;">0.438</span> 0.156  -<span style="color: #BB0000;">2.82</span> 4.85<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span> 1.84<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> pat1    chr4:…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> AACGAT…    <span style="text-decoration: underline;">1</span>042.          0.488 0.176   2.78 5.47<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span> 1.84<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> common  chr1:…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> AACAAG…    <span style="text-decoration: underline;">2</span>660.          0.423 0.158   2.68 7.42<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span> 1.84<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> pat1    chr7:…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> AACGAC…    <span style="text-decoration: underline;">2</span>155.          0.426 0.160   2.66 7.87<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span> 1.84<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> common  chr9:…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> AACAGA…    <span style="text-decoration: underline;">1</span>852.         -<span style="color: #BB0000;">0.461</span> 0.174  -<span style="color: #BB0000;">2.65</span> 8.12<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span> 1.84<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> pat1    chr9:…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> AACGAT…    <span style="text-decoration: underline;">2</span>303.         -<span style="color: #BB0000;">0.421</span> 0.162  -<span style="color: #BB0000;">2.60</span> 9.38<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span> 1.84<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> common  ETV6-…</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 196 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> AACAAC…    <span style="text-decoration: underline;">1</span>821.         -<span style="color: #BB0000;">3.26</span>  0.164 -<span style="color: #BB0000;">19.9</span>  2.87<span style="color: #949494;">e</span><span style="color: #BB0000;">-88</span> 6.48<span style="color: #949494;">e</span><span style="color: #BB0000;">-86</span> pat1    chr1:…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> AACACC…     682.         -<span style="color: #BB0000;">3.34</span>  0.250 -<span style="color: #BB0000;">13.4</span>  1.06<span style="color: #949494;">e</span><span style="color: #BB0000;">-40</span> 1.19<span style="color: #949494;">e</span><span style="color: #BB0000;">-38</span> pat1    chr1:…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> AACGGA…    <span style="text-decoration: underline;">1</span>818.          0.661 0.161   4.12 3.85<span style="color: #949494;">e</span><span style="color: #BB0000;">- 5</span> 2.90<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span> common  chr7:…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> AACACA…    <span style="text-decoration: underline;">1</span>114.          0.500 0.176   2.83 4.60<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span> 1.72<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> pat1    chr15…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> AACAGA…    <span style="text-decoration: underline;">1</span>866.         -<span style="color: #BB0000;">0.465</span> 0.165  -<span style="color: #BB0000;">2.82</span> 4.76<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span> 1.72<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> pat1    chr9:…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> AACAAG…    <span style="text-decoration: underline;">2</span>323.          0.622 0.223   2.80 5.18<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span> 1.72<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> pat1    chr7:…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> AACACT…    <span style="text-decoration: underline;">1</span>557.         -<span style="color: #BB0000;">0.413</span> 0.149  -<span style="color: #BB0000;">2.77</span> 5.58<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span> 1.72<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> pat1    chr7:…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> AACACG…    <span style="text-decoration: underline;">1</span>302.         -<span style="color: #BB0000;">0.442</span> 0.161  -<span style="color: #BB0000;">2.74</span> 6.10<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span> 1.72<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> pat1    chr4:…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> AACAGT…    <span style="text-decoration: underline;">1</span>782.         -<span style="color: #BB0000;">0.455</span> 0.173  -<span style="color: #BB0000;">2.64</span> 8.36<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span> 2.10<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> pat1    ETV6-…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> AACAAG…    <span style="text-decoration: underline;">2</span>679.          0.420 0.163   2.57 1.01<span style="color: #949494;">e</span><span style="color: #BB0000;">- 2</span> 2.13<span style="color: #949494;">e</span><span style="color: #BB0000;">- 1</span> pat1    chr7:…</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 216 more rows</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 10 more variables: mut_id &lt;chr&gt;, pep_id &lt;chr&gt;, pep_type &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   gene_name &lt;chr&gt;, gene_id &lt;chr&gt;, tx_id &lt;chr&gt;, tiled &lt;chr&gt;, n_tiles &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   nt &lt;dbl&gt;, peptide &lt;chr&gt;</span></span></span></code></pre></div>
@@ -192,19 +184,26 @@ significant alt peptides</li>
 <code>labs</code> – whether to label constructs in less dense areas
 of the plot</li>
 <li>
+<code>min_reads</code> – a minimum read count to consider a data
+point for plotting</li>
+<li>
 <code>cap_fc</code> – a maximum (and negative minimum) fold change
-value to bound data points to</li>
+value for data points</li>
+<li>
+<code>p_sig</code> – a p-value threshold to consider a data point
+significant for labeling and linking</li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_screen.html">plot_screen</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">`Sample vs Mock`</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Joining with `by = join_by(bc_type, mut_id)`</span></span>
-<span><span class="co">#&gt; Registered S3 methods overwritten by 'ggpp': method from</span></span>
-<span><span class="co">#&gt; heightDetails.titleGrob ggplot2 widthDetails.titleGrob ggplot2</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_screen.html">plot_screen</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">`Sample vs Mock`</span>, min_reads<span class="op">=</span><span class="fl">100</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Registered S3 methods overwritten by 'ggpp':</span></span>
+<span><span class="co">#&gt;   method                  from   </span></span>
+<span><span class="co">#&gt;   heightDetails.titleGrob ggplot2</span></span>
+<span><span class="co">#&gt;   widthDetails.titleGrob  ggplot2</span></span></code></pre></div>
 <p><img src="screen_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="" width="700"></p>
 <p>As with the <em>Quality Control</em> plots already, we can also
 create and interactive plot. This will not display links between
 <code>ref</code> and <code>alt</code> peptides, but instead highlight a
-contruct group (by <code>mut_id</code>) when interacting with a data
+construct group (by <code>mut_id</code>) when interacting with a data
 point.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

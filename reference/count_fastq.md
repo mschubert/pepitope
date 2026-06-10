@@ -57,5 +57,12 @@ constructs = list(pat1=data.frame(gene_name="GENE1", mut_id="GENE1_A1V",
 fq = tempfile(fileext=".fq")
 writeLines(c("@r1", "GGGAAAA", "+", "IIIIIII", "@r2", "GGGAAAA", "+", "IIIIIII"), fq)
 count_fastq(fq, samples, constructs, read_structure="3B4M", verbose=FALSE)
-#> Error in count_fastq_barcodes_cpp(fq = fq, sample_barcodes = sample_barcodes,     construct_barcodes = construct_barcodes, sample_start = read_structure$sample$start,     sample_width = read_structure$sample$width, construct_start = read_structure$construct$start,     construct_width = read_structure$construct$width, verbose = verbose): function 'enterRNGScope' not provided by package 'Rcpp'
+#> class: SummarizedExperiment 
+#> dim: 1 1 
+#> metadata(0):
+#> assays(1): counts
+#> rownames(1): AAAA
+#> rowData names(7): barcode bc_type ... pep_type tiled
+#> colnames(1): sample1
+#> colData names(10): sample_id patient ... short label
 ```

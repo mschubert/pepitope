@@ -48,5 +48,5 @@ samples = data.frame(sample_id="sample1", patient="pat1", rep="1",
 constructs = list(pat1=data.frame(gene_name="GENE1", mut_id="GENE1_A1V",
     pep_id="GENE1_A1V", pep_type="alt", tiled="ATGGCCGCC", barcode_1="AAAA"))
 example_fastq(samples, constructs, target_reads=2, custom=FALSE)
-#> [1] "/tmp/RtmphuvFfx/my_seqdata.fq"
+#> [1] "/tmp/RtmpDX08iG/my_seqdata.fq"
 ```

@@ -128,11 +128,11 @@ number is used to indicate to use all remaining nucleotides:
 - `M` – the construct barcode to count (required)
 - `T` – the template read sequence (optional)
 - `S` – skip these nucleotides and do not include in output (optional)
-- `<` after each letter to denote a reverse complement sequence
+- `^` before a letter to denote a reverse complement sequence
 
 In our example data, the sample barcode is followed directly by a
 reverse complement of the construct barcode, so the read structure is
-identified as `7B12M<`:
+identified:
 
 ``` r
 plot_read_structure(fastq_file, sample_sheet, all_constructs)
@@ -149,8 +149,9 @@ from the read sequences. However, we could also specify it via the
 
 ``` r
 dset = count_fastq(fastq_file, sample_sheet, all_constructs, valid_barcodes)
-#> Counting barcodes in /tmp/Rtmp9z0aLT/my_seqdata.fq
-#> Processed 1000000 reads
+#> Read structure identified as '7B12M'
+#> Counting barcodes in /tmp/RtmpBIVk2K/my_seqdata.fq
+#> Processed 1,608,536 reads
 ```
 
 Here, `dset` will be a `SummarizedExperiment` object that you can
@@ -172,8 +173,6 @@ more reads on the bottom:
 
 ``` r
 plot_read_count(dset, 10)
-#> Joining with `by = join_by(barcode)`
-#> Joining with `by = join_by(sample_id)`
 ```
 
 ![](qc_files/figure-html/unnamed-chunk-13-1.png)
@@ -183,8 +182,6 @@ We can also plot this interactively with `plotly`:
 ``` r
 library(plotly)
 plot = plot_read_count(dset)
-#> Joining with `by = join_by(barcode)`
-#> Joining with `by = join_by(sample_id)`
 subplot(ggplotly(plot[[1]], height=300),
         ggplotly(plot[[2]], height=300), nrows=1)
 ```
@@ -204,8 +201,6 @@ line for how many reads are sequenced of this barcode on the y axis:
 
 ``` r
 plot_read_distr(dset)
-#> Joining with `by = join_by(barcode)`
-#> Joining with `by = join_by(sample_id)`
 ```
 
 ![](qc_files/figure-html/unnamed-chunk-15-1.png)
@@ -224,6 +219,4 @@ over with the mouse to see which barcode is in which position exactly:
 ``` r
 library(plotly)
 ggplotly(plot_read_distr(dset), height=500, tooltip="text")
-#> Joining with `by = join_by(barcode)`
-#> Joining with `by = join_by(sample_id)`
 ```
