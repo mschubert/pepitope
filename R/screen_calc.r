@@ -29,7 +29,7 @@ screen_calc = function(dset, comparisons) {
             as_tibble() |>
             filter(!is.na(log2FoldChange)) |>
             arrange(padj, pvalue) |>
-            left_join(as.data.frame(rowData(eset)))
+            left_join(as.data.frame(rowData(eset)), by=join_by(barcode))
     }
 
     if (is.list(comparisons)) {

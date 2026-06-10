@@ -9,8 +9,8 @@
 calc_representation = function(lib_counts, bcs, meta) {
     reshape2::melt(lib_counts) |> as_tibble() |>
         dplyr::rename(barcode=Var1, sample_id=Var2) |>
-        inner_join(bcs |> select(barcode, bc_type, gene_name, mut_id, pep_id, pep_type)) |>
-        inner_join(meta |> select(-barcode)) |>
+        inner_join(bcs |> select(barcode, bc_type, gene_name, mut_id, pep_id, pep_type), by=join_by(barcode)) |>
+        inner_join(meta |> select(-barcode), by=join_by(sample_id)) |>
         rowwise() |>
             mutate(is_matched = bc_type %in% strsplit(as.character(patient), "+", fixed=TRUE)[[1]]) |>
         group_by(sample_id) |>

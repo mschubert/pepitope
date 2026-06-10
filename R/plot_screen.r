@@ -56,5 +56,5 @@ make_links = function(res, sample) {
         dplyr::rename(baseMean_ref=baseMean, log2FoldChange_ref=log2FoldChange)
     ar2 = arrs |> filter(pep_type == "alt", padj<0.1) |> select(-pep_type) |>
         dplyr::rename(baseMean_alt=baseMean, log2FoldChange_alt=log2FoldChange, padj_alt=padj)
-    inner_join(ar1, ar2, relationship="many-to-many")
+    inner_join(ar1, ar2, by=join_by(bc_type, mut_id), relationship="many-to-many")
 }
