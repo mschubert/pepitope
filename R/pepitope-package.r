@@ -12,17 +12,6 @@
 #' @docType package
 #' @import dplyr
 #' @import ggplot2
-#' @importFrom VariantAnnotation readVcfAsVRanges
-#' @importFrom SummarizedExperiment colData rowData assay
-#' @importFrom GenomeInfoDb seqlevelsStyle seqlevelsStyle<-
-#' @rawNamespace export(readVcfAsVRanges)
-#' @rawNamespace export(colData)
-#' @rawNamespace export(rowData)
-#' @rawNamespace export(assay)
-#' @rawNamespace export(genome)
-#' @rawNamespace export(seqinfo)
-#' @rawNamespace export(seqlevels)
-#' @rawNamespace export(seqlevelsStyle)
-#' @rawNamespace export("seqlevelsStyle<-")
+#' @import Rcpp
 #' @useDynLib pepitope, .registration=TRUE
 "_PACKAGE"
