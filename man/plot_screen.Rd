@@ -10,7 +10,8 @@ plot_screen(
   links = TRUE,
   labs = TRUE,
   min_reads = 10,
-  cap_fc = 8
+  cap_fc = 8,
+  p_sig = 0.05
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ plot_screen(
 \item{min_reads}{Minimum number of reads to show as points (default: 10)}
 
 \item{cap_fc}{Maximum amount of fold-change to limit values to}
+
+\item{p_sig}{Maximum adjusted p-value to consider significant (default: 0.05)}
 }
 \value{
 A `ggplot2` object of the differential expression results
