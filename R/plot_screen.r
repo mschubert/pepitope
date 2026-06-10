@@ -25,7 +25,7 @@ plot_screen = function(res, sample=NULL, links=TRUE, labs=TRUE, min_reads=10, ca
 
     p = ggplot(res, aes(x=baseMean, y=log2FoldChange)) +
         geom_hline(yintercept=0, color="grey") +
-        geom_point(aes(color=bc_type, shape=pep_type, size=padj<0.1, alpha=padj<0.1)) +
+        geom_point(aes(color=bc_type, shape=pep_type, size=padj<p_sig, alpha=padj<p_sig)) +
         scale_shape_manual(values=c(ref=1, alt=19), na.value=19) +
         scale_size_manual(values=c("TRUE"=1, "FALSE"=0.2), na.value=0.2) +
         scale_alpha_manual(values=c("TRUE"=0.5, "FALSE"=0.2), na.value=0.2) +
@@ -40,7 +40,7 @@ plot_screen = function(res, sample=NULL, links=TRUE, labs=TRUE, min_reads=10, ca
                 keep.fraction=1, keep.number=30)
     }
     if (labs && nrow(lab) > 0) {
-        p = p + ggpp::stat_dens2d_filter_g(data=lab, aes(label=gene_name, color=bc_type),
+        p = p + ggpp::stat_dens2d_filter_g(data=lab, aes(label=pep_id, color=bc_type),
             geom=ggrepel::GeomTextRepel, keep.fraction=1, keep.number=45,
             size=1.5, min.segment.length=0, segment.alpha=0.3, segment.size=0.3)
     }
@@ -48,7 +48,7 @@ plot_screen = function(res, sample=NULL, links=TRUE, labs=TRUE, min_reads=10, ca
 }
 
 #' @keywords internal
-make_links = function(res, sample) {
+make_links = function(res, sample, p_sig) {
     if (is.null(sample))
         sample = unique(res$bc_type)
     arrs = res |> filter(bc_type %in% sample) |>

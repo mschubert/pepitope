@@ -102,7 +102,7 @@ but we can fine-tune the plot with the following additional arguments:
 * `links` -- whether to draw arrows between ref and significant alt peptides
 * `labs` -- whether to label constructs in less dense areas of the plot
 * `min_reads` -- a minimum read count to consider a data point for plotting
-* `cap_fc` -- a maximum (and negative minimum) fold change value to bound data points to
+* `cap_fc` -- a maximum (and negative minimum) fold change value for data points
 * `p_sig` -- a p-value threshold to consider a data point significant for labeling and linking
 
 ```{r}
