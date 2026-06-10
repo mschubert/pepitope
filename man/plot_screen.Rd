@@ -4,7 +4,14 @@
 \alias{plot_screen}
 \title{Plot screen results}
 \usage{
-plot_screen(res, sample = NULL, links = TRUE, labs = TRUE, cap_fc = 8)
+plot_screen(
+  res,
+  sample = NULL,
+  links = TRUE,
+  labs = TRUE,
+  min_reads = 10,
+  cap_fc = 8
+)
 }
 \arguments{
 \item{res}{A results `data.frame` from `screen_calc()`}
@@ -14,6 +21,8 @@ plot_screen(res, sample = NULL, links = TRUE, labs = TRUE, cap_fc = 8)
 \item{links}{Whether to draw arrows between ref and significant alt peptides}
 
 \item{labs}{Whether to label genes in less dense areas}
+
+\item{min_reads}{Minimum number of reads to show as points (default: 10)}
 
 \item{cap_fc}{Maximum amount of fold-change to limit values to}
 }

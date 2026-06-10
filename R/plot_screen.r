@@ -4,6 +4,7 @@
 #' @param sample  Which library to plot (default: all)
 #' @param links   Whether to draw arrows between ref and significant alt peptides
 #' @param labs    Whether to label genes in less dense areas
+#' @param min_reads  Minimum number of reads to show as points (default: 10)
 #' @param cap_fc  Maximum amount of fold-change to limit values to
 #' @return  A `ggplot2` object of the differential expression results
 #'
@@ -16,7 +17,7 @@
 #' }
 #'
 #' @export
-plot_screen = function(res, sample=NULL, links=TRUE, labs=TRUE, cap_fc=8) {
+plot_screen = function(res, sample=NULL, links=TRUE, labs=TRUE, min_reads=10, cap_fc=8) {
     res$log2FoldChange = sign(res$log2FoldChange) * pmin(abs(res$log2FoldChange), cap_fc)
     lab = res |> filter(padj<0.1) |> group_by(gene_name) |>
         filter(n_distinct(pep_type)==1 | is.na(pep_type) | pep_type=="alt")
@@ -28,7 +29,7 @@ plot_screen = function(res, sample=NULL, links=TRUE, labs=TRUE, cap_fc=8) {
         scale_size_manual(values=c("TRUE"=1, "FALSE"=0.2), na.value=0.2) +
         scale_alpha_manual(values=c("TRUE"=0.5, "FALSE"=0.2), na.value=0.2) +
         scale_color_brewer(palette="Set1", drop=FALSE) +
-        scale_x_log10(limits=c(10,NA))
+        scale_x_log10(limits=c(min_reads,NA))
     if (links) {
         link = make_links(res, sample)
         if (nrow(link) > 0)
