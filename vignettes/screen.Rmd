@@ -106,7 +106,7 @@ but we can fine-tune the plot with the following additional arguments:
 * `p_sig` -- a p-value threshold to consider a data point significant for labeling and linking
 
 ```{r}
-plot_screen(res$`Sample vs Mock`)
+plot_screen(res$`Sample vs Mock`, min_reads=100)
 ```
 
 As with the *Quality Control* plots already, we can also create and interactive plot.
