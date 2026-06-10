@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cctype>
 #include <cstdint>
+#include <ostream>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -52,6 +53,16 @@ std::unordered_map<std::string, int> make_index(const std::vector<std::string> &
     return index;
 }
 
+std::string format_reads(std::uint64_t value, Rcpp::Function formatter) {
+    Rcpp::CharacterVector formatted = formatter(
+        static_cast<double>(value),
+        Rcpp::Named("big.mark") = ",",
+        Rcpp::Named("scientific") = false,
+        Rcpp::Named("trim") = true
+    );
+    return Rcpp::as<std::string>(formatted[0]);
+}
+
 } // namespace
 
 // [[Rcpp::export]]
@@ -77,6 +88,7 @@ Rcpp::List count_fastq_barcodes_cpp(Rcpp::CharacterVector fq,
     double unmatched_reads = 0.0;
     double too_short_reads = 0.0;
     std::uint64_t reads_seen = 0;
+    Rcpp::Function format("format");
 
     const std::string path = Rcpp::as<std::string>(fq[0]);
     if (verbose)
@@ -92,7 +104,7 @@ Rcpp::List count_fastq_barcodes_cpp(Rcpp::CharacterVector fq,
         if (reads_seen % 1000000 == 0) {
             Rcpp::checkUserInterrupt();
             if (verbose)
-                Rcpp::Rcout << "Processed " << reads_seen << " reads\n";
+                Rcpp::Rcout << "\rProcessed " << format_reads(reads_seen, format) << " reads" << std::flush;
         }
 
         std::string sample_key;
@@ -121,6 +133,9 @@ Rcpp::List count_fastq_barcodes_cpp(Rcpp::CharacterVector fq,
 
     kseq_destroy(seq);
     gzclose(fp);
+
+    if (verbose)
+        Rcpp::Rcout << "\rProcessed " << format_reads(reads_seen, format) << " reads\n";
 
     return Rcpp::List::create(
         Rcpp::_["counts"] = counts,
