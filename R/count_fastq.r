@@ -57,6 +57,7 @@ count_fastq = function(fq, samples, all_constructs, valid_barcodes, read_structu
     if (any(nchar(construct_barcodes) != sum(read_structure$construct$width)))
         stop("Construct barcode width does not match 'M' segments in 'read_structure'")
 
+    .progress = verbose && !isTRUE(getOption("knitr.in.progress"))
     res = count_fastq_barcodes_cpp(
         fq = fq,
         sample_barcodes = sample_barcodes,
@@ -65,7 +66,8 @@ count_fastq = function(fq, samples, all_constructs, valid_barcodes, read_structu
         sample_width = read_structure$sample$width,
         construct_start = read_structure$construct$start,
         construct_width = read_structure$construct$width,
-        verbose = verbose
+        verbose = verbose,
+        progress = .progress
     )
 
     counts = res$counts

@@ -11,8 +11,8 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // count_fastq_barcodes_cpp
-Rcpp::List count_fastq_barcodes_cpp(Rcpp::CharacterVector fq, Rcpp::CharacterVector sample_barcodes, Rcpp::CharacterVector construct_barcodes, Rcpp::IntegerVector sample_start, Rcpp::IntegerVector sample_width, Rcpp::IntegerVector construct_start, Rcpp::IntegerVector construct_width, bool verbose);
-RcppExport SEXP _pepitope_count_fastq_barcodes_cpp(SEXP fqSEXP, SEXP sample_barcodesSEXP, SEXP construct_barcodesSEXP, SEXP sample_startSEXP, SEXP sample_widthSEXP, SEXP construct_startSEXP, SEXP construct_widthSEXP, SEXP verboseSEXP) {
+Rcpp::List count_fastq_barcodes_cpp(Rcpp::CharacterVector fq, Rcpp::CharacterVector sample_barcodes, Rcpp::CharacterVector construct_barcodes, Rcpp::IntegerVector sample_start, Rcpp::IntegerVector sample_width, Rcpp::IntegerVector construct_start, Rcpp::IntegerVector construct_width, bool verbose, bool progress);
+RcppExport SEXP _pepitope_count_fastq_barcodes_cpp(SEXP fqSEXP, SEXP sample_barcodesSEXP, SEXP construct_barcodesSEXP, SEXP sample_startSEXP, SEXP sample_widthSEXP, SEXP construct_startSEXP, SEXP construct_widthSEXP, SEXP verboseSEXP, SEXP progressSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -24,13 +24,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type construct_start(construct_startSEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type construct_width(construct_widthSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(count_fastq_barcodes_cpp(fq, sample_barcodes, construct_barcodes, sample_start, sample_width, construct_start, construct_width, verbose));
+    Rcpp::traits::input_parameter< bool >::type progress(progressSEXP);
+    rcpp_result_gen = Rcpp::wrap(count_fastq_barcodes_cpp(fq, sample_barcodes, construct_barcodes, sample_start, sample_width, construct_start, construct_width, verbose, progress));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_pepitope_count_fastq_barcodes_cpp", (DL_FUNC) &_pepitope_count_fastq_barcodes_cpp, 8},
+    {"_pepitope_count_fastq_barcodes_cpp", (DL_FUNC) &_pepitope_count_fastq_barcodes_cpp, 9},
     {NULL, NULL, 0}
 };
 

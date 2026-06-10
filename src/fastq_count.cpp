@@ -73,7 +73,8 @@ Rcpp::List count_fastq_barcodes_cpp(Rcpp::CharacterVector fq,
                                     Rcpp::IntegerVector sample_width,
                                     Rcpp::IntegerVector construct_start,
                                     Rcpp::IntegerVector construct_width,
-                                    bool verbose) {
+                                    bool verbose,
+                                    bool progress) {
     const std::vector<std::string> samples = Rcpp::as<std::vector<std::string>>(sample_barcodes);
     const std::vector<std::string> constructs = Rcpp::as<std::vector<std::string>>(construct_barcodes);
 
@@ -103,7 +104,7 @@ Rcpp::List count_fastq_barcodes_cpp(Rcpp::CharacterVector fq,
         ++reads_seen;
         if (reads_seen % 1000000 == 0) {
             Rcpp::checkUserInterrupt();
-            if (verbose)
+            if (progress)
                 Rcpp::Rcout << "\rProcessed " << format_reads(reads_seen, format) << " reads" << std::flush;
         }
 
@@ -142,6 +143,7 @@ Rcpp::List count_fastq_barcodes_cpp(Rcpp::CharacterVector fq,
         Rcpp::_["total_reads"] = total_reads,
         Rcpp::_["mapped_reads"] = mapped_reads,
         Rcpp::_["unmatched_reads"] = unmatched_reads,
-        Rcpp::_["too_short_reads"] = too_short_reads
+        Rcpp::_["too_short_reads"] = too_short_reads,
+        Rcpp::_["reads_seen"] = static_cast<double>(reads_seen)
     );
 }
