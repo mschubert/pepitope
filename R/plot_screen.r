@@ -32,7 +32,7 @@ plot_screen = function(res, sample=NULL, links=TRUE, labs=TRUE, min_reads=10, ca
         scale_color_brewer(palette="Set1", drop=FALSE) +
         scale_x_log10(limits=c(min_reads,NA))
     if (links) {
-        link = make_links(res, sample)
+        link = make_links(res, sample, p_sig)
         if (nrow(link) > 0)
             p = p + ggpp::stat_dens2d_filter(data=link, geom="segment", color="black", alpha=0.2, linewidth=0.3,
                 aes(x=baseMean_alt, xend=baseMean_ref, y=log2FoldChange_alt, yend=log2FoldChange_ref),
@@ -55,7 +55,7 @@ make_links = function(res, sample) {
         select(bc_type, mut_id, pep_type, baseMean, log2FoldChange, padj)
     ar1 = arrs |> filter(pep_type == "ref") |> select(-pep_type) |>
         dplyr::rename(baseMean_ref=baseMean, log2FoldChange_ref=log2FoldChange)
-    ar2 = arrs |> filter(pep_type == "alt", padj<0.1) |> select(-pep_type) |>
+    ar2 = arrs |> filter(pep_type == "alt", padj<p_sig) |> select(-pep_type) |>
         dplyr::rename(baseMean_alt=baseMean, log2FoldChange_alt=log2FoldChange, padj_alt=padj)
     inner_join(ar1, ar2, by=join_by(bc_type, mut_id), relationship="many-to-many")
 }
