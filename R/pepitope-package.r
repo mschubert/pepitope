@@ -15,6 +15,7 @@
 #' @importFrom VariantAnnotation readVcfAsVRanges
 #' @importFrom SummarizedExperiment colData rowData assay
 #' @importFrom GenomeInfoDb seqlevelsStyle seqlevelsStyle<-
+#' @importFrom Rcpp evalCpp
 #' @rawNamespace export(readVcfAsVRanges)
 #' @rawNamespace export(colData)
 #' @rawNamespace export(rowData)
