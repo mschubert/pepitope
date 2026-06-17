@@ -13,16 +13,40 @@
 \alias{seqlevelsStyle<-}
 \alias{readVcfAsVRanges}
 \title{Objects exported from other packages}
-\keyword{internal}
+\usage{
+assay(x, i, withDimnames = TRUE, ...)
+
+colData(x, ...)
+
+rowData(x, use.names = TRUE, ...)
+
+genome(x)
+
+seqinfo(x)
+
+seqlevels(x)
+
+seqlevelsStyle(x)
+
+seqlevelsStyle(x) <- value
+
+readVcfAsVRanges(x, genome, param = ScanVcfParam(), use.names = FALSE, ...)
+}
 \description{
 These objects are imported from other packages. Follow the links
 below to see their documentation.
-
+}
+\details{
 \describe{
-  \item{GenomeInfoDb}{\code{\link[GenomeInfoDb:genome]{genome}}, \code{\link[GenomeInfoDb:seqinfo]{seqinfo}}, \code{\link[GenomeInfoDb:seqlevels]{seqlevels}}, \code{\link[GenomeInfoDb:seqlevelsStyle]{seqlevelsStyle()}}, \code{\link[GenomeInfoDb:seqlevelsStyle<-]{seqlevelsStyle<-()}}}
-
-  \item{SummarizedExperiment}{\code{\link[SummarizedExperiment:assay]{assay()}}, \code{\link[SummarizedExperiment:colData]{colData()}}, \code{\link[SummarizedExperiment:rowData]{rowData()}}}
-
-  \item{VariantAnnotation}{\code{\link[VariantAnnotation:readVcfAsVRanges]{readVcfAsVRanges()}}}
-}}
-
+  \item{GenomeInfoDb}{\code{\link[Seqinfo:seqinfo]{genome}},
+    \code{\link[Seqinfo:seqinfo]{seqinfo}},
+    \code{\link[Seqinfo:seqinfo]{seqlevels}},
+    \code{\link[GenomeInfoDb:seqlevelsStyle]{seqlevelsStyle()}},
+    \code{\link[GenomeInfoDb:seqlevelsStyle<-]{seqlevelsStyle<-()}}}
+  \item{SummarizedExperiment}{\code{\link[SummarizedExperiment:assay]{assay()}},
+    \code{\link[SummarizedExperiment:colData]{colData()}},
+    \code{\link[SummarizedExperiment:rowData]{rowData()}}}
+  \item{VariantAnnotation}{\code{\link[VariantAnnotation:VRanges-class]{readVcfAsVRanges()}}}
+}
+}
+\keyword{internal}
