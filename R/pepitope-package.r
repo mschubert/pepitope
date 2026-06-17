@@ -12,6 +12,6 @@
 #' @docType package
 #' @import dplyr
 #' @import ggplot2
-#' @import Rcpp
+#' @importFrom Rcpp evalCpp
 #' @useDynLib pepitope, .registration=TRUE
 "_PACKAGE"
