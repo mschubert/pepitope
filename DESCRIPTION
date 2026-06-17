@@ -61,6 +61,7 @@ Encoding: UTF-8
 Suggests:
     AnnotationHub,
     BiocCheck,
+    BSgenome.Hsapiens.NCBI.GRCh38,
     BSgenome.Hsapiens.UCSC.hg38,
     DT,
     htmltools,
