@@ -53,8 +53,7 @@ Imports:
     VariantAnnotation,
     XVector
 LinkingTo:
-    Rcpp,
-    Rhtslib
+    Rcpp
 License: GPL-3
 Encoding: UTF-8
 Suggests:

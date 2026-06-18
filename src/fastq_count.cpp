@@ -1,7 +1,6 @@
 #include <Rcpp.h>
 
 #include <zlib.h>
-#include <htslib/kseq.h>
 
 #include <algorithm>
 #include <cctype>
@@ -10,8 +9,6 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
-
-KSEQ_INIT(gzFile, gzread)
 
 namespace {
 
@@ -36,11 +33,26 @@ std::vector<Segment> as_segments(Rcpp::IntegerVector start, Rcpp::IntegerVector 
     return out;
 }
 
-bool append_segments(std::string &out, const std::vector<Segment> &segments, const kseq_t *seq) {
+bool read_gz_line(gzFile fp, std::string &out) {
+    out.clear();
+    char buffer[65536];
+    while (gzgets(fp, buffer, sizeof(buffer)) != Z_NULL) {
+        out += buffer;
+        if (!out.empty() && out.back() == '\n')
+            break;
+    }
+    if (out.empty())
+        return false;
+    while (!out.empty() && (out.back() == '\n' || out.back() == '\r'))
+        out.pop_back();
+    return true;
+}
+
+bool append_segments(std::string &out, const std::vector<Segment> &segments, const std::string &seq) {
     for (const Segment &segment : segments) {
-        if (seq->seq.l < static_cast<std::size_t>(segment.start + segment.width))
+        if (seq.size() < static_cast<std::size_t>(segment.start + segment.width))
             return false;
-        out += uppercase_subseq(seq->seq.s, segment.start, segment.width);
+        out += uppercase_subseq(seq.data(), segment.start, segment.width);
     }
     return true;
 }
@@ -98,9 +110,16 @@ Rcpp::List count_fastq_barcodes_cpp(Rcpp::CharacterVector fq,
     gzFile fp = gzopen(path.c_str(), "r");
     if (fp == nullptr)
         Rcpp::stop("Could not open FASTQ file '%s'", path);
-    kseq_t *seq = kseq_init(fp);
 
-    while (kseq_read(seq) >= 0) {
+    std::string header;
+    std::string seq;
+    std::string plus;
+    std::string qual;
+    while (read_gz_line(fp, header)) {
+        if (!read_gz_line(fp, seq) || !read_gz_line(fp, plus) || !read_gz_line(fp, qual)) {
+            gzclose(fp);
+            Rcpp::stop("Malformed FASTQ file '%s'", path);
+        }
         ++reads_seen;
         if (reads_seen % 1000000 == 0) {
             Rcpp::checkUserInterrupt();
@@ -132,7 +151,6 @@ Rcpp::List count_fastq_barcodes_cpp(Rcpp::CharacterVector fq,
         ++counts(construct_hit->second, sample_i);
     }
 
-    kseq_destroy(seq);
     gzclose(fp);
 
     if (verbose)
