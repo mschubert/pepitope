@@ -8,8 +8,6 @@ vignettes/*.html
 vignettes/.build.timestamp
 src/*.o
 src/*.so
-src/Makevars
-src/Makevars.win
 *.swp
 *.tar.gz
 *.log
