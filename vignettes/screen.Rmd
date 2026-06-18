@@ -47,8 +47,7 @@ These two repeats are important, as we need to estimate within-condition
 variability as well as between-condition variability.
 
 ```{r echo=FALSE, message=FALSE, results="hide"}
-lib = "https://raw.githubusercontent.com/hawkjo/freebarcodes/master/barcodes/barcodes12-1.txt"
-valid_barcodes = readr::read_tsv(lib, col_names=FALSE)$X1
+valid_barcodes = example_barcodes(1000)
 all_constructs = example_peptides(valid_barcodes)
 sample_sheet = system.file("my_samples.tsv", package="pepitope")
 fastq_file = example_fastq(sample_sheet, all_constructs)

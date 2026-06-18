@@ -1,13 +1,5 @@
 context("demux_count")
 
-example_barcodes = function(n, width=12) {
-    alphabet = c("A", "C", "G", "T")
-    vapply(seq_len(n) - 1L, function(i) {
-        digits = (i %/% (4L ^ seq.int(0L, width - 1L))) %% 4L
-        paste(alphabet[digits + 1L], collapse="")
-    }, character(1))
-}
-
 valid_barcodes = example_barcodes(1000)
 all_constructs = example_peptides(valid_barcodes)
 sample_sheet = system.file("my_samples.tsv", package="pepitope")

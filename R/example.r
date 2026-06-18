@@ -33,11 +33,8 @@ example_peptide_file = function() {
 #' @return  A named list of peptide/minigene constructs with barcodes
 #'
 #' @examples
-#' bases = expand.grid(rep(list(c("A", "C", "G", "T")), 4))
-#' valid_barcodes = apply(bases, 1, paste0, collapse="")
-#' if (interactive()) {
-#'     example_peptides(valid_barcodes)
-#' }
+#' valid_barcodes = example_barcodes(1000)
+#' example_peptides(valid_barcodes)
 #'
 #' @keywords internal
 #' @export
@@ -73,6 +70,33 @@ example_peptides = function(valid_barcodes) {
                barcode_2 = valid_barcodes[seq_len(n()) + n() + offset])
 
     list(pat1=pat1, pat2=pat2, pat3=pat3, common=common)
+}
+
+#' Create deterministic example barcodes
+#'
+#' @param n      Number of barcodes to create
+#' @param width  Barcode width in nucleotides
+#' @return       A character vector of DNA barcodes
+#'
+#' @examples
+#' example_barcodes(4, width=4)
+#'
+#' @keywords internal
+#' @export
+example_barcodes = function(n, width=12) {
+    if (!is.numeric(n) || length(n) != 1 || is.na(n) || n < 0 || n != floor(n))
+        stop("'n' must be a non-negative integer")
+    if (!is.numeric(width) || length(width) != 1 || is.na(width) ||
+            width < 1 || width != floor(width))
+        stop("'width' must be a positive integer")
+    if (n > 4^width)
+        stop("'n' cannot exceed 4^width")
+
+    alphabet = c("A", "C", "G", "T")
+    vapply(seq_len(n) - 1L, function(i) {
+        digits = (i %/% (4L ^ seq.int(0L, width - 1L))) %% 4L
+        paste(alphabet[digits + 1L], collapse="")
+    }, character(1))
 }
 
 #' Simulate sequencing data and write them to a temporary FASTQ file

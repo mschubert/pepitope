@@ -16,11 +16,8 @@ A named list of peptide/minigene constructs with barcodes
 Create example peptide sheets for multiple samples
 }
 \examples{
-bases = expand.grid(rep(list(c("A", "C", "G", "T")), 4))
-valid_barcodes = apply(bases, 1, paste0, collapse="")
-if (interactive()) {
-    example_peptides(valid_barcodes)
-}
+valid_barcodes = example_barcodes(1000)
+example_peptides(valid_barcodes)
 
 }
 \keyword{internal}
