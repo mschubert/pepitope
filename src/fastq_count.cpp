@@ -96,6 +96,7 @@ Rcpp::List count_fastq_barcodes_cpp(Rcpp::CharacterVector fq,
     const auto construct_index = make_index(constructs);
 
     Rcpp::NumericMatrix counts(constructs.size(), samples.size());
+    Rcpp::NumericVector unassigned_reads(constructs.size());
     Rcpp::NumericVector total_reads(samples.size());
     Rcpp::NumericVector mapped_reads(samples.size());
     double unmatched_reads = 0.0;
@@ -136,14 +137,16 @@ Rcpp::List count_fastq_barcodes_cpp(Rcpp::CharacterVector fq,
         }
 
         const auto sample_hit = sample_index.find(sample_key);
+        const auto construct_hit = construct_index.find(construct_key);
         if (sample_hit == sample_index.end()) {
             ++unmatched_reads;
+            if (construct_hit != construct_index.end())
+                ++unassigned_reads[construct_hit->second];
             continue;
         }
 
         const int sample_i = sample_hit->second;
         ++total_reads[sample_i];
-        const auto construct_hit = construct_index.find(construct_key);
         if (construct_hit == construct_index.end())
             continue;
 
@@ -158,6 +161,7 @@ Rcpp::List count_fastq_barcodes_cpp(Rcpp::CharacterVector fq,
 
     return Rcpp::List::create(
         Rcpp::_["counts"] = counts,
+        Rcpp::_["unassigned_reads"] = unassigned_reads,
         Rcpp::_["total_reads"] = total_reads,
         Rcpp::_["mapped_reads"] = mapped_reads,
         Rcpp::_["unmatched_reads"] = unmatched_reads,

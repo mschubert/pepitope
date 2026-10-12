@@ -9,6 +9,8 @@
 #'      this will be inferred from the first reads in `fq`.
 #' @param verbose  Whether to print progress messages (default: TRUE)
 #' @return      A \code{SummarizedExperiment} object with counts and metadata
+#'      `rowData` includes `unassigned_reads`, the number of reads with a matching construct
+#'      barcode but no matching sample barcode.
 #'
 #' @examples
 #' samples = data.frame(sample_id="sample1", patient="pat1", rep="1",
@@ -86,7 +88,7 @@ count_fastq = function(fq, samples, all_constructs, valid_barcodes, read_structu
                short = paste(patient, smp),
                label = sprintf("%s (%s)", short, sample_id))
 
-    rows = data.frame(barcode=valid_barcodes) |>
+    rows = data.frame(barcode=valid_barcodes, unassigned_reads=res$unassigned_reads) |>
         left_join(construct_df, by="barcode") |>
         mutate(bc_type = ifelse(is.na(bc_type), "unused", bc_type),
                bc_type = factor(bc_type, levels=c(names(all_constructs), "unused")))
