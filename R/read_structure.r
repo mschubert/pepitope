@@ -1,16 +1,21 @@
 #' Annotate barcode positions in source FASTQ reads
 #'
+#' If structure inference fails, a warning is emitted and the structure is `"unknown"`.
+#'
 #' @param fq  Path to one FASTQ file
 #' @param samples  A sample sheet as `data.frame` in tsv format. Requires the
 #'      columns 'sample_id', 'patient', 'rep', 'origin', 'barcode'
 #' @param all_constructs  A named list of all construct libraries
 #' @param nrec  Number of FASTQ records to inspect
+#' @param min_frac  Minimum fraction of inspected reads matching each barcode type
+#'      at its inferred position in either orientation
 #' @return  A `list` with barcode counts, reads, and inferred read structure
 #'
-#' @importFrom Biostrings readDNAStringSet reverseComplement DNAStringSet DNAString PDict matchPDict xscat
+#' @importFrom Biostrings readDNAStringSet reverseComplement DNAStringSet DNAString
+#' @importFrom Biostrings PDict matchPDict xscat
 #' @importFrom BiocGenerics width
 #' @keywords internal
-.rs_annotate = function(fq, samples, all_constructs, nrec=100000L) {
+.rs_annotate = function(fq, samples, all_constructs, nrec=100000L, min_frac=0.2) {
     samples = .read_samples(samples)
     construct_df = merge_constructs(all_constructs)
     sample_barcodes = DNAStringSet(toupper(samples$barcode))
@@ -28,11 +33,15 @@
         check.names=FALSE
     )
 
-    list(
-        counts = counts,
-        reads = reads,
-        structure = .rs_format(counts, width(sample_barcodes)[1], width(construct_barcodes)[1])
+    structure = tryCatch(
+        .rs_format(counts, width(sample_barcodes)[1], width(construct_barcodes)[1],
+                   n_reads=length(reads), min_frac=min_frac),
+        error=function(e) {
+            warning(conditionMessage(e), immediate.=TRUE)
+            "unknown"
+        }
     )
+    list(counts=counts, reads=reads, structure=structure)
 }
 
 .rs_count = function(reads, barcodes) {
@@ -52,7 +61,7 @@
 #' Parse a read structure
 #'
 #' @param read_structures  A character string describing the FASTQ read structure
-#' @return  A `list` with sample and construct barcode ranges
+#' @return  A `list` with sample and construct barcode ranges; missing types have zero rows
 #'
 #' @keywords internal
 .rs_parse = function(read_structures) {
@@ -94,35 +103,43 @@
     ranges = ranges[c("start", "width", "op", "revcomp")]
     sample = ranges[ranges$op == "B", c("start", "width", "revcomp")]
     construct = ranges[ranges$op == "M", c("start", "width", "revcomp")]
-    if (nrow(sample) != 1)
-        stop("'read_structures' must contain exactly one sample barcode ('B') segment")
-    if (nrow(construct) != 1)
-        stop("'read_structures' must contain exactly one construct barcode ('M') segment")
+    if (nrow(sample) > 1)
+        stop("'read_structures' must contain at most one sample barcode ('B') segment")
+    if (nrow(construct) > 1)
+        stop("'read_structures' must contain at most one construct barcode ('M') segment")
+    if (nrow(sample) + nrow(construct) == 0)
+        stop("'read_structures' must contain a sample ('B') or construct ('M') barcode segment")
     list(sample=sample, construct=construct)
 }
 
 #' Format a read structure from barcode position counts
 #'
+#' Raises an error if neither barcode type meets `min_frac` or inferred barcode positions overlap.
+#'
 #' @param counts  A `data.frame` with `B`, `^B`, `M`, and `^M` count columns
 #' @param sample_width  Width of the sample barcode
 #' @param construct_width  Width of the construct barcode
-#' @return  A read structure string
+#' @param n_reads  Number of inspected reads
+#' @param min_frac  Minimum fraction of reads matching each barcode type at its
+#'      inferred position in either orientation
+#' @return  A read structure string containing the barcode types that meet `min_frac`
 #'
 #' @keywords internal
-.rs_format = function(counts, sample_width, construct_width) {
+.rs_format = function(counts, sample_width, construct_width, n_reads, min_frac=0.2) {
     best_position = function(op, width) {
         cols = c(op, paste0("^", op))
         scores = as.matrix(counts[cols])
         best = arrayInd(which.max(scores), dim(scores))
-        if (scores[best] == 0)
-            stop("Could not infer read structure because ", op, " barcodes were not found")
-
-        data.frame(start=best[1], width=width, op=cols[best[2]])
+        data.frame(start=best[1], width=width, op=cols[best[2]], frac=scores[best] / n_reads)
     }
 
     sample = best_position("B", sample_width)
     construct = best_position("M", construct_width)
-    segments = rbind(sample, construct) |> dplyr::arrange(start)
+    segments = rbind(sample, construct)
+    segments = segments[segments$frac >= min_frac, ]
+    if (nrow(segments) == 0)
+        stop("Could not infer read structure: barcode match fraction below min_frac (", min_frac, ")")
+    segments = dplyr::arrange(segments, start)
     if (any(segments$start[-1] < utils::head(segments$start + segments$width, -1)))
         stop("Could not infer read structure because barcode positions overlap")
 

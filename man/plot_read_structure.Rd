@@ -22,6 +22,8 @@ A patchwork object containing barcode counts and read examples
 \description{
 Forward and reverse barcode match counts are shown at each barcode start
 position across all inspected reads, above up to ten read examples.
+Only barcode types included in the inferred structure are annotated in the reads.
+Read examples are shown without barcode annotations if the structure is unknown.
 }
 \examples{
 if (interactive()) {

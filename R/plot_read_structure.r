@@ -2,6 +2,8 @@
 #'
 #' Forward and reverse barcode match counts are shown at each barcode start
 #' position across all inspected reads, above up to ten read examples.
+#' Only barcode types included in the inferred structure are annotated in the reads.
+#' Read examples are shown without barcode annotations if the structure is unknown.
 #'
 #' @param fq  Path to one FASTQ file
 #' @param samples  A sample sheet as `data.frame` in tsv format. Requires the
@@ -40,6 +42,7 @@ plot_read_structure = function(fq, samples, all_constructs, nrec=100000L) {
     }, rows$read, as.character(reads)))
     bases = merge(bases, rows[c("read", "y")])
 
+    known_structure = ann$structure != "unknown"
     feature_labels = c(B="Sample (B)", M="Construct (M)")
     position_scale = scale_x_continuous(limits=c(0.5, read_width + 0.5),
         breaks=seq.int(1L, read_width, by=max(1L, floor(read_width / 10L))),
@@ -54,7 +57,8 @@ plot_read_structure = function(fq, samples, all_constructs, nrec=100000L) {
         geom_line(linewidth=0.4) +
         geom_point(size=0.9) +
         facet_grid(orientation ~ .) +
-        scale_colour_discrete(limits=names(feature_labels), guide="none") +
+        scale_colour_discrete(name="Feature", limits=names(feature_labels), labels=feature_labels,
+                              guide=if (known_structure) "none" else "legend") +
         scale_y_continuous(limits=c(0, NA)) +
         position_scale +
         labs(x=NULL, y="Barcode matches",
@@ -62,36 +66,39 @@ plot_read_structure = function(fq, samples, all_constructs, nrec=100000L) {
              subtitle=paste("First", format(nrec, big.mark=","), "reads inspected")) +
         theme(axis.text.x=element_blank(), axis.ticks.x=element_blank())
 
-    read_structure = ann$structure
-    structure = .rs_parse(read_structure)
-    features = rbind(
-        data.frame(structure$sample, type="B"),
-        data.frame(structure$construct, type="M")
-    )
-    rects = merge(rows, features)
-    sample_barcodes = toupper(.read_samples(samples)$barcode)
-    construct_barcodes = toupper(merge_constructs(all_constructs)$barcode)
-    barcodes = subseq(DNAStringSet(reads[rects$read]), start=rects$start, width=rects$width)
-    barcodes[rects$revcomp] = reverseComplement(barcodes[rects$revcomp])
-    present = ifelse(rects$type == "B", as.character(barcodes) %in% sample_barcodes,
-                     as.character(barcodes) %in% construct_barcodes)
-    rects$barcode = ifelse(present, "Present", "Absent")
-    rects$fill = ifelse(present, rects$type, NA_character_)
+    barcode_layers = NULL
+    if (known_structure) {
+        structure = .rs_parse(ann$structure)
+        features = rbind(data.frame(structure$sample, type=rep("B", nrow(structure$sample))),
+                         data.frame(structure$construct, type=rep("M", nrow(structure$construct))))
+        rects = merge(rows, features)
+        sample_barcodes = toupper(.read_samples(samples)$barcode)
+        construct_barcodes = toupper(merge_constructs(all_constructs)$barcode)
+        barcodes = subseq(DNAStringSet(reads[rects$read]), start=rects$start, width=rects$width)
+        barcodes[rects$revcomp] = reverseComplement(barcodes[rects$revcomp])
+        present = ifelse(rects$type == "B", as.character(barcodes) %in% sample_barcodes,
+                         as.character(barcodes) %in% construct_barcodes)
+        rects$barcode = ifelse(present, "Present", "Absent")
+        rects$fill = ifelse(present, rects$type, NA_character_)
+        barcode_layers = list(
+            geom_rect(data=rects, aes(xmin=start - 0.5, xmax=start + width - 0.5,
+                                     ymin=y - 0.24, ymax=y + 0.24, fill=fill,
+                                     colour=type, linetype=barcode), alpha=0.45, show.legend=TRUE),
+            scale_colour_discrete(aesthetics=c("colour", "fill"), name="Feature",
+                                  limits=names(feature_labels), labels=feature_labels,
+                                  na.value=NA, na.translate=FALSE),
+            scale_linetype_manual(name="Barcode", values=c(Present="solid", Absent="solid"),
+                                  limits=c("Present", "Absent"),
+                                  guide=guide_legend(override.aes=list(fill=c("grey40", NA),
+                                                                      colour="grey40")))
+        )
+    }
 
     read_plot = ggplot() +
         geom_rect(data=rows, aes(xmin=0.5, xmax=read_width + 0.5, ymin=y - 0.2, ymax=y + 0.2),
                   fill="grey95", color="grey80") +
-        geom_rect(data=rects, aes(xmin=start - 0.5, xmax=start + width - 0.5, ymin=y - 0.24,
-                                  ymax=y + 0.24, fill=fill, colour=type, linetype=barcode),
-                  alpha=0.45, show.legend=TRUE) +
+        barcode_layers +
         geom_text(data=bases, aes(x=position, y=y, label=base), size=3) +
-        scale_colour_discrete(aesthetics=c("colour", "fill"), name="Feature",
-                              limits=names(feature_labels), labels=feature_labels,
-                              na.value=NA, na.translate=FALSE) +
-        scale_linetype_manual(name="Barcode", values=c(Present="solid", Absent="solid"),
-                              limits=c("Present", "Absent"),
-                              guide=guide_legend(override.aes=list(fill=c("grey40", NA),
-                                                                  colour="grey40"))) +
         scale_y_reverse(breaks=rows$y, labels=paste0("read ", rows$read_idx),
                         expand=expansion(add=0.15)) +
         position_scale +

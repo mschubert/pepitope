@@ -4,7 +4,7 @@
 \alias{.rs_annotate}
 \title{Annotate barcode positions in source FASTQ reads}
 \usage{
-.rs_annotate(fq, samples, all_constructs, nrec = 100000L)
+.rs_annotate(fq, samples, all_constructs, nrec = 100000L, min_frac = 0.2)
 }
 \arguments{
 \item{fq}{Path to one FASTQ file}
@@ -15,11 +15,14 @@ columns 'sample_id', 'patient', 'rep', 'origin', 'barcode'}
 \item{all_constructs}{A named list of all construct libraries}
 
 \item{nrec}{Number of FASTQ records to inspect}
+
+\item{min_frac}{Minimum fraction of inspected reads matching each barcode type
+at its inferred position in either orientation}
 }
 \value{
 A `list` with barcode counts, reads, and inferred read structure
 }
 \description{
-Annotate barcode positions in source FASTQ reads
+If structure inference fails, a warning is emitted and the structure is `"unknown"`.
 }
 \keyword{internal}

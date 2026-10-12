@@ -4,7 +4,7 @@
 \alias{.rs_format}
 \title{Format a read structure from barcode position counts}
 \usage{
-.rs_format(counts, sample_width, construct_width)
+.rs_format(counts, sample_width, construct_width, n_reads, min_frac = 0.2)
 }
 \arguments{
 \item{counts}{A `data.frame` with `B`, `^B`, `M`, and `^M` count columns}
@@ -12,11 +12,16 @@
 \item{sample_width}{Width of the sample barcode}
 
 \item{construct_width}{Width of the construct barcode}
+
+\item{n_reads}{Number of inspected reads}
+
+\item{min_frac}{Minimum fraction of reads matching each barcode type at its
+inferred position in either orientation}
 }
 \value{
-A read structure string
+A read structure string containing the barcode types that meet `min_frac`
 }
 \description{
-Format a read structure from barcode position counts
+Raises an error if neither barcode type meets `min_frac` or inferred barcode positions overlap.
 }
 \keyword{internal}

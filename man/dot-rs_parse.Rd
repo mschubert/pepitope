@@ -10,7 +10,7 @@
 \item{read_structures}{A character string describing the FASTQ read structure}
 }
 \value{
-A `list` with sample and construct barcode ranges
+A `list` with sample and construct barcode ranges; missing types have zero rows
 }
 \description{
 Parse a read structure

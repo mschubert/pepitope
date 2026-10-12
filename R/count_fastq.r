@@ -46,6 +46,8 @@ count_fastq = function(fq, samples, all_constructs, valid_barcodes, read_structu
             message("Read structure identified as ", sQuote(read_structure))
     }
     read_structure = .rs_parse(read_structure)
+    if (nrow(read_structure$sample) != 1 || nrow(read_structure$construct) != 1)
+        stop("Counting requires both sample ('B') and construct ('M') segments")
     sample_barcodes = toupper(samples$barcode) |> .check_barcodes("Sample barcodes")
     construct_barcodes = toupper(as.character(valid_barcodes)) |> .check_barcodes("Construct barcodes")
     if (read_structure$sample$revcomp)
