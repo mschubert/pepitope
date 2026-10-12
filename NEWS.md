@@ -1,8 +1,12 @@
+# git head
+
+* Add unknown sample(s) to `plot_read_count()`
+
 # pepitope 0.4.1
 
 * Partial read structures can now be inferred (but not counted)
-* `plot_read_structure` now indicates if a barcode is valid
-* `plot_read_structure` now displays the barcode type counts on each position
+* `plot_read_structure()` now indicates if a barcode is valid
+* `plot_read_structure()` now displays the barcode type counts on each position
 
 # pepitope 0.4.0
 

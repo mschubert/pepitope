@@ -18,7 +18,8 @@ plot_reads(dset)
 A patchwork object containing the read count summary plots
 }
 \description{
-Plot the overall read counts
+Reads with a recognized construct barcode but an unmatched sample barcode are
+included as an "Unknown sample" group using `rowData(dset)$unassigned_reads`.
 }
 \examples{
 if (interactive()) {

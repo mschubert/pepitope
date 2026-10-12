@@ -1,5 +1,8 @@
 #' Plot the overall read counts
 #'
+#' Reads with a recognized construct barcode but an unmatched sample barcode are
+#' included as an "Unknown sample" group using `rowData(dset)$unassigned_reads`.
+#'
 #' @param dset  The `SummarizedExperiment` object from `count_fastq`
 #' @param n_cutoff  Minimum reads for counting a barcode as represented
 #' @return  A patchwork object containing the read count summary plots
@@ -27,11 +30,16 @@ plot_read_count = function(dset, n_cutoff=10) {
             coord_flip()
     }
 
-    meta = as_tibble(colData(dset))
-    read_summary = calc_representation(assay(dset), as_tibble(rowData(dset)), meta) |>
+    bcs = as_tibble(rowData(dset))
+    counts = cbind(assay(dset), unassigned=bcs$unassigned_reads)
+    add_meta = tibble(sample_id="unassigned", label="Unknown sample(s)",
+                      total_reads=sum(bcs$unassigned_reads), mapped_reads=sum(bcs$unassigned_reads))
+    meta = bind_rows(as_tibble(colData(dset)), add_meta) |>
+        mutate(label=factor(label, levels=rev(label)))
+    read_summary = calc_representation(counts, bcs, meta) |>
         group_by(sample_id, label, bc_type) |>
         summarize(reads=sum(value), nonzero_bcs=sum(value >= n_cutoff))
-    unmapped = as_tibble(colData(dset)) |>
+    unmapped = meta |>
         mutate(bc_type=factor("unmapped"), reads=total_reads - mapped_reads) |>
         select(sample_id, label, bc_type, reads)
     both = bind_rows(read_summary, unmapped)
