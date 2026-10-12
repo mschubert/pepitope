@@ -1,6 +1,7 @@
 # git head
 
 * `plot_read_structure` now indicates if a barcode is valid
+* `plot_read_structure` now displays the barcode type counts on each position
 
 # pepitope 0.4.0
 

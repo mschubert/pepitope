@@ -1,11 +1,14 @@
 #' Plot annotated read structure examples
 #'
+#' Forward and reverse barcode match counts are shown at each barcode start
+#' position across all inspected reads, above up to ten read examples.
+#'
 #' @param fq  Path to one FASTQ file
 #' @param samples  A sample sheet as `data.frame` in tsv format. Requires the
 #'      columns 'sample_id', 'patient', 'rep', 'origin', 'barcode'
 #' @param all_constructs  A named list of all construct libraries
 #' @param nrec  Number of FASTQ records to inspect
-#' @return  A `ggplot2` object
+#' @return  A patchwork object containing barcode counts and read examples
 #'
 #' @examples
 #' if (interactive()) {
@@ -21,6 +24,8 @@
 #' @import ggplot2
 #' @importFrom BiocGenerics width
 #' @importFrom Biostrings DNAStringSet subseq reverseComplement
+#' @importFrom patchwork wrap_plots
+#' @importFrom tidyr pivot_longer
 #' @export
 plot_read_structure = function(fq, samples, all_constructs, nrec=100000L) {
     ann = .rs_annotate(fq, samples, all_constructs, nrec)
@@ -35,42 +40,64 @@ plot_read_structure = function(fq, samples, all_constructs, nrec=100000L) {
     }, rows$read, as.character(reads)))
     bases = merge(bases, rows[c("read", "y")])
 
+    feature_labels = c(B="Sample (B)", M="Construct (M)")
+    position_scale = scale_x_continuous(limits=c(0.5, read_width + 0.5),
+        breaks=seq.int(1L, read_width, by=max(1L, floor(read_width / 10L))),
+        expand=expansion(mult=0))
+    counts = ann$counts
+    counts$position = seq_len(nrow(counts))
+    counts = pivot_longer(counts, cols=c("B", "^B", "M", "^M"), names_to="op", values_to="count")
+    counts$type = sub("^\\^", "", counts$op)
+    counts$orientation = factor(ifelse(startsWith(counts$op, "^"), "Reverse", "Forward"),
+                                levels=c("Forward", "Reverse"))
+    count_plot = ggplot(counts, aes(x=position, y=count, colour=type)) +
+        geom_line(linewidth=0.4) +
+        geom_point(size=0.9) +
+        facet_grid(orientation ~ .) +
+        scale_colour_discrete(limits=names(feature_labels), guide="none") +
+        scale_y_continuous(limits=c(0, NA)) +
+        position_scale +
+        labs(x=NULL, y="Barcode matches",
+             title=paste("Read structure identified as:", ann$structure),
+             subtitle=paste("First", format(nrec, big.mark=","), "reads inspected")) +
+        theme_minimal() +
+        theme(axis.text.x=element_blank(), axis.ticks.x=element_blank())
+
     read_structure = ann$structure
     structure = .rs_parse(read_structure)
     features = rbind(
-        data.frame(structure$sample, op=ifelse(structure$sample$revcomp, "^B", "B")),
-        data.frame(structure$construct, op=ifelse(structure$construct$revcomp, "^M", "M"))
+        data.frame(structure$sample, type="B"),
+        data.frame(structure$construct, type="M")
     )
     rects = merge(rows, features)
     sample_barcodes = toupper(.read_samples(samples)$barcode)
     construct_barcodes = toupper(merge_constructs(all_constructs)$barcode)
     barcodes = subseq(DNAStringSet(reads[rects$read]), start=rects$start, width=rects$width)
     barcodes[rects$revcomp] = reverseComplement(barcodes[rects$revcomp])
-    present = ifelse(rects$op %in% c("B", "^B"),
-                     as.character(barcodes) %in% sample_barcodes,
+    present = ifelse(rects$type == "B", as.character(barcodes) %in% sample_barcodes,
                      as.character(barcodes) %in% construct_barcodes)
     rects$barcode = ifelse(present, "Present", "Absent")
-    rects$fill = ifelse(present, rects$op, NA_character_)
+    rects$fill = ifelse(present, rects$type, NA_character_)
 
-    ggplot() +
-        geom_rect(data=rows, aes(xmin=0.5, xmax=read_width + 0.5, ymin=y - 0.2,
-                                 ymax=y + 0.2),
+    read_plot = ggplot() +
+        geom_rect(data=rows, aes(xmin=0.5, xmax=read_width + 0.5, ymin=y - 0.2, ymax=y + 0.2),
                   fill="grey95", color="grey80") +
-        geom_rect(data=rects, aes(xmin=start - 0.5, xmax=start + width - 0.5,
-                                  ymin=y - 0.24, ymax=y + 0.24, fill=fill,
-                                  colour=op, linetype=barcode),
+        geom_rect(data=rects, aes(xmin=start - 0.5, xmax=start + width - 0.5, ymin=y - 0.24,
+                                  ymax=y + 0.24, fill=fill, colour=type, linetype=barcode),
                   alpha=0.45, show.legend=TRUE) +
         geom_text(data=bases, aes(x=position, y=y, label=base), size=3) +
-        scale_fill_discrete(limits=unique(features$op), na.translate=FALSE) +
-        scale_colour_discrete(limits=unique(features$op), guide="none") +
+        scale_colour_discrete(aesthetics=c("colour", "fill"), name="Feature",
+                              limits=names(feature_labels), labels=feature_labels,
+                              na.value=NA, na.translate=FALSE) +
         scale_linetype_manual(name="Barcode", values=c(Present="solid", Absent="solid"),
                               limits=c("Present", "Absent"),
                               guide=guide_legend(override.aes=list(fill=c("grey40", NA),
                                                                   colour="grey40"))) +
         scale_y_reverse(breaks=rows$y, labels=paste0("read ", rows$read_idx),
                         expand=expansion(add=0.15)) +
-        scale_x_continuous(breaks=seq.int(1L, read_width, by=max(1L, floor(read_width / 10L)))) +
-        labs(x="Position", y=NULL, fill="Feature",
-             title=paste("Read structure identified as:", read_structure)) +
+        position_scale +
+        labs(x="Position", y=NULL) +
         theme_minimal()
+
+    wrap_plots(count_plot, read_plot, ncol=1, heights=c(2, 4), guides="collect")
 }

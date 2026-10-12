@@ -17,10 +17,11 @@ columns 'sample_id', 'patient', 'rep', 'origin', 'barcode'}
 \item{nrec}{Number of FASTQ records to inspect}
 }
 \value{
-A `ggplot2` object
+A patchwork object containing barcode counts and read examples
 }
 \description{
-Plot annotated read structure examples
+Forward and reverse barcode match counts are shown at each barcode start
+position across all inspected reads, above up to ten read examples.
 }
 \examples{
 if (interactive()) {
