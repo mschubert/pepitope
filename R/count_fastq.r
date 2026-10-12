@@ -11,6 +11,8 @@
 #' @return      A \code{SummarizedExperiment} object with counts and metadata
 #'      `rowData` includes `unassigned_reads`, the number of reads with a matching construct
 #'      barcode but no matching sample barcode.
+#'      `metadata(dset)$unmapped_reads` records reads matching neither sample nor construct
+#'      barcode, excluding reads too short to extract both barcodes.
 #'
 #' @examples
 #' samples = data.frame(sample_id="sample1", patient="pat1", rep="1",
@@ -96,7 +98,8 @@ count_fastq = function(fq, samples, all_constructs, valid_barcodes, read_structu
     SummarizedExperiment(
         list(counts = counts[, meta$sample_id, drop=FALSE]),
         colData = meta,
-        rowData = rows
+        rowData = rows,
+        metadata = list(unmapped_reads = res$unmapped_reads)
     )
 }
 

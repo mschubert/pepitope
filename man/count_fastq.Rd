@@ -32,6 +32,8 @@ this will be inferred from the first reads in `fq`.}
 A \code{SummarizedExperiment} object with counts and metadata
      `rowData` includes `unassigned_reads`, the number of reads with a matching construct
      barcode but no matching sample barcode.
+     `metadata(dset)$unmapped_reads` records reads matching neither sample nor construct
+     barcode, excluding reads too short to extract both barcodes.
 }
 \description{
 Count barcodes directly from source FASTQ files

@@ -20,6 +20,8 @@ A patchwork object containing the read count summary plots
 \description{
 Reads with a recognized construct barcode but an unmatched sample barcode are
 included as an "Unknown sample" group using `rowData(dset)$unassigned_reads`.
+Reads matching neither barcode are included as unmapped reads in this group using
+`metadata(dset)$unmapped_reads`.
 }
 \examples{
 if (interactive()) {

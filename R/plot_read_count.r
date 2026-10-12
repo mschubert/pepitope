@@ -2,6 +2,8 @@
 #'
 #' Reads with a recognized construct barcode but an unmatched sample barcode are
 #' included as an "Unknown sample" group using `rowData(dset)$unassigned_reads`.
+#' Reads matching neither barcode are included as unmapped reads in this group using
+#' `metadata(dset)$unmapped_reads`.
 #'
 #' @param dset  The `SummarizedExperiment` object from `count_fastq`
 #' @param n_cutoff  Minimum reads for counting a barcode as represented
@@ -21,6 +23,7 @@
 #'
 #' @import ggplot2
 #' @importFrom patchwork wrap_plots plot_layout
+#' @importFrom S4Vectors metadata
 #' @export
 plot_read_count = function(dset, n_cutoff=10) {
     plot_one = function(rsum, y, position) {
@@ -33,7 +36,8 @@ plot_read_count = function(dset, n_cutoff=10) {
     bcs = as_tibble(rowData(dset))
     counts = cbind(assay(dset), unassigned=bcs$unassigned_reads)
     add_meta = tibble(sample_id="unassigned", label="Unknown sample(s)",
-                      total_reads=sum(bcs$unassigned_reads), mapped_reads=sum(bcs$unassigned_reads))
+                      total_reads=sum(bcs$unassigned_reads) + metadata(dset)$unmapped_reads,
+                      mapped_reads=sum(bcs$unassigned_reads))
     meta = bind_rows(as_tibble(colData(dset)), add_meta) |>
         mutate(label=factor(label, levels=rev(label)))
     read_summary = calc_representation(counts, bcs, meta) |>

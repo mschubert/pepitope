@@ -65,7 +65,7 @@ test_that("count_fastq infers missing read structure", {
     expect_equal(SummarizedExperiment::assay(dset)[1, 1], 1)
 })
 
-test_that("construct reads with unmatched samples are counted separately in rowData", {
+test_that("reads with unmatched samples are stored separately by construct or in metadata", {
     samples = data.frame(sample_id="sample1", patient="pat1", rep="1",
                          origin="lib", barcode="GGG")
     constructs = list(pat1=data.frame(gene_name=c("gene1", "gene2"),
@@ -73,8 +73,10 @@ test_that("construct reads with unmatched samples are counted separately in rowD
                                      tiled=TRUE, barcode=c("AAAA", "CCCC")))
     fq = tempfile(fileext=".fq")
     on.exit(unlink(fq))
-    reads = c("GGGAAAA", "AACAAAA", "TTTAAAA", "AACCCCC")
-    writeLines(as.vector(rbind(paste0("@r", seq_along(reads)), reads, "+", strrep("I", 7))), fq)
+    reads = c("GGGAAAA", "AACAAAA", "TTTAAAA", "AACCCCC", "AACTTTT", "TTTTTTT",
+              "GGGTTTT", "GGG")
+    writeLines(as.vector(rbind(paste0("@r", seq_along(reads)), reads, "+",
+                              strrep("I", nchar(reads)))), fq)
 
     dset = count_fastq(fq, samples, constructs, valid_barcodes=c("CCCC", "AAAA"),
                        read_structure="3B4M", verbose=FALSE)
@@ -82,4 +84,7 @@ test_that("construct reads with unmatched samples are counted separately in rowD
     expect_equal(rownames(dset), c("CCCC", "AAAA"))
     expect_equal(SummarizedExperiment::rowData(dset)$unassigned_reads, c(1, 2))
     expect_equal(as.numeric(SummarizedExperiment::assay(dset)), c(0, 1))
+    expect_equal(S4Vectors::metadata(dset)$unmapped_reads, 2)
+    expect_equal(SummarizedExperiment::colData(dset)$total_reads, 2)
+    expect_equal(SummarizedExperiment::colData(dset)$mapped_reads, 1)
 })
