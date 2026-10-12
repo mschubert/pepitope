@@ -36,10 +36,7 @@
     structure = tryCatch(
         .rs_format(counts, width(sample_barcodes)[1], width(construct_barcodes)[1],
                    n_reads=length(reads), min_frac=min_frac),
-        error=function(e) {
-            warning(conditionMessage(e), immediate.=TRUE)
-            "unknown"
-        }
+        error=function(e) { warning(conditionMessage(e), immediate.=TRUE); "unknown" }
     )
     list(counts=counts, reads=reads, structure=structure)
 }
