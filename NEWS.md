@@ -1,3 +1,7 @@
+# git head
+
+* `plot_read_structure` now indicates if a barcode is valid
+
 # pepitope 0.4.0
 
 * Added `plot_read_structure()` to identify and visualize read features

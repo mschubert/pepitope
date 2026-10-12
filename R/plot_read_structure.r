@@ -20,6 +20,7 @@
 #'
 #' @import ggplot2
 #' @importFrom BiocGenerics width
+#' @importFrom Biostrings DNAStringSet subseq reverseComplement
 #' @export
 plot_read_structure = function(fq, samples, all_constructs, nrec=100000L) {
     ann = .rs_annotate(fq, samples, all_constructs, nrec)
@@ -41,15 +42,31 @@ plot_read_structure = function(fq, samples, all_constructs, nrec=100000L) {
         data.frame(structure$construct, op=ifelse(structure$construct$revcomp, "^M", "M"))
     )
     rects = merge(rows, features)
+    sample_barcodes = toupper(.read_samples(samples)$barcode)
+    construct_barcodes = toupper(merge_constructs(all_constructs)$barcode)
+    barcodes = subseq(DNAStringSet(reads[rects$read]), start=rects$start, width=rects$width)
+    barcodes[rects$revcomp] = reverseComplement(barcodes[rects$revcomp])
+    present = ifelse(rects$op %in% c("B", "^B"),
+                     as.character(barcodes) %in% sample_barcodes,
+                     as.character(barcodes) %in% construct_barcodes)
+    rects$barcode = ifelse(present, "Present", "Absent")
+    rects$fill = ifelse(present, rects$op, NA_character_)
 
     ggplot() +
         geom_rect(data=rows, aes(xmin=0.5, xmax=read_width + 0.5, ymin=y - 0.2,
                                  ymax=y + 0.2),
                   fill="grey95", color="grey80") +
         geom_rect(data=rects, aes(xmin=start - 0.5, xmax=start + width - 0.5,
-                                  ymin=y - 0.24, ymax=y + 0.24, fill=op),
-                  alpha=0.45) +
+                                  ymin=y - 0.24, ymax=y + 0.24, fill=fill,
+                                  colour=op, linetype=barcode),
+                  alpha=0.45, show.legend=TRUE) +
         geom_text(data=bases, aes(x=position, y=y, label=base), size=3) +
+        scale_fill_discrete(limits=unique(features$op), na.translate=FALSE) +
+        scale_colour_discrete(limits=unique(features$op), guide="none") +
+        scale_linetype_manual(name="Barcode", values=c(Present="solid", Absent="solid"),
+                              limits=c("Present", "Absent"),
+                              guide=guide_legend(override.aes=list(fill=c("grey40", NA),
+                                                                  colour="grey40"))) +
         scale_y_reverse(breaks=rows$y, labels=paste0("read ", rows$read_idx),
                         expand=expansion(add=0.15)) +
         scale_x_continuous(breaks=seq.int(1L, read_width, by=max(1L, floor(read_width / 10L)))) +
