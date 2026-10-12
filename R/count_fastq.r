@@ -82,7 +82,7 @@ count_fastq = function(fq, samples, all_constructs, valid_barcodes, read_structu
 
     stats = data.frame(sample_id = samples$sample_id,
                        total_reads = res$total_reads,
-                       mapped_reads = res$mapped_reads)
+                       mapped_reads = colSums(counts))
     meta = samples |>
         left_join(stats, by="sample_id") |>
         mutate(patient = factor(patient),

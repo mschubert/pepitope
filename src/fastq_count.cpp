@@ -98,9 +98,7 @@ Rcpp::List count_fastq_barcodes_cpp(Rcpp::CharacterVector fq,
     Rcpp::NumericMatrix counts(constructs.size(), samples.size());
     Rcpp::NumericVector unassigned_reads(constructs.size());
     Rcpp::NumericVector total_reads(samples.size());
-    Rcpp::NumericVector mapped_reads(samples.size());
-    double unmatched_reads = 0.0;
-    double too_short_reads = 0.0;
+    double unmapped_reads = 0.0;
     std::uint64_t reads_seen = 0;
     Rcpp::Function format("format");
 
@@ -131,17 +129,16 @@ Rcpp::List count_fastq_barcodes_cpp(Rcpp::CharacterVector fq,
         std::string sample_key;
         std::string construct_key;
         if (!append_segments(sample_key, sample_segments, seq) ||
-                !append_segments(construct_key, construct_segments, seq)) {
-            ++too_short_reads;
+                !append_segments(construct_key, construct_segments, seq))
             continue;
-        }
 
         const auto sample_hit = sample_index.find(sample_key);
         const auto construct_hit = construct_index.find(construct_key);
         if (sample_hit == sample_index.end()) {
-            ++unmatched_reads;
             if (construct_hit != construct_index.end())
                 ++unassigned_reads[construct_hit->second];
+            else
+                ++unmapped_reads;
             continue;
         }
 
@@ -150,7 +147,6 @@ Rcpp::List count_fastq_barcodes_cpp(Rcpp::CharacterVector fq,
         if (construct_hit == construct_index.end())
             continue;
 
-        ++mapped_reads[sample_i];
         ++counts(construct_hit->second, sample_i);
     }
 
@@ -163,10 +159,6 @@ Rcpp::List count_fastq_barcodes_cpp(Rcpp::CharacterVector fq,
         Rcpp::_["counts"] = counts,
         Rcpp::_["unassigned_reads"] = unassigned_reads,
         Rcpp::_["total_reads"] = total_reads,
-        Rcpp::_["mapped_reads"] = mapped_reads,
-        Rcpp::_["unmatched_reads"] = unmatched_reads,
-        Rcpp::_["unmapped_reads"] = unmatched_reads - Rcpp::sum(unassigned_reads),
-        Rcpp::_["too_short_reads"] = too_short_reads,
-        Rcpp::_["reads_seen"] = static_cast<double>(reads_seen)
+        Rcpp::_["unmapped_reads"] = unmapped_reads
     );
 }
