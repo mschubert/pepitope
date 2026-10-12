@@ -60,7 +60,6 @@ plot_read_structure = function(fq, samples, all_constructs, nrec=100000L) {
         labs(x=NULL, y="Barcode matches",
              title=paste("Read structure identified as:", ann$structure),
              subtitle=paste("First", format(nrec, big.mark=","), "reads inspected")) +
-        theme_minimal() +
         theme(axis.text.x=element_blank(), axis.ticks.x=element_blank())
 
     read_structure = ann$structure
@@ -96,8 +95,7 @@ plot_read_structure = function(fq, samples, all_constructs, nrec=100000L) {
         scale_y_reverse(breaks=rows$y, labels=paste0("read ", rows$read_idx),
                         expand=expansion(add=0.15)) +
         position_scale +
-        labs(x="Position", y=NULL) +
-        theme_minimal()
+        labs(x="Position", y=NULL)
 
-    wrap_plots(count_plot, read_plot, ncol=1, heights=c(2, 4), guides="collect")
+    wrap_plots(count_plot, read_plot, ncol=1, heights=c(2, 4), guides="collect") & theme_minimal()
 }
