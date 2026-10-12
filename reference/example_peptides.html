@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pepitope</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,11 +66,120 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">bases</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"C"</span>, <span class="st">"G"</span>, <span class="st">"T"</span><span class="op">)</span><span class="op">)</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">valid_barcodes</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">bases</span>, <span class="fl">1</span>, <span class="va">paste0</span>, collapse<span class="op">=</span><span class="st">""</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>    <span class="fu">example_peptides</span><span class="op">(</span><span class="va">valid_barcodes</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">valid_barcodes</span> <span class="op">=</span> <span class="fu"><a href="example_barcodes.html">example_barcodes</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">example_peptides</span><span class="op">(</span><span class="va">valid_barcodes</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pat1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 67 × 13</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    var_id             mut_id       pep_id        pep_type gene_name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> chr1:114713908_T/A NRAS_Q61     NRAS_Q61      ref      NRAS     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> chr1:114713908_T/A NRAS_Q61     NRAS_Q61L     alt      NRAS     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> chr1:114713908_T/C NRAS_Q61     NRAS_Q61R     alt      NRAS     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> chr2:208248388_G/A IDH1_R132    IDH1_R132     ref      IDH1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> chr2:208248388_G/A IDH1_R132    IDH1_R132L    alt      IDH1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> chr3:179234297_A/G PIK3CA_H1047 PIK3CA_H1047  ref      PIK3CA   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> chr3:179234297_A/G PIK3CA_H1047 PIK3CA_H1047R alt      PIK3CA   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> chr4:54285926_A/T  PDGFRA_D842  PDGFRA_D842   ref      PDGFRA   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> chr4:54285926_A/T  PDGFRA_D842  PDGFRA_D842V  alt      PDGFRA   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> chr4:54733155_A/T  KIT_D816     KIT_D816      ref      KIT      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    gene_id         tx_id         tiled n_tiles    nt peptide barcode_1 barcode_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ENSG00000213281 ENST00000369… ATAG…       1    93 IDGETC… AAAAAAAA… TAACAAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ENSG00000213281 ENST00000369… ATAG…       1    93 IDGETC… CAAAAAAA… ACACAAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ENSG00000213281 ENST00000369… ATAG…       1    93 IDGETC… GAAAAAAA… CCACAAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ENSG00000138413 ENST00000345… ATCC…       1    93 IPRLVS… TAAAAAAA… GCACAAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ENSG00000138413 ENST00000345… ATCC…       1    93 IPRLVS… ACAAAAAA… TCACAAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ENSG00000121879 ENST00000263… GAGC…       1    93 EQEALE… CCAAAAAA… AGACAAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ENSG00000121879 ENST00000263… GAGC…       1    93 EQEALE… GCAAAAAA… CGACAAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ENSG00000134853 ENST00000257… GCAC…       1    93 AQGKIV… TCAAAAAA… GGACAAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ENSG00000134853 ENST00000257… GCAC…       1    93 AQGKIV… AGAAAAAA… TGACAAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ENSG00000157404 ENST00000288… ACTC…       1    93 THGRIT… CGAAAAAA… ATACAAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 57 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pat2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 46 × 13</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    var_id             mut_id       pep_id        pep_type gene_name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> chr1:114713908_T/A NRAS_Q61     NRAS_Q61      ref      NRAS     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> chr1:114713908_T/A NRAS_Q61     NRAS_Q61L     alt      NRAS     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> chr1:114713908_T/C NRAS_Q61     NRAS_Q61R     alt      NRAS     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> chr3:179234297_A/G PIK3CA_H1047 PIK3CA_H1047  ref      PIK3CA   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> chr3:179234297_A/G PIK3CA_H1047 PIK3CA_H1047R alt      PIK3CA   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> chr4:54285926_A/T  PDGFRA_D842  PDGFRA_D842   ref      PDGFRA   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> chr4:54285926_A/T  PDGFRA_D842  PDGFRA_D842V  alt      PDGFRA   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> chr4:54733155_A/T  KIT_D816     KIT_D816      ref      KIT      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> chr4:54733155_A/T  KIT_D816     KIT_D816V     alt      KIT      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> chr4:152326137_C/T FBXW7_R505   FBXW7_R505    ref      FBXW7    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    gene_id         tx_id         tiled n_tiles    nt peptide barcode_1 barcode_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ENSG00000213281 ENST00000369… ATAG…       1    93 IDGETC… GCAGAAAA… ACTGAAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ENSG00000213281 ENST00000369… ATAG…       1    93 IDGETC… TCAGAAAA… CCTGAAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ENSG00000213281 ENST00000369… ATAG…       1    93 IDGETC… AGAGAAAA… GCTGAAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ENSG00000121879 ENST00000263… GAGC…       1    93 EQEALE… CGAGAAAA… TCTGAAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ENSG00000121879 ENST00000263… GAGC…       1    93 EQEALE… GGAGAAAA… AGTGAAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ENSG00000134853 ENST00000257… GCAC…       1    93 AQGKIV… TGAGAAAA… CGTGAAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ENSG00000134853 ENST00000257… GCAC…       1    93 AQGKIV… ATAGAAAA… GGTGAAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ENSG00000157404 ENST00000288… ACTC…       1    93 THGRIT… CTAGAAAA… TGTGAAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ENSG00000157404 ENST00000288… ACTC…       1    93 THGRIT… GTAGAAAA… ATTGAAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ENSG00000109670 ENST00000281… ACAG…       1    93 TGQCLH… TTAGAAAA… CTTGAAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 36 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $pat3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 47 × 13</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    var_id             mut_id       pep_id        pep_type gene_name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> chr2:208248388_G/A IDH1_R132    IDH1_R132     ref      IDH1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> chr2:208248388_G/A IDH1_R132    IDH1_R132L    alt      IDH1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> chr3:179234297_A/G PIK3CA_H1047 PIK3CA_H1047  ref      PIK3CA   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> chr3:179234297_A/G PIK3CA_H1047 PIK3CA_H1047R alt      PIK3CA   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> chr4:54285926_A/T  PDGFRA_D842  PDGFRA_D842   ref      PDGFRA   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> chr4:54285926_A/T  PDGFRA_D842  PDGFRA_D842V  alt      PDGFRA   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> chr4:54733155_A/T  KIT_D816     KIT_D816      ref      KIT      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> chr4:54733155_A/T  KIT_D816     KIT_D816V     alt      KIT      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> chr4:152326137_C/T FBXW7_R505   FBXW7_R505    ref      FBXW7    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> chr4:152326137_C/T FBXW7_R505   FBXW7_R505S   alt      FBXW7    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    gene_id         tx_id         tiled n_tiles    nt peptide barcode_1 barcode_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ENSG00000138413 ENST00000345… ATCC…       1    93 IPRLVS… GAGTAAAA… CACACAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ENSG00000138413 ENST00000345… ATCC…       1    93 IPRLVS… TAGTAAAA… GACACAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ENSG00000121879 ENST00000263… GAGC…       1    93 EQEALE… ACGTAAAA… TACACAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ENSG00000121879 ENST00000263… GAGC…       1    93 EQEALE… CCGTAAAA… ACCACAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ENSG00000134853 ENST00000257… GCAC…       1    93 AQGKIV… GCGTAAAA… CCCACAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ENSG00000134853 ENST00000257… GCAC…       1    93 AQGKIV… TCGTAAAA… GCCACAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ENSG00000157404 ENST00000288… ACTC…       1    93 THGRIT… AGGTAAAA… TCCACAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ENSG00000157404 ENST00000288… ACTC…       1    93 THGRIT… CGGTAAAA… AGCACAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ENSG00000109670 ENST00000281… ACAG…       1    93 TGQCLH… GGGTAAAA… CGCACAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ENSG00000109670 ENST00000281… ACAG…       1    93 TGQCLH… TGGTAAAA… GGCACAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 37 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $common</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 46 × 13</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    var_id             mut_id       pep_id        pep_type gene_name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> chr1:114713908_T/A NRAS_Q61     NRAS_Q61      ref      NRAS     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> chr1:114713908_T/A NRAS_Q61     NRAS_Q61L     alt      NRAS     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> chr1:114713908_T/C NRAS_Q61     NRAS_Q61R     alt      NRAS     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> chr2:208248388_G/A IDH1_R132    IDH1_R132     ref      IDH1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> chr2:208248388_G/A IDH1_R132    IDH1_R132L    alt      IDH1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> chr3:179234297_A/G PIK3CA_H1047 PIK3CA_H1047  ref      PIK3CA   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> chr3:179234297_A/G PIK3CA_H1047 PIK3CA_H1047R alt      PIK3CA   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> chr4:54285926_A/T  PDGFRA_D842  PDGFRA_D842   ref      PDGFRA   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> chr4:54285926_A/T  PDGFRA_D842  PDGFRA_D842V  alt      PDGFRA   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> chr4:54733155_A/T  KIT_D816     KIT_D816      ref      KIT      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    gene_id         tx_id         tiled n_tiles    nt peptide barcode_1 barcode_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ENSG00000213281 ENST00000369… ATAG…       1    93 IDGETC… AAACCAAA… GTGCCAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ENSG00000213281 ENST00000369… ATAG…       1    93 IDGETC… CAACCAAA… TTGCCAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ENSG00000213281 ENST00000369… ATAG…       1    93 IDGETC… GAACCAAA… AATCCAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ENSG00000138413 ENST00000345… ATCC…       1    93 IPRLVS… TAACCAAA… CATCCAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ENSG00000138413 ENST00000345… ATCC…       1    93 IPRLVS… ACACCAAA… GATCCAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ENSG00000121879 ENST00000263… GAGC…       1    93 EQEALE… CCACCAAA… TATCCAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ENSG00000121879 ENST00000263… GAGC…       1    93 EQEALE… GCACCAAA… ACTCCAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ENSG00000134853 ENST00000257… GCAC…       1    93 AQGKIV… TCACCAAA… CCTCCAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ENSG00000134853 ENST00000257… GCAC…       1    93 AQGKIV… AGACCAAA… GCTCCAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ENSG00000157404 ENST00000288… ACTC…       1    93 THGRIT… CGACCAAA… TCTCCAAA…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 36 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -83,7 +192,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

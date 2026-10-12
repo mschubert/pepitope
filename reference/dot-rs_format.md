@@ -1,11 +1,12 @@
 # Format a read structure from barcode position counts
 
-Format a read structure from barcode position counts
+Raises an error if neither barcode type meets \`min_frac\` or inferred
+barcode positions overlap.
 
 ## Usage
 
 ``` r
-.rs_format(counts, sample_width, construct_width)
+.rs_format(counts, sample_width, construct_width, n_reads, min_frac = 0.2)
 ```
 
 ## Arguments
@@ -22,6 +23,16 @@ Format a read structure from barcode position counts
 
   Width of the construct barcode
 
+- n_reads:
+
+  Number of inspected reads
+
+- min_frac:
+
+  Minimum fraction of reads matching each barcode type at its inferred
+  position in either orientation
+
 ## Value
 
-A read structure string
+A read structure string containing the barcode types that meet
+\`min_frac\`

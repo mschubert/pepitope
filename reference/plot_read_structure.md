@@ -1,6 +1,10 @@
 # Plot annotated read structure examples
 
-Plot annotated read structure examples
+Forward and reverse barcode match counts are shown at each barcode start
+position across all inspected reads, above up to ten read examples. Only
+barcode types included in the inferred structure are annotated in the
+reads. Read examples are shown without barcode annotations if the
+structure is unknown.
 
 ## Usage
 
@@ -29,7 +33,7 @@ plot_read_structure(fq, samples, all_constructs, nrec = 100000L)
 
 ## Value
 
-A \`ggplot2\` object
+A patchwork object containing barcode counts and read examples
 
 ## Examples
 

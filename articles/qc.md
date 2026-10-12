@@ -24,13 +24,12 @@ When ordering those as gene blocks, one or more construct barcodes are
 added to the sequence, so we are able to uniquely identify our minigene
 peptides also when a sequencing read does not reach the mutated base.
 
-Here, we use barcodes from [this
-publication](https://www.pnas.org/doi/full/10.1073/pnas.1802640115) and
-[Github repository](https://github.com/hawkjo/freebarcodes):
+Here, we generate a deterministic set of example barcodes. In a real
+library, use a validated barcode design with the required edit distance
+and sequence constraints for your assay:
 
 ``` r
-lib = "https://raw.githubusercontent.com/hawkjo/freebarcodes/master/barcodes/barcodes12-1.txt"
-valid_barcodes = readr::read_tsv(lib, col_names=FALSE)$X1
+valid_barcodes = example_barcodes(1000)
 ```
 
 These barcodes need to be of the same length and not overlap between
@@ -150,7 +149,7 @@ from the read sequences. However, we could also specify it via the
 ``` r
 dset = count_fastq(fastq_file, sample_sheet, all_constructs, valid_barcodes)
 #> Read structure identified as '7B12M'
-#> Counting barcodes in /tmp/RtmpBIVk2K/my_seqdata.fq
+#> Counting barcodes in /tmp/RtmpOXa7zR/my_seqdata.fq
 #> Processed 1,608,536 reads
 ```
 

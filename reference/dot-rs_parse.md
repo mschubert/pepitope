@@ -16,4 +16,5 @@ Parse a read structure
 
 ## Value
 
-A \`list\` with sample and construct barcode ranges
+A \`list\` with sample and construct barcode ranges; missing types have
+zero rows

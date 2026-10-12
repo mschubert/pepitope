@@ -1,11 +1,12 @@
 # Annotate barcode positions in source FASTQ reads
 
-Annotate barcode positions in source FASTQ reads
+If structure inference fails, a warning is emitted and the structure is
+\`"unknown"\`.
 
 ## Usage
 
 ``` r
-.rs_annotate(fq, samples, all_constructs, nrec = 100000L)
+.rs_annotate(fq, samples, all_constructs, nrec = 100000L, min_frac = 0.2)
 ```
 
 ## Arguments
@@ -26,6 +27,11 @@ Annotate barcode positions in source FASTQ reads
 - nrec:
 
   Number of FASTQ records to inspect
+
+- min_frac:
+
+  Minimum fraction of inspected reads matching each barcode type at its
+  inferred position in either orientation
 
 ## Value
 
