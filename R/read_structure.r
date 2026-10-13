@@ -55,6 +55,35 @@
     counts
 }
 
+#' Match inferred barcode segments in individual reads
+#'
+#' @param reads  Read sequences as a character vector or `DNAStringSet`
+#' @param structure  An inferred read structure string, including `"unknown"`
+#' @param sample_barcodes  Known sample barcodes
+#' @param construct_barcodes  Known construct barcodes
+#' @return  A `data.frame` with read indices, barcode types, ranges, orientations, and
+#'      logical `present` values; unknown structures return zero rows
+#'
+#' @importFrom Biostrings DNAStringSet subseq reverseComplement
+#' @keywords internal
+.rs_match = function(reads, structure, sample_barcodes, construct_barcodes) {
+    if (structure == "unknown")
+        return(data.frame(read=integer(), start=integer(), width=integer(),
+                          revcomp=logical(), type=character(), present=logical()))
+
+    structure = .rs_parse(structure)
+    features = rbind(data.frame(structure$sample, type=rep("B", nrow(structure$sample))),
+                     data.frame(structure$construct, type=rep("M", nrow(structure$construct))))
+    matches = merge(data.frame(read=seq_along(reads)), features)
+    reads = DNAStringSet(toupper(as.character(reads)))
+    barcodes = subseq(reads[matches$read], start=matches$start, width=matches$width)
+    barcodes[matches$revcomp] = reverseComplement(barcodes[matches$revcomp])
+    matches$present = ifelse(matches$type == "B",
+                             as.character(barcodes) %in% toupper(sample_barcodes),
+                             as.character(barcodes) %in% toupper(construct_barcodes))
+    matches
+}
+
 #' Parse a read structure
 #'
 #' @param read_structures  A character string describing the FASTQ read structure

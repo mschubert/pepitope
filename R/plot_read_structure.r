@@ -25,7 +25,6 @@
 #'
 #' @import ggplot2
 #' @importFrom BiocGenerics width
-#' @importFrom Biostrings DNAStringSet subseq reverseComplement
 #' @importFrom patchwork wrap_plots
 #' @importFrom tidyr pivot_longer
 #' @export
@@ -66,20 +65,13 @@ plot_read_structure = function(fq, samples, all_constructs, nrec=100000L) {
              subtitle=paste("First", format(nrec, big.mark=","), "reads inspected")) +
         theme(axis.text.x=element_blank(), axis.ticks.x=element_blank())
 
+    matches = .rs_match(reads, ann$structure, .read_samples(samples)$barcode,
+                        merge_constructs(all_constructs)$barcode)
     barcode_layers = NULL
     if (known_structure) {
-        structure = .rs_parse(ann$structure)
-        features = rbind(data.frame(structure$sample, type=rep("B", nrow(structure$sample))),
-                         data.frame(structure$construct, type=rep("M", nrow(structure$construct))))
-        rects = merge(rows, features)
-        sample_barcodes = toupper(.read_samples(samples)$barcode)
-        construct_barcodes = toupper(merge_constructs(all_constructs)$barcode)
-        barcodes = subseq(DNAStringSet(reads[rects$read]), start=rects$start, width=rects$width)
-        barcodes[rects$revcomp] = reverseComplement(barcodes[rects$revcomp])
-        present = ifelse(rects$type == "B", as.character(barcodes) %in% sample_barcodes,
-                         as.character(barcodes) %in% construct_barcodes)
-        rects$barcode = ifelse(present, "Present", "Absent")
-        rects$fill = ifelse(present, rects$type, NA_character_)
+        rects = merge(rows, matches, by="read")
+        rects$barcode = ifelse(rects$present, "Present", "Absent")
+        rects$fill = ifelse(rects$present, rects$type, NA_character_)
         barcode_layers = list(
             geom_rect(data=rects, aes(xmin=start - 0.5, xmax=start + width - 0.5,
                                      ymin=y - 0.24, ymax=y + 0.24, fill=fill,
