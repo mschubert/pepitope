@@ -1,3 +1,23 @@
+context("read_structure")
+
+test_that("rs_annotate finds barcode positions and orientation", {
+    samples = data.frame(sample_id="sample1", patient="pat1", rep="1", origin="lib", barcode="GGG")
+    constructs = list(pat1 = data.frame(gene_name="gene", mut_id="gene", pep_id="pep",
+                                        tiled=TRUE, barcode="TTAACG"))
+    fq = tempfile(fileext=".fq")
+    writeLines(c(
+        "@read1", "GGGNNNNNCGTTAA", "+", "IIIIIIIIIIIIII",
+        "@read2", "GGGNNNNNTTAACG", "+", "IIIIIIIIIIIIII"
+    ), fq)
+
+    res = .rs_annotate(fq, samples, constructs, nrec=1)
+
+    expect_equal(length(res$reads), 1L)
+    expect_equal(res$counts[["B"]][1], 1L)
+    expect_equal(res$counts[["^M"]][9], 1L)
+    expect_equal(res$structure, "3B5S6^M")
+})
+
 test_that("read structure inference includes each barcode type meeting the threshold", {
     counts = data.frame(B=integer(14), `^B`=integer(14), M=integer(14),
                         `^M`=integer(14), check.names=FALSE)
