@@ -29,7 +29,9 @@
 #' @importFrom tidyr pivot_longer
 #' @export
 plot_read_structure = function(fq, samples, all_constructs, nrec=100000L) {
-    ann = .rs_annotate(fq, samples, all_constructs, nrec)
+    sample_barcodes = .read_samples(samples)$barcode
+    construct_barcodes = merge_constructs(all_constructs)$barcode
+    ann = .rs_annotate(fq, sample_barcodes, construct_barcodes, nrec)
     n_reads = min(10L, length(ann$reads))
     read_idx = sample(seq_along(ann$reads), n_reads)
     reads = ann$reads[read_idx]
@@ -65,8 +67,7 @@ plot_read_structure = function(fq, samples, all_constructs, nrec=100000L) {
              subtitle=paste("First", format(nrec, big.mark=","), "reads inspected")) +
         theme(axis.text.x=element_blank(), axis.ticks.x=element_blank())
 
-    matches = .rs_match(reads, ann$structure, .read_samples(samples)$barcode,
-                        merge_constructs(all_constructs)$barcode)
+    matches = .rs_match(reads, ann$structure, sample_barcodes, construct_barcodes)
     barcode_layers = NULL
     if (known_structure) {
         rects = merge(rows, matches, by="read")

@@ -47,6 +47,16 @@ test_that("count_fastq infers missing read structure", {
     expect_equal(SummarizedExperiment::assay(dset)[1, 1], 1)
 })
 
+test_that("count_fastq requires both sample and construct barcode segments", {
+    samples = data.frame(sample_id="sample1", patient="pat1", rep="1",
+                         origin="lib", barcode="GGG")
+    constructs = list(pat1=data.frame(gene_name="gene", mut_id="gene", pep_id="pep",
+                                     tiled=TRUE, barcode="TTAACG"))
+    for (structure in c("3B", "8S6^M"))
+        expect_error(count_fastq("unused.fq", samples, constructs, read_structure=structure,
+                                 verbose=FALSE), "Counting requires both")
+})
+
 test_that("reads with unmatched samples are stored separately by construct or in metadata", {
     samples = data.frame(sample_id="sample1", patient="pat1", rep="1",
                          origin="lib", barcode="GGG")

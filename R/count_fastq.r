@@ -45,7 +45,7 @@ count_fastq = function(fq, samples, all_constructs, valid_barcodes, read_structu
     fq = path.expand(fq)
 
     if (missing(read_structure)) {
-        read_structure = .rs_annotate(fq, samples, all_constructs)$structure
+        read_structure = .rs_annotate(fq, samples$barcode, construct_df$barcode)$structure
         if (verbose)
             message("Read structure identified as ", sQuote(read_structure))
     }

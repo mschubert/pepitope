@@ -1,16 +1,14 @@
 context("read_structure")
 
 test_that("rs_annotate finds barcode positions and orientation", {
-    samples = data.frame(sample_id="sample1", patient="pat1", rep="1", origin="lib", barcode="GGG")
-    constructs = list(pat1 = data.frame(gene_name="gene", mut_id="gene", pep_id="pep",
-                                        tiled=TRUE, barcode="TTAACG"))
     fq = tempfile(fileext=".fq")
+    on.exit(unlink(fq))
     writeLines(c(
         "@read1", "GGGNNNNNCGTTAA", "+", "IIIIIIIIIIIIII",
         "@read2", "GGGNNNNNTTAACG", "+", "IIIIIIIIIIIIII"
     ), fq)
 
-    res = .rs_annotate(fq, samples, constructs, nrec=1)
+    res = .rs_annotate(fq, "GGG", "TTAACG", nrec=1)
 
     expect_equal(length(res$reads), 1L)
     expect_equal(res$counts[["B"]][1], 1L)
@@ -19,10 +17,6 @@ test_that("rs_annotate finds barcode positions and orientation", {
 })
 
 test_that("read annotation counts forward and reverse barcode matches separately", {
-    samples = data.frame(sample_id="sample1", patient="pat1", rep="1",
-                         origin="lib", barcode="aac")
-    constructs = list(pat1=data.frame(gene_name="gene", mut_id="gene", pep_id="pep",
-                                     tiled=TRUE, barcode_1="ttaacg"))
     fq = tempfile(fileext=".fq")
     on.exit(unlink(fq))
 
@@ -37,7 +31,7 @@ test_that("read annotation counts forward and reverse barcode matches separately
         writeLines(as.vector(rbind(paste0("@r", seq_along(reads)), reads,
                                    "+", strrep("I", 14))), fq)
 
-        counts = .rs_annotate(fq, samples, constructs, nrec=14)$counts
+        counts = .rs_annotate(fq, "aac", "ttaacg", nrec=14)$counts
         main_ops = if (reverse) c("^B", "^M") else c("B", "M")
         other_ops = if (reverse) c("B", "M") else c("^B", "^M")
         for (i in seq_along(main_ops)) {
@@ -177,39 +171,28 @@ test_that("overlapping barcode positions raise errors while adjacent positions a
 })
 
 test_that("read annotation passes min_frac and uses the actual number of inspected reads", {
-    samples = data.frame(sample_id="sample1", patient="pat1", rep="1",
-                         origin="lib", barcode="GGG")
-    constructs = list(pat1=data.frame(gene_name="gene", mut_id="gene", pep_id="pep",
-                                     tiled=TRUE, barcode="TTAACG"))
     fq = tempfile(fileext=".fq")
     on.exit(unlink(fq))
     reads = c("GGGNNNNNCGTTAA", rep(strrep("N", 14), 4))
     writeLines(as.vector(rbind(paste0("@r", seq_along(reads)), reads,
                                "+", strrep("I", 14))), fq)
 
-    expect_equal(.rs_annotate(fq, samples, constructs, nrec=100)$structure, "3B5S6^M")
-    expect_warning(ann <- .rs_annotate(fq, samples, constructs, nrec=100, min_frac=0.21),
+    expect_equal(.rs_annotate(fq, "GGG", "TTAACG", nrec=100)$structure, "3B5S6^M")
+    expect_warning(ann <- .rs_annotate(fq, "GGG", "TTAACG", nrec=100, min_frac=0.21),
                    "below min_frac")
     expect_equal(ann$structure, "unknown")
     expect_length(ann$reads, 5)
     expect_equal(ann$counts$B[1], 1L)
     expect_equal(ann$counts[["^M"]][9], 1L)
-    for (structure in c("3B", "8S6^M"))
-        expect_error(count_fastq(fq, samples, constructs, read_structure=structure, verbose=FALSE),
-                     "Counting requires both")
 })
 
 test_that("read annotation warns and returns unknown for overlapping barcode positions", {
-    samples = data.frame(sample_id="sample1", patient="pat1", rep="1",
-                         origin="lib", barcode="GGG")
-    constructs = list(pat1=data.frame(gene_name="gene", mut_id="gene", pep_id="pep",
-                                     tiled=TRUE, barcode="GGGAAA"))
     fq = tempfile(fileext=".fq")
     on.exit(unlink(fq))
     writeLines(as.vector(rbind(paste0("@r", seq_len(5)), rep("GGGAAANNNNNNNN", 5),
                                "+", strrep("I", 14))), fq)
 
-    expect_warning(ann <- .rs_annotate(fq, samples, constructs, nrec=5),
+    expect_warning(ann <- .rs_annotate(fq, "GGG", "GGGAAA", nrec=5),
                    "barcode positions overlap")
     expect_equal(ann$structure, "unknown")
 })

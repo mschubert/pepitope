@@ -4,15 +4,20 @@
 \alias{.rs_annotate}
 \title{Annotate barcode positions in source FASTQ reads}
 \usage{
-.rs_annotate(fq, samples, all_constructs, nrec = 100000L, min_frac = 0.2)
+.rs_annotate(
+  fq,
+  sample_barcodes,
+  construct_barcodes,
+  nrec = 100000L,
+  min_frac = 0.2
+)
 }
 \arguments{
 \item{fq}{Path to one FASTQ file}
 
-\item{samples}{A sample sheet as `data.frame` in tsv format. Requires the
-columns 'sample_id', 'patient', 'rep', 'origin', 'barcode'}
+\item{sample_barcodes}{A character vector of known sample barcodes}
 
-\item{all_constructs}{A named list of all construct libraries}
+\item{construct_barcodes}{A character vector of known construct barcodes}
 
 \item{nrec}{Number of FASTQ records to inspect}
 

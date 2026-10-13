@@ -3,9 +3,8 @@
 #' If structure inference fails, a warning is emitted and the structure is `"unknown"`.
 #'
 #' @param fq  Path to one FASTQ file
-#' @param samples  A sample sheet as `data.frame` in tsv format. Requires the
-#'      columns 'sample_id', 'patient', 'rep', 'origin', 'barcode'
-#' @param all_constructs  A named list of all construct libraries
+#' @param sample_barcodes  A character vector of known sample barcodes
+#' @param construct_barcodes  A character vector of known construct barcodes
 #' @param nrec  Number of FASTQ records to inspect
 #' @param min_frac  Minimum fraction of inspected reads matching each barcode type
 #'      at its inferred position in either orientation
@@ -15,11 +14,9 @@
 #' @importFrom Biostrings PDict matchPDict xscat
 #' @importFrom BiocGenerics width
 #' @keywords internal
-.rs_annotate = function(fq, samples, all_constructs, nrec=100000L, min_frac=0.2) {
-    samples = .read_samples(samples)
-    construct_df = merge_constructs(all_constructs)
-    sample_barcodes = DNAStringSet(toupper(samples$barcode))
-    construct_barcodes = DNAStringSet(toupper(construct_df$barcode))
+.rs_annotate = function(fq, sample_barcodes, construct_barcodes, nrec=100000L, min_frac=0.2) {
+    sample_barcodes = DNAStringSet(toupper(sample_barcodes))
+    construct_barcodes = DNAStringSet(toupper(construct_barcodes))
     .check_barcodes(sample_barcodes, "Sample barcodes")
     .check_barcodes(construct_barcodes, "Construct barcodes")
 
