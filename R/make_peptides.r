@@ -9,6 +9,8 @@
 #'     peptides = make_peptides(subs)
 #' }
 #'
+#' @importFrom methods is
+#' @importFrom S4Vectors mcols mcols<-
 #' @export
 make_peptides = function(subs, fus=DataFrame()) {
     # changes peptide, is unique and is expressed
@@ -32,6 +34,7 @@ make_peptides = function(subs, fus=DataFrame()) {
         ifelse(consequence == "frameshift", "fs", substr(varaa, 1L, end))
     }
 
+    mcols(subs) = .sequences_as_character(mcols(subs))
     pep = as.data.frame(subs) |>
         select(var_id, mut_id, gene_name, gene_id=GENEID, tx_id=tx_name,
                consequence=CONSEQUENCE, varaa=VARAA, ref=ref_nuc, alt=alt_nuc) |>
@@ -43,7 +46,7 @@ make_peptides = function(subs, fus=DataFrame()) {
     if (nrow(fus) == 0)
         return(pep)
 
-    fdf = as_tibble(fus)
+    fdf = as_tibble(.sequences_as_character(fus))
     ref1 = fdf |> mutate(gene_name=sub("(.*)--.*", "\\1", fusion)) |>
         select(fusion, gene_name, gene_id=gene_id_5p, tx_id=tx_id_5p, cDNA=ref_nuc_5p)
     ref2 = fdf |> mutate(gene_name=sub(".*--(.*)", "\\1", fusion)) |>
@@ -62,4 +65,13 @@ make_peptides = function(subs, fus=DataFrame()) {
         select(-fusion)
 
     bind_rows(pep, pep2)
+}
+
+# Keep named sequence columns flat when converting Bioconductor tables to data frames.
+.sequences_as_character = function(df) {
+    for (col in names(df)) {
+        if (is(df[[col]], "XStringSet"))
+            df[[col]] = as.character(df[[col]])
+    }
+    df
 }
