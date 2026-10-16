@@ -3,7 +3,7 @@ context("count_fastq")
 valid_barcodes = example_barcodes(1000)
 all_constructs = example_peptides(valid_barcodes)
 sample_sheet = system.file("my_samples.tsv", package="pepitope")
-samples = readr::read_tsv(sample_sheet)
+samples = .read_samples(sample_sheet)
 fastq_file = example_fastq(sample_sheet, all_constructs, target_reads=100)
 
 test_that("count source FASTQ directly", {

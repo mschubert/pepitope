@@ -6,8 +6,10 @@
 #'
 #' @keywords internal
 add_gex = function(res, rec) {
-    counts = readr::read_tsv(rec$til_rna$count, col_names=c("gene_id", "gene_name", "count"))
-    gex = readr::read_tsv(rec$til_rna$tpm) |>
+    counts = .read_tsv(rec$til_rna$count, header=FALSE,
+                       col.names=c("gene_id", "gene_name", "count"),
+                       colClasses=c(gene_id="character", gene_name="character"))
+    gex = .read_tsv(rec$til_rna$tpm, colClasses=c(gene_id="character")) |>
         inner_join(counts) |>
         select(gene_id, gene_name, locus, count, TPM)
 

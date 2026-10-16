@@ -148,7 +148,7 @@ sample_sheet = system.file("my_samples.tsv", package="pepitope")
 ```
 
 ```{r echo=FALSE, message=FALSE}
-DT::datatable(readr::read_tsv(sample_sheet), class="compact stripe hover")
+DT::datatable(utils::read.delim(sample_sheet), class="compact stripe hover")
 ```
 
 Here, we did not actually do any sequencing, so we provide a simulated FASTQ

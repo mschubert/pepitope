@@ -38,7 +38,6 @@ Imports:
     patchwork,
     purrr,
     RColorBrewer,
-    readr,
     Rcpp,
     rlang,
     S4Vectors,
