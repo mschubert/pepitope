@@ -19,8 +19,8 @@ calc_sample_cor = function(reps, keep=c("patient", "bc_type", "gene_name", "mut_
 
 #' @importFrom stats cor
 plot_sample_cor = function(sample_cor_df, axes=c("rep 1", "rep 2"), add=list()) {
-    ax1 = rlang::sym(axes[1])
-    ax2 = rlang::sym(axes[2])
+    ax1 = as.name(axes[1])
+    ax2 = as.name(axes[2])
     if (is.data.frame(sample_cor_df)) {
         cors = sample_cor_df |> group_by(smp1, smp2) |>
             summarize(pearson = sprintf("R = %.3f", cor({{ ax1 }}, {{ ax2 }})))
