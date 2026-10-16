@@ -72,23 +72,23 @@ The result will look like the following:
 
 ``` r
 res[[1]]
-#> # A tibble: 226 × 19
-#>    barcode baseMean log2FoldChange lfcSE   stat   pvalue     padj bc_type var_id
-#>    <chr>      <dbl>          <dbl> <dbl>  <dbl>    <dbl>    <dbl> <fct>   <chr> 
-#>  1 CAAAAA…    1821.         -3.26  0.164 -19.9  2.87e-88 6.48e-86 pat1    chr1:…
-#>  2 ACACAA…     682.         -3.34  0.250 -13.4  1.06e-40 1.19e-38 pat1    chr1:…
-#>  3 TGTCCA…    1818.          0.661 0.161   4.12 3.85e- 5 2.90e- 3 common  chr7:…
-#>  4 GTGAAA…    1114.          0.500 0.176   2.83 4.60e- 3 1.72e- 1 pat1    chr15…
-#>  5 AGGCAA…    1866.         -0.465 0.165  -2.82 4.76e- 3 1.72e- 1 pat1    chr9:…
-#>  6 GAGAAA…    2323.          0.622 0.223   2.80 5.18e- 3 1.72e- 1 pat1    chr7:…
-#>  7 GCCCAA…    1557.         -0.413 0.149  -2.77 5.58e- 3 1.72e- 1 pat1    chr7:…
-#>  8 GGACAA…    1302.         -0.442 0.161  -2.74 6.10e- 3 1.72e- 1 pat1    chr4:…
-#>  9 AAAGAA…    1782.         -0.455 0.173  -2.64 8.36e- 3 2.10e- 1 pat1    ETV6-…
-#> 10 CTCAAA…    2679.          0.420 0.163   2.57 1.01e- 2 2.13e- 1 pat1    chr7:…
+#> # A tibble: 226 × 20
+#>    barcode      baseMean log2FoldChange lfcSE   stat   pvalue     padj
+#>    <chr>           <dbl>          <dbl> <dbl>  <dbl>    <dbl>    <dbl>
+#>  1 CAAAAAAAAAAA    1821.         -3.26  0.164 -19.9  2.87e-88 6.48e-86
+#>  2 ACACAAAAAAAA     682.         -3.34  0.250 -13.4  1.06e-40 1.19e-38
+#>  3 TGTCCAAAAAAA    1818.          0.661 0.161   4.12 3.85e- 5 2.90e- 3
+#>  4 GTGAAAAAAAAA    1114.          0.500 0.176   2.83 4.60e- 3 1.72e- 1
+#>  5 AGGCAAAAAAAA    1866.         -0.465 0.165  -2.82 4.76e- 3 1.72e- 1
+#>  6 GAGAAAAAAAAA    2323.          0.622 0.223   2.80 5.18e- 3 1.72e- 1
+#>  7 GCCCAAAAAAAA    1557.         -0.413 0.149  -2.77 5.58e- 3 1.72e- 1
+#>  8 GGACAAAAAAAA    1302.         -0.442 0.161  -2.74 6.10e- 3 1.72e- 1
+#>  9 AAAGAAAAAAAA    1782.         -0.455 0.173  -2.64 8.36e- 3 2.10e- 1
+#> 10 CTCAAAAAAAAA    2679.          0.420 0.163   2.57 1.01e- 2 2.13e- 1
 #> # ℹ 216 more rows
-#> # ℹ 10 more variables: mut_id <chr>, pep_id <chr>, pep_type <chr>,
-#> #   gene_name <chr>, gene_id <chr>, tx_id <chr>, tiled <chr>, n_tiles <dbl>,
-#> #   nt <dbl>, peptide <chr>
+#> # ℹ 13 more variables: unassigned_reads <dbl>, bc_type <fct>, var_id <chr>,
+#> #   mut_id <chr>, pep_id <chr>, pep_type <chr>, gene_name <chr>, gene_id <chr>,
+#> #   tx_id <chr>, tiled <chr>, n_tiles <dbl>, nt <dbl>, peptide <chr>
 ```
 
 ## Plotting the screen results

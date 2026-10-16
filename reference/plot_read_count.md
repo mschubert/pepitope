@@ -1,11 +1,15 @@
 # Plot the overall read counts
 
-Plot the overall read counts
+Reads with a recognized construct barcode but an unmatched sample
+barcode are included as an "Unknown sample" group using
+\`rowData(dset)\$unassigned_reads\`. Reads matching neither barcode are
+included as unmapped reads in this group using
+\`metadata(dset)\$unmapped_reads\`.
 
 ## Usage
 
 ``` r
-plot_read_count(dset, n_cutoff = 10)
+plot_read_count(dset, n_cutoff = 10, label_format = "{sample_id} ({patient})")
 
 plot_reads(dset)
 ```
@@ -19,6 +23,10 @@ plot_reads(dset)
 - n_cutoff:
 
   Minimum reads for counting a barcode as represented
+
+- label_format:
+
+  Sample label template with column placeholders
 
 ## Value
 

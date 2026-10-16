@@ -45,7 +45,12 @@ count_fastq(
 
 ## Value
 
-A `SummarizedExperiment` object with counts and metadata
+A `SummarizedExperiment` object with counts and metadata \`rowData\`
+includes \`unassigned_reads\`, the number of reads with a matching
+construct barcode but no matching sample barcode.
+\`metadata(dset)\$unmapped_reads\` records reads matching neither sample
+nor construct barcode, excluding reads too short to extract both
+barcodes.
 
 ## Examples
 
@@ -59,10 +64,10 @@ writeLines(c("@r1", "GGGAAAA", "+", "IIIIIII", "@r2", "GGGAAAA", "+", "IIIIIII")
 count_fastq(fq, samples, constructs, read_structure="3B4M", verbose=FALSE)
 #> class: SummarizedExperiment 
 #> dim: 1 1 
-#> metadata(0):
+#> metadata(1): unmapped_reads
 #> assays(1): counts
 #> rownames(1): AAAA
-#> rowData names(7): barcode bc_type ... pep_type tiled
+#> rowData names(8): barcode unassigned_reads ... pep_type tiled
 #> colnames(1): sample1
 #> colData names(10): sample_id patient ... short label
 ```

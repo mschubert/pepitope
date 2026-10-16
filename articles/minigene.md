@@ -86,9 +86,9 @@ We can combine and subset them the following way:
 
 ``` r
 # note that this is not run in this example because we don't have RNA-seq data
-counts = readr::read_tsv("salmon.merged.gene_counts.tsv") |>
+counts = utils::read.delim("salmon.merged.gene_counts.tsv", check.names=FALSE) |>
     dplyr::select(gene_id, gene_name, count=SAMPLE)
-tpm = readr::read_tsv("salmon.merged.gene_tpm.tsv") |>
+tpm = utils::read.delim("salmon.merged.gene_tpm.tsv", check.names=FALSE) |>
     dplyr::select(gene_id, gene_name, tpm=SAMPLE)
 
 rna_sample = inner_join(counts, tpm)

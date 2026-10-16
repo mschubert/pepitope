@@ -149,7 +149,7 @@ from the read sequences. However, we could also specify it via the
 ``` r
 dset = count_fastq(fastq_file, sample_sheet, all_constructs, valid_barcodes)
 #> Read structure identified as '7B12M'
-#> Counting barcodes in /tmp/RtmpOXa7zR/my_seqdata.fq
+#> Counting barcodes in /tmp/RtmpqWBczP/my_seqdata.fq
 #> Processed 1,608,536 reads
 ```
 

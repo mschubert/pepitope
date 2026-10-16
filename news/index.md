@@ -1,11 +1,19 @@
 # Changelog
 
+## pepitope 0.4.2
+
+- Add unknown sample(s) to
+  [`plot_read_count()`](../reference/plot_read_count.md)
+- Plotting functions now take `label_format` argument for sample labels
+- Reduced the number of direct package dependencies
+
 ## pepitope 0.4.1
 
 - Partial read structures can now be inferred (but not counted)
-- `plot_read_structure` now indicates if a barcode is valid
-- `plot_read_structure` now displays the barcode type counts on each
-  position
+- [`plot_read_structure()`](../reference/plot_read_structure.md) now
+  indicates if a barcode is valid
+- [`plot_read_structure()`](../reference/plot_read_structure.md) now
+  displays the barcode type counts on each position
 
 ## pepitope 0.4.0
 

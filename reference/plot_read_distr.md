@@ -5,7 +5,7 @@ Plot the read distribution across barcodes
 ## Usage
 
 ``` r
-plot_read_distr(dset)
+plot_read_distr(dset, label_format = "{sample_id} ({patient})")
 
 plot_distr(dset)
 ```
@@ -15,6 +15,10 @@ plot_distr(dset)
 - dset:
 
   The \`SummarizedExperiment\` object from \`count_fastq\`
+
+- label_format:
+
+  Sample label template with column placeholders
 
 ## Value
 

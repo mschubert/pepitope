@@ -104,7 +104,7 @@ target cells. The steps are:
 ``` r
 # creating barcoded constructs
 lib = "https://raw.githubusercontent.com/hawkjo/freebarcodes/master/barcodes/barcodes12-1.txt"
-valid_barcodes = readr::read_tsv(lib, col_names=FALSE)$X1
+valid_barcodes = utils::read.delim(lib, header=FALSE)[[1]]
 all_constructs = example_peptides(valid_barcodes)
 plot_barcode_overlap(all_constructs, valid_barcodes)
 ```

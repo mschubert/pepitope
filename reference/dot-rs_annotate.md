@@ -6,7 +6,13 @@ If structure inference fails, a warning is emitted and the structure is
 ## Usage
 
 ``` r
-.rs_annotate(fq, samples, all_constructs, nrec = 100000L, min_frac = 0.2)
+.rs_annotate(
+  fq,
+  sample_barcodes,
+  construct_barcodes,
+  nrec = 100000L,
+  min_frac = 0.2
+)
 ```
 
 ## Arguments
@@ -15,14 +21,13 @@ If structure inference fails, a warning is emitted and the structure is
 
   Path to one FASTQ file
 
-- samples:
+- sample_barcodes:
 
-  A sample sheet as \`data.frame\` in tsv format. Requires the columns
-  'sample_id', 'patient', 'rep', 'origin', 'barcode'
+  A character vector of known sample barcodes
 
-- all_constructs:
+- construct_barcodes:
 
-  A named list of all construct libraries
+  A character vector of known construct barcodes
 
 - nrec:
 

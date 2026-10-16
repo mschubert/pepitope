@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="index.html">pepitope</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -140,7 +140,7 @@
 </summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># creating barcoded constructs</span></span>
 <span><span class="va">lib</span> <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/hawkjo/freebarcodes/master/barcodes/barcodes12-1.txt"</span></span>
-<span><span class="va">valid_barcodes</span> <span class="op">=</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_tsv</a></span><span class="op">(</span><span class="va">lib</span>, col_names<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">X1</span></span>
+<span><span class="va">valid_barcodes</span> <span class="op">=</span> <span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="va">lib</span>, header<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="va">all_constructs</span> <span class="op">=</span> <span class="fu"><a href="reference/example_peptides.html">example_peptides</a></span><span class="op">(</span><span class="va">valid_barcodes</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/plot_barcode_overlap.html">plot_barcode_overlap</a></span><span class="op">(</span><span class="va">all_constructs</span>, <span class="va">valid_barcodes</span><span class="op">)</span></span></code></pre></div>
 </details><details><summary><b>Code example</b> (loading from <code>.xlsx</code>)
