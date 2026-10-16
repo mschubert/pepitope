@@ -37,7 +37,6 @@ Imports:
     Rcpp,
     S4Vectors,
     stats,
-    stringdist,
     SummarizedExperiment,
     tibble,
     tidyr,

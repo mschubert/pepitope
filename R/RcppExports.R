@@ -5,3 +5,7 @@ count_fastq_barcodes_cpp <- function(fq, sample_barcodes, construct_barcodes, sa
     .Call(`_pepitope_count_fastq_barcodes_cpp`, fq, sample_barcodes, construct_barcodes, sample_start, sample_width, construct_start, construct_width, verbose, progress)
 }
 
+remove_cutsite_nuc_cpp <- function(nuc, sites, genetic_code) {
+    .Call(`_pepitope_remove_cutsite_nuc_cpp`, nuc, sites, genetic_code)
+}
+

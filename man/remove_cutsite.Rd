@@ -2,23 +2,27 @@
 % Please edit documentation in R/remove_cutsite.r
 \name{remove_cutsite}
 \alias{remove_cutsite}
-\title{Remove a Restriction Enzyme cut site but keep AA in a tiled peptide data.frame}
+\title{Remove restriction enzyme sites while preserving amino acids}
 \usage{
 remove_cutsite(pep, ...)
 }
 \arguments{
 \item{pep}{A data.frame of tiled peptides}
 
-\item{...}{Named argumennts of cut sites, e.g. `BbsI="GAAGAC"`}
+\item{...}{Named recognition sequences containing A, C, G, and T, e.g.
+`BbsI="GAAGAC", EcoRI="GAATTC"`. All sites are removed together.}
 }
 \value{
-A data.frame with replace nucleotides and number of replacements
+A data.frame with synonymously recoded sequences and the number of
+     original occurrences on either strand in one `<name>_replaced` column per site.
+     Palindromic recognition sites are counted once per occurrence.
 }
 \description{
-Remove a Restriction Enzyme cut site but keep AA in a tiled peptide data.frame
+Minimizes nucleotide substitutions while preserving translation and excluding
+all supplied recognition sites on both strands, including sites created by other edits.
 }
 \examples{
-pep = data.frame(pep_id="p1", tiled="ATGGCCGCC")
-remove_cutsite(pep, BbsI="GAAGAC")
+pep = data.frame(pep_id="p1", tiled="ATGGAAGACGAATTC")
+remove_cutsite(pep, BbsI="GAAGAC", EcoRI="GAATTC")
 
 }

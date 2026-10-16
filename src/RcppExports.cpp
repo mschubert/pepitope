@@ -29,9 +29,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// remove_cutsite_nuc_cpp
+Rcpp::CharacterVector remove_cutsite_nuc_cpp(Rcpp::CharacterVector nuc, Rcpp::CharacterVector sites, Rcpp::CharacterVector genetic_code);
+RcppExport SEXP _pepitope_remove_cutsite_nuc_cpp(SEXP nucSEXP, SEXP sitesSEXP, SEXP genetic_codeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type nuc(nucSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type sites(sitesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type genetic_code(genetic_codeSEXP);
+    rcpp_result_gen = Rcpp::wrap(remove_cutsite_nuc_cpp(nuc, sites, genetic_code));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_pepitope_count_fastq_barcodes_cpp", (DL_FUNC) &_pepitope_count_fastq_barcodes_cpp, 9},
+    {"_pepitope_remove_cutsite_nuc_cpp", (DL_FUNC) &_pepitope_remove_cutsite_nuc_cpp, 3},
     {NULL, NULL, 0}
 };
 

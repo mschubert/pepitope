@@ -1,12 +1,18 @@
-#' Remove a Restriction Enzyme cut site but keep AA in a tiled peptide data.frame
+#' Remove restriction enzyme sites while preserving amino acids
+#'
+#' Minimizes nucleotide substitutions while preserving translation and excluding
+#' all supplied recognition sites on both strands, including sites created by other edits.
 #'
 #' @param pep   A data.frame of tiled peptides
-#' @param ...   Named argumennts of cut sites, e.g. `BbsI="GAAGAC"`
-#' @return      A data.frame with replace nucleotides and number of replacements
+#' @param ...   Named recognition sequences containing A, C, G, and T, e.g.
+#'      `BbsI="GAAGAC", EcoRI="GAATTC"`. All sites are removed together.
+#' @return      A data.frame with synonymously recoded sequences and the number of
+#'      original occurrences on either strand in one `<name>_replaced` column per site.
+#'      Palindromic recognition sites are counted once per occurrence.
 #'
 #' @examples
-#' pep = data.frame(pep_id="p1", tiled="ATGGCCGCC")
-#' remove_cutsite(pep, BbsI="GAAGAC")
+#' pep = data.frame(pep_id="p1", tiled="ATGGAAGACGAATTC")
+#' remove_cutsite(pep, BbsI="GAAGAC", EcoRI="GAATTC")
 #'
 #' @export
 remove_cutsite = function(pep, ...) {
@@ -15,57 +21,62 @@ remove_cutsite = function(pep, ...) {
         stop("Required column(s) not found: ", paste(setdiff(req, colnames(pep)), collapse=", "))
 
     args = list(...)
-    if (! length(args) == 1 && names(args) == "BbsI" && args[[1]] == "GAAGAC")
-        stop("for now only BbsI implemented")
+    if (length(args) == 0 || is.null(names(args)) || any(names(args) == "") ||
+            anyDuplicated(names(args)))
+        stop("Cut sites must have unique, nonempty names")
+    sites = toupper(vapply(args, identity, character(1)))
+    optimized = remove_cutsite_nuc(pep$tiled, site=sites, seed=178529)
+    reverse = as.character(reverseComplement(DNAStringSet(sites)))
 
-    pep$BbsI_replaced = vcountPattern("GAAGAC", pep$tiled) + vcountPattern("GTCTTC", pep$tiled)
-    pep$tiled = sapply(pep$tiled, remove_cutsite_nuc, site="GAAGAC", seed=178529, USE.NAMES=FALSE)
-#    stopifnot(pep$peptide == as.character(translate(DNAStringSet(pep$tiled), no.init.codon=TRUE)))
+    for (i in seq_along(sites)) {
+        patterns = unique(c(sites[i], reverse[i]))
+        pep[[paste0(names(sites)[i], "_replaced")]] =
+            Reduce(`+`, lapply(patterns, function(s) vcountPattern(s, pep$tiled)))
+    }
+    pep$tiled = optimized
     pep
 }
 
-#' Remove a Restriction Enzyme cut site but keep AA
+#' Remove restriction enzyme sites while preserving amino acids
 #'
-#' @param nuc   cDNA nucleotide string
-#' @param site  Recognition site to be replaced (fwd+rev comp)
-#' @param seed  Seed for deterministic pseudo-random candidate ordering
-#' @return      cDNA with minimal changes to no longer contain the cut site
+#' Uses dynamic programming to minimize nucleotide substitutions while excluding
+#' all recognition sites and their reverse complements everywhere in the result.
+#' Incomplete terminal codons are kept unchanged.
+#' Translation uses the standard genetic code with `no.init.codon=TRUE`.
 #'
-#' @importFrom Biostrings subseq getGeneticCode DNAString translate replaceAt DNAStringSet reverseComplement vmatchPattern vcountPattern
+#' @param nuc   A character vector of cDNA nucleotide strings using unambiguous DNA bases
+#' @param site  A character vector of recognition sequences to remove on both strands
+#' @param seed  Seed for deterministic ordering of equally optimal synonymous codons
+#' @return      cDNA sequences with the fewest nucleotide substitutions needed to
+#'      remove the cut sites while preserving translation
+#'
+#' @importFrom Biostrings getGeneticCode DNAStringSet reverseComplement
+#' @importFrom Biostrings subseq translate vcountPattern width
 #' @keywords internal
 remove_cutsite_nuc = function(nuc, site, seed=NULL) {
-    revtrans = function(aa) {
-        aa_split = strsplit(as.character(aa), "+")[[1]]
-        tr = getGeneticCode()
-        lapply(aa_split, function(x) names(tr)[tr == x]) |>
-            do.call(tidyr::crossing, args=_) |>
-            do.call(paste0, args=_)
-    }
-    alt_nuc = function(nuc, match) {
-        subs = subseq(DNAString(nuc), IRanges::start(match), IRanges::end(match))
-        possib = revtrans(translate(subs, no.init.codon=TRUE))
-        lapply(possib, replaceAt, x=nuc, at=match)
-    }
+    if (!is.character(site) || length(site) == 0 || anyNA(site) ||
+            any(!grepl("^[ACGT]+$", toupper(site))))
+        stop("'site' must contain nonempty DNA recognition sequences using A, C, G, and T")
+    site = toupper(site)
+    sites = unique(c(site, as.character(reverseComplement(DNAStringSet(site)))))
+    original = DNAStringSet(nuc)
+    result = as.character(original)
+    has_site = Reduce(`|`, lapply(sites, function(s) vcountPattern(s, original) > 0))
+    if (!any(has_site))
+        return(result)
 
-    rc = function(x) as.character(reverseComplement(DNAString(x)))
-    m = c(vmatchPattern(site, nuc), vmatchPattern(rc(site), nuc)) |> unlist()
-    if (length(m) == 0)
-        return(nuc)
+    code = getGeneticCode()
+    code = code[.pseudorandom_order(length(code), seed)]
+    result[has_site] = remove_cutsite_nuc_cpp(result[has_site], sites, code)
 
-    IRanges::start(m) = floor((IRanges::start(m)-1)/3) * 3 + 1
-    IRanges::end(m) = ceiling((IRanges::end(m))/3) * 3
-
-    nucs = nuc = DNAStringSet(nuc)
-    for (i in seq_along(m))
-        nucs = lapply(nucs, alt_nuc, match=m[i]) |> do.call(c, args=_)
-    nucs = DNAStringSet(nucs)
-
-    valid = vcountPattern(site, nucs) + vcountPattern(rc(site), nucs) == 0
-    nchange = mapply(function(i) stringdist::stringdist(subseq(nuc, m[i]), subseq(nucs, m[i])),
-                     i=seq_along(m)) |> as.matrix() |> rowSums()
-    min_valid = which(valid & nchange == min(nchange[valid]))
-    pick = .pseudorandom_order(length(min_valid), seed)[1]
-    as.character(nucs[min_valid[pick]])
+    optimized = DNAStringSet(result[has_site])
+    complete = 3L * (width(optimized) %/% 3L)
+    before = translate(subseq(original[has_site], end=complete), no.init.codon=TRUE)
+    after = translate(subseq(optimized, end=complete), no.init.codon=TRUE)
+    stopifnot(identical(as.character(before), as.character(after)))
+    for (s in sites)
+        stopifnot(all(vcountPattern(s, optimized) == 0))
+    result
 }
 
 .pseudorandom_order = function(n, seed=0) {
