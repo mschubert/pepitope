@@ -12,8 +12,7 @@ plot_distr(dset)
 \arguments{
 \item{dset}{The `SummarizedExperiment` object from `count_fastq`}
 
-\item{label_format}{Sample label template with `{column}` placeholders for fields in
-`colData(dset)`, such as `{sample_id}`, `{patient}`, `{origin}`, and `{rep}`}
+\item{label_format}{Sample label template with column placeholders}
 }
 \value{
 A `ggplot2` object with cumulative read distribution plots

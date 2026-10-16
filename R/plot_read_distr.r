@@ -26,8 +26,7 @@ calc_representation = function(lib_counts, bcs, meta) {
 #' Plot the read distribution across barcodes
 #'
 #' @param dset  The `SummarizedExperiment` object from `count_fastq`
-#' @param label_format  Sample label template with `{column}` placeholders for fields in
-#'      `colData(dset)`, such as `{sample_id}`, `{patient}`, `{origin}`, and `{rep}`
+#' @param label_format  Sample label template with column placeholders
 #' @return  A `ggplot2` object with cumulative read distribution plots
 #'
 #' @examples

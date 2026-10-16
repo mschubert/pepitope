@@ -14,9 +14,7 @@ plot_reads(dset)
 
 \item{n_cutoff}{Minimum reads for counting a barcode as represented}
 
-\item{label_format}{Sample label template with `{column}` placeholders for fields in
-`colData(dset)`, such as `{sample_id}`, `{patient}`, `{origin}`, and `{rep}`.
-The unknown sample group is labelled "Unknown sample(s)".}
+\item{label_format}{Sample label template with column placeholders}
 }
 \value{
 A patchwork object containing the read count summary plots

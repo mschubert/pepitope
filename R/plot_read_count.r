@@ -7,9 +7,7 @@
 #'
 #' @param dset  The `SummarizedExperiment` object from `count_fastq`
 #' @param n_cutoff  Minimum reads for counting a barcode as represented
-#' @param label_format  Sample label template with `{column}` placeholders for fields in
-#'      `colData(dset)`, such as `{sample_id}`, `{patient}`, `{origin}`, and `{rep}`.
-#'      The unknown sample group is labelled "Unknown sample(s)".
+#' @param label_format  Sample label template with column placeholders
 #' @return  A patchwork object containing the read count summary plots
 #'
 #' @examples
