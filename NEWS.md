@@ -1,8 +1,12 @@
 # git head
 
+* Refactor `remove_cutsite()` into `Rcpp` utility function
+
+# pepitope 0.4.2
+
 * Add unknown sample(s) to `plot_read_count()`
 * Plotting functions now take `label_format` argument for sample labels
-* Replaced some package dependencies by utility code
+* Reduced the number of direct package dependencies
 
 # pepitope 0.4.1
 
