@@ -7,8 +7,9 @@
 #'
 #' @keywords internal
 calc_representation = function(lib_counts, bcs, meta) {
-    reshape2::melt(lib_counts) |> as_tibble() |>
-        dplyr::rename(barcode=Var1, sample_id=Var2) |>
+    tibble(barcode = rep(rownames(lib_counts), ncol(lib_counts)),
+           sample_id = rep(colnames(lib_counts), each=nrow(lib_counts)),
+           value = as.vector(lib_counts)) |>
         inner_join(bcs |> select(barcode, bc_type, gene_name, mut_id, pep_id, pep_type), by=join_by(barcode)) |>
         inner_join(meta |> select(-barcode), by=join_by(sample_id)) |>
         rowwise() |>

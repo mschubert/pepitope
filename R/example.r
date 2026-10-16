@@ -169,7 +169,10 @@ example_fastq = function(samples, peptide_sheets, target_reads=1000, custom=TRUE
     }
 
     # add all non-zero read entries in fastq format
-    reads = reshape2::melt(counts) |> filter(value != 0) |>
+    reads = tibble(barcode = rep(rownames(counts), ncol(counts)),
+                   sample_id = rep(colnames(counts), each=nrow(counts)),
+                   value = as.vector(counts)) |>
+        filter(value != 0) |>
         inner_join(samples, by=join_by(sample_id))
     res = with(reads, Map(sim_reads, barcode.y, barcode.x, value))
 

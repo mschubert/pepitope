@@ -39,7 +39,6 @@ Imports:
     purrr,
     RColorBrewer,
     readr,
-    reshape2,
     Rcpp,
     rlang,
     S4Vectors,
