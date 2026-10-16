@@ -1,9 +1,9 @@
 calc_sample_cor = function(reps, keep=c("patient", "bc_type", "gene_name", "mut_id")) {
     merge_one = function(one_pat) {
         rdf1 = one_pat |> filter(rep == s_rep[1]) |>
-            select(oligo_id, keep, smp1=smp, {{ r1 }}:=value)
+            select(oligo_id, keep, smp1=sample_id, {{ r1 }}:=value)
         rdf2 = one_pat |> filter(rep == s_rep[2]) |>
-            select(oligo_id, smp2=smp, {{ r2 }}:=value)
+            select(oligo_id, smp2=sample_id, {{ r2 }}:=value)
         re = inner_join(rdf1, rdf2, by="oligo_id", relationship="many-to-many") |>
             filter(! ({{ r1 }} == 0 & {{ r2 }} == 0))
     }

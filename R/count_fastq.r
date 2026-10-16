@@ -85,10 +85,7 @@ count_fastq = function(fq, samples, all_constructs, valid_barcodes, read_structu
                        mapped_reads = colSums(counts))
     meta = samples |>
         left_join(stats, by="sample_id") |>
-        mutate(patient = factor(patient),
-               smp = paste(ifelse(nchar(origin)>8, stringr::word(origin, 1), origin), rep, sep="-"),
-               short = paste(patient, smp),
-               label = sprintf("%s (%s)", short, sample_id))
+        mutate(patient = factor(patient))
 
     rows = data.frame(barcode=valid_barcodes, unassigned_reads=res$unassigned_reads) |>
         left_join(construct_df, by="barcode") |>

@@ -5,7 +5,7 @@
 \alias{plot_reads}
 \title{Plot the overall read counts}
 \usage{
-plot_read_count(dset, n_cutoff = 10)
+plot_read_count(dset, n_cutoff = 10, label_format = "{sample_id} ({patient})")
 
 plot_reads(dset)
 }
@@ -13,6 +13,10 @@ plot_reads(dset)
 \item{dset}{The `SummarizedExperiment` object from `count_fastq`}
 
 \item{n_cutoff}{Minimum reads for counting a barcode as represented}
+
+\item{label_format}{Sample label template with `{column}` placeholders for fields in
+`colData(dset)`, such as `{sample_id}`, `{patient}`, `{origin}`, and `{rep}`.
+The unknown sample group is labelled "Unknown sample(s)".}
 }
 \value{
 A patchwork object containing the read count summary plots

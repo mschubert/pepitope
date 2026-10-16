@@ -5,12 +5,15 @@
 \alias{plot_distr}
 \title{Plot the read distribution across barcodes}
 \usage{
-plot_read_distr(dset)
+plot_read_distr(dset, label_format = "{sample_id} ({patient})")
 
 plot_distr(dset)
 }
 \arguments{
 \item{dset}{The `SummarizedExperiment` object from `count_fastq`}
+
+\item{label_format}{Sample label template with `{column}` placeholders for fields in
+`colData(dset)`, such as `{sample_id}`, `{patient}`, `{origin}`, and `{rep}`}
 }
 \value{
 A `ggplot2` object with cumulative read distribution plots

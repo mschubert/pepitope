@@ -27,3 +27,15 @@ test_that("gene expression TSVs retain gene identifiers and numeric measurements
     expect_equal(res$rna_count, c(2, 1.5, NA_real_))
     expect_equal(res$rna_tpm, c(20, 10, NA_real_))
 })
+
+test_that("sample label templates use metadata columns literally", {
+    meta = data.frame(sample_id=c("s1", "s2"), patient=factor(c("p1", "p2")),
+                      rep=c(1, 2), origin=c("{patient}", "A\\B $1"))
+
+    expect_equal(.format_sample_labels(meta, "{sample_id} ({patient})"), c("s1 (p1)", "s2 (p2)"))
+    expect_equal(.format_sample_labels(meta, "{rep}: {origin} / {patient} / {patient}"),
+                 c("1: {patient} / p1 / p1", "2: A\\B $1 / p2 / p2"))
+    expect_equal(.format_sample_labels(meta, "All samples"), rep("All samples", 2))
+    expect_equal(.format_sample_labels(meta[FALSE, ], "{sample_id}"), character())
+    expect_error(.format_sample_labels(meta, "{missing}"), "Unknown sample label columns: missing")
+})

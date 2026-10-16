@@ -26,6 +26,8 @@ calc_representation = function(lib_counts, bcs, meta) {
 #' Plot the read distribution across barcodes
 #'
 #' @param dset  The `SummarizedExperiment` object from `count_fastq`
+#' @param label_format  Sample label template with `{column}` placeholders for fields in
+#'      `colData(dset)`, such as `{sample_id}`, `{patient}`, `{origin}`, and `{rep}`
 #' @return  A `ggplot2` object with cumulative read distribution plots
 #'
 #' @examples
@@ -41,8 +43,10 @@ calc_representation = function(lib_counts, bcs, meta) {
 #' }
 #'
 #' @export
-plot_read_distr = function(dset) {
-    reps = calc_representation(assay(dset), as_tibble(rowData(dset)), as_tibble(colData(dset))) |>
+plot_read_distr = function(dset, label_format="{sample_id} ({patient})") {
+    meta = as_tibble(colData(dset))
+    meta$label = .format_sample_labels(meta, label_format)
+    reps = calc_representation(assay(dset), as_tibble(rowData(dset)), meta) |>
         filter(is_matched | value > 0) |>
         mutate(text = sprintf("%s (%s)\n%i reads (%.1f%%)\n%s (%s)",
             ifelse(is.na(pep_id), barcode, pep_id),
@@ -57,7 +61,8 @@ plot_read_distr = function(dset) {
                            guide=guide_legend(override.aes=list(linewidth=0.8))) +
         scale_y_continuous(limits=c(0,NA), trans="log1p", breaks=c("0"=0,"100"=100,"10k"=1e4,"1M"=1e6)) +
         scale_x_continuous(limits=c(0,1), breaks=c(0,0.5,1)) +
-        facet_wrap(~ short) +
+        facet_wrap(~ sample_id,
+                    labeller=as_labeller(setNames(meta$label, meta$sample_id))) +
         labs(x = "Ranked abundance",
              y = "Counts per barcode")
 }

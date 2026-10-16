@@ -7,6 +7,9 @@
 #'
 #' @param dset  The `SummarizedExperiment` object from `count_fastq`
 #' @param n_cutoff  Minimum reads for counting a barcode as represented
+#' @param label_format  Sample label template with `{column}` placeholders for fields in
+#'      `colData(dset)`, such as `{sample_id}`, `{patient}`, `{origin}`, and `{rep}`.
+#'      The unknown sample group is labelled "Unknown sample(s)".
 #' @return  A patchwork object containing the read count summary plots
 #'
 #' @examples
@@ -25,21 +28,24 @@
 #' @importFrom patchwork wrap_plots plot_layout
 #' @importFrom S4Vectors metadata
 #' @export
-plot_read_count = function(dset, n_cutoff=10) {
+plot_read_count = function(dset, n_cutoff=10, label_format="{sample_id} ({patient})") {
     plot_one = function(rsum, y, position) {
-        ggplot(rsum, aes(x=label, y={{ y }}, fill=bc_type)) +
+        ggplot(rsum, aes(x=sample_id, y={{ y }}, fill=bc_type)) +
             geom_col(position=position, show.legend=c(unused=TRUE, unmapped=TRUE)) +
             scale_fill_manual(values=make_pal(rsum$bc_type), drop=FALSE) +
+            scale_x_discrete(limits=rev(meta$sample_id),
+                              labels=setNames(meta$label, meta$sample_id)) +
             coord_flip()
     }
 
     bcs = as_tibble(rowData(dset))
     counts = cbind(assay(dset), unassigned=bcs$unassigned_reads)
+    meta = as_tibble(colData(dset))
+    meta$label = .format_sample_labels(meta, label_format)
     add_meta = tibble(sample_id="unassigned", label="Unknown sample(s)",
                       total_reads=sum(bcs$unassigned_reads) + metadata(dset)$unmapped_reads,
                       mapped_reads=sum(bcs$unassigned_reads))
-    meta = bind_rows(as_tibble(colData(dset)), add_meta) |>
-        mutate(label=factor(label, levels=rev(label)))
+    meta = bind_rows(meta, add_meta)
     read_summary = calc_representation(counts, bcs, meta) |>
         group_by(sample_id, label, bc_type) |>
         summarize(reads=sum(value), nonzero_bcs=sum(value >= n_cutoff))
