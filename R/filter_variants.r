@@ -15,7 +15,7 @@
 #' filter_variants(vr, min_cov=2, min_af=0.05, pass=TRUE)
 #'
 #' @importFrom VariantAnnotation softFilterMatrix altDepth totalDepth
-#' @importFrom Biobase sampleNames
+#' @importFrom VariantAnnotation sampleNames
 #' @importFrom GenomicRanges seqnames
 #' @importFrom GenomeInfoDb keepStandardChromosomes
 #' @export

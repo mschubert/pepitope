@@ -128,14 +128,13 @@ cds_by_break = function(gr, txdb, cds, type="left") {
 #' @return      A DataFrame with sequence information
 #'
 #' @importFrom IRanges start
-#' @importFrom ensembldb genomeToTranscript transcriptToCds
 #' @keywords internal
 add_seq_info = function(gr, cds_break, asm, txdb, tx) {
     seqs = filter_proper_orf(extractTranscriptSeqs(asm, cds_break))
     if (length(seqs) == 0)
         return(DataFrame())
-    locs = unlist(genomeToTranscript(gr, txdb))[names(seqs)]
-    locs2 = transcriptToCds(locs, txdb)
+    locs = unlist(ensembldb::genomeToTranscript(gr, txdb))[names(seqs)]
+    locs2 = ensembldb::transcriptToCds(locs, txdb)
 
     DataFrame(mcols(locs2)[c("seq_name", "seq_strand", "seq_start", "tx_id")],
               gene_id=tx$gene_id[match(names(locs2), names(tx))],

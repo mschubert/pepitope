@@ -24,7 +24,7 @@
 #' }
 #'
 #' @import ggplot2
-#' @importFrom BiocGenerics width
+#' @importFrom Biostrings width
 #' @importFrom patchwork wrap_plots
 #' @export
 plot_read_structure = function(fq, samples, all_constructs, nrec=100000L) {

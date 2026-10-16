@@ -12,7 +12,7 @@
 #'
 #' @importFrom Biostrings readDNAStringSet reverseComplement DNAStringSet DNAString
 #' @importFrom Biostrings PDict matchPDict xscat
-#' @importFrom BiocGenerics width
+#' @importFrom Biostrings width
 #' @keywords internal
 .rs_annotate = function(fq, sample_barcodes, construct_barcodes, nrec=100000L, min_frac=0.2) {
     sample_barcodes = DNAStringSet(toupper(sample_barcodes))

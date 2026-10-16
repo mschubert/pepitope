@@ -14,12 +14,12 @@
 #'     annotate_coding(vr, txdb, asm)
 #' }
 #'
-#' @importFrom BiocGenerics width strand strand<-
+#' @importFrom Biostrings width
+#' @importFrom GenomicRanges strand strand<-
 #' @importFrom S4Vectors mcols mcols<-
 #' @importFrom GenomicFeatures transcriptsBy threeUTRsByTranscript cdsBy extractTranscriptSeqs genes
 #' @importFrom VariantAnnotation sampleNames ref alt refDepth altDepth
 #' @importFrom Biostrings subseq nchar reverse translate replaceAt DNAStringSet xscat vcountPattern
-#' @importFrom BSgenome getSeq
 #' @importFrom GenomeInfoDb seqnames seqnames<- genome genome<- isCircular isCircular<- seqinfo seqinfo<-
 #' @importFrom methods as
 #' @export

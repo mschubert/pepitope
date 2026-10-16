@@ -17,8 +17,6 @@ BugReports: https://github.com/mschubert/pepitope/issues
 Depends:
     R (>= 4.5.0)
 Imports:
-    Biobase,
-    BiocGenerics,
     Biostrings,
     BSgenome,
     DESeq2,
@@ -33,7 +31,6 @@ Imports:
     grDevices,
     gtools,
     IRanges,
-    MatrixGenerics,
     methods,
     patchwork,
     RColorBrewer,
@@ -45,8 +42,7 @@ Imports:
     tibble,
     tidyr,
     utils,
-    VariantAnnotation,
-    XVector
+    VariantAnnotation
 LinkingTo:
     Rcpp
 License: GPL-3

@@ -33,14 +33,8 @@ export(subset_context)
 export(subset_context_fusion)
 import(dplyr)
 import(ggplot2)
-importFrom(BSgenome,getSeq)
-importFrom(Biobase,sampleNames)
-importFrom(BiocGenerics,
-  "strand<-",
-  strand,
-  width
-)
 importFrom(Biostrings,
+  "subseq<-",
   AAStringSet,
   DNAString,
   DNAStringSet,
@@ -58,6 +52,7 @@ importFrom(Biostrings,
   translate,
   vcountPattern,
   vmatchPattern,
+  width,
   xscat
 )
 importFrom(GenomeInfoDb,
@@ -84,8 +79,10 @@ importFrom(GenomicFeatures,
   transcriptsBy
 )
 importFrom(GenomicRanges,
+  "strand<-",
   GRanges,
-  seqnames
+  seqnames,
+  strand
 )
 importFrom(IRanges,
   IRanges,
@@ -95,7 +92,6 @@ importFrom(IRanges,
   start,
   subsetByOverlaps
 )
-importFrom(MatrixGenerics,rowRanges)
 importFrom(Rcpp,evalCpp)
 importFrom(S4Vectors,
   "%in%",
@@ -110,7 +106,8 @@ importFrom(SummarizedExperiment,
   SummarizedExperiment,
   assay,
   colData,
-  rowData
+  rowData,
+  rowRanges
 )
 importFrom(VariantAnnotation,
   alt,
@@ -121,14 +118,6 @@ importFrom(VariantAnnotation,
   sampleNames,
   softFilterMatrix,
   totalDepth
-)
-importFrom(XVector,
-  "subseq<-",
-  subseq
-)
-importFrom(ensembldb,
-  genomeToTranscript,
-  transcriptToCds
 )
 importFrom(methods,
   as,
