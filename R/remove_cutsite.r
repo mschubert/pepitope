@@ -39,8 +39,7 @@ remove_cutsite_nuc = function(nuc, site, seed=NULL) {
         tr = getGeneticCode()
         lapply(aa_split, function(x) names(tr)[tr == x]) |>
             do.call(tidyr::crossing, args=_) |>
-            rowwise() |>
-            purrr::pmap_chr(paste0)
+            do.call(paste0, args=_)
     }
     alt_nuc = function(nuc, match) {
         subs = subseq(DNAString(nuc), IRanges::start(match), IRanges::end(match))

@@ -26,7 +26,6 @@
 #' @import ggplot2
 #' @importFrom BiocGenerics width
 #' @importFrom patchwork wrap_plots
-#' @importFrom tidyr pivot_longer
 #' @export
 plot_read_structure = function(fq, samples, all_constructs, nrec=100000L) {
     sample_barcodes = .read_samples(samples)$barcode
@@ -50,7 +49,8 @@ plot_read_structure = function(fq, samples, all_constructs, nrec=100000L) {
         expand=expansion(mult=0))
     counts = ann$counts
     counts$position = seq_len(nrow(counts))
-    counts = pivot_longer(counts, cols=c("B", "^B", "M", "^M"), names_to="op", values_to="count")
+    counts = tidyr::pivot_longer(counts, cols=c("B", "^B", "M", "^M"),
+                                 names_to="op", values_to="count")
     counts$type = sub("^\\^", "", counts$op)
     counts$orientation = factor(ifelse(startsWith(counts$op, "^"), "Reverse", "Forward"),
                                 levels=c("Forward", "Reverse"))

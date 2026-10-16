@@ -144,5 +144,4 @@ importFrom(stats,
   qnbinom,
   setNames
 )
-importFrom(tidyr,pivot_longer)
 useDynLib(pepitope, .registration=TRUE)

@@ -36,7 +36,6 @@ Imports:
     MatrixGenerics,
     methods,
     patchwork,
-    purrr,
     RColorBrewer,
     Rcpp,
     rlang,
