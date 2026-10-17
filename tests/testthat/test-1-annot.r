@@ -159,3 +159,32 @@ test_that("peptide identifiers separate mutation groups and peptide alleles", {
     expect_true(all(startsWith(pep$pep_id[pep$pep_type == "alt"], pep$mut_id[pep$pep_type == "alt"])))
     expect_true(any(pep$pep_type == "alt" & pep$pep_id != pep$mut_id))
 })
+
+test_that("coding coordinates respect exon boundaries and transcript strands", {
+    cds = GenomicRanges::GRangesList(
+        forward = GRanges("1", IRanges(c(100, 200), width=6), strand="+"),
+        reverse = GRanges("1", IRanges(c(400, 300), width=6), strand="-")
+    )
+    query = GRanges("1", IRanges(c(102, 403, 150, 104), c(102, 403, 150, 201)))
+    mapped = .coding_coordinates(query, cds)
+    expect_equal(mapped$QUERYID, c(1L, 2L))
+    expect_equal(mapped$TXID, c("forward", "reverse"))
+    expect_equal(as.character(strand(mapped)), c("+", "-"))
+    expect_equal(unname(mapped$CDSLOC), IRanges(c(3, 3), width=1))
+})
+
+test_that("frameshift codons do not depend on other variants in the batch", {
+    fs = GRanges("1", IRanges(5, width=1))
+    fs$CDSLOC = IRanges(5, width=1)
+    fs$ref_nuc = DNAStringSet("ATGGAGTTTTAA")
+    fs$varAllele = DNAStringSet("AG")
+    snv = fs
+    snv$varAllele = DNAStringSet("C")
+    single = .coding_changes(fs)
+    batched = .coding_changes(c(fs, snv))
+    expect_identical(single, batched[1])
+    expect_equal(as.character(single$REFCODON), "GAG")
+    expect_equal(as.character(single$VARCODON), "GAGG")
+    expect_equal(as.character(single$alt_nuc), "ATGGAGGTTTTAA")
+    expect_equal(single$CONSEQUENCE, "frameshift")
+})

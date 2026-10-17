@@ -34,7 +34,6 @@ export(subset_context_fusion)
 import(dplyr)
 import(ggplot2)
 importFrom(Biostrings,
-  "subseq<-",
   AAStringSet,
   DNAString,
   DNAStringSet,
@@ -106,8 +105,7 @@ importFrom(SummarizedExperiment,
   SummarizedExperiment,
   assay,
   colData,
-  rowData,
-  rowRanges
+  rowData
 )
 importFrom(VariantAnnotation,
   alt,
@@ -121,7 +119,6 @@ importFrom(VariantAnnotation,
 )
 importFrom(methods,
   as,
-  callGeneric,
   is
 )
 importFrom(patchwork,
