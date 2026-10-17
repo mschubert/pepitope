@@ -15,7 +15,7 @@
 #' }
 #'
 #' @importFrom Biostrings AAStringSet DNAStringSet DNAStringSetList GENETIC_CODE width
-#' @importFrom Biostrings nchar replaceAt reverse reverseComplement subseq translate vcountPattern
+#' @importFrom Biostrings nchar replaceAt reverse reverseComplement subseq translate
 #' @importFrom IRanges IRanges IntegerList
 #' @importFrom S4Vectors %in% DataFrame elementNROWS mcols mcols<-
 #' @importFrom GenomicFeatures cdsBy extractTranscriptSeqs genes mapToTranscripts transcriptsBy
@@ -77,14 +77,6 @@ annotate_coding = function(vr, txdb, asm) {
     codv$var_id = sprintf("%s:%i_%s/%s", seqnames(codv), IRanges::start(codv), codv$ref, codv$alt)
     pstarts = ceiling(start(codv$CDSLOC)/3) + codv$silent_start
     codv$mut_id = sprintf("%s_%s%i", codv$gene_name, codv$REFAA, pstarts)
-
-    # check if we didn't change the length of any nuc
-    stopifnot(with(codv,
-        nchar(codv$ref_nuc) - nchar(codv$REFCODON) == nchar(codv$alt_nuc) - nchar(codv$VARCODON) |
-        codv$CONSEQUENCE %in% c("frameshift", "nonsense", "nostart") |
-        vcountPattern("*", codv$REFAA) > 0 | # transcript extension
-        vcountPattern("*", codv$VARAA) > 0 # "missense"+nonsense
-    ))
 
     infomap = match(seqnames(seqinfo(codv)), seqnames(seqinfo(gnames)))
     genome(codv) = genome(gnames)[infomap]

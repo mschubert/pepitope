@@ -49,6 +49,7 @@ get_coding_seq = function(asm, txdb, ..., include_stop=TRUE) {
 #' @param x  A DNAStringSet or AAStringSet object
 #' @return  A logical vector indicating whether each sequence has a proper ORF
 #'
+#' @importFrom Biostrings vcountPattern
 #' @keywords internal
 is_proper_orf = function(x) {
     if (inherits(x, "DNAStringSet"))
