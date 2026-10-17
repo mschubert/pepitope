@@ -1,4 +1,4 @@
-# git head
+# pepitope 0.4.3
 
 * Use `minigenes` for sample construct libraries and barcode library membership
 * Refactor `remove_cutsite()` into `Rcpp` utility function
