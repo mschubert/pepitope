@@ -106,7 +106,7 @@ annotate_coding = function(vr, txdb, asm) {
     }
 
     # Require a variant to map within an individual CDS, not merely across introns.
-    flat_cds = unlist(cds)
+    flat_cds = unlist(cds[unique(map$transcriptsHits)])
     map_cds = mapToTranscripts(unname(query)[map$xHits], flat_cds, ignore.strand=FALSE)
     map = map[seq_along(map) %in% map_cds$xHits]
 

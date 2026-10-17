@@ -54,3 +54,25 @@ test_that("sample label templates use metadata columns literally", {
     expect_equal(.format_sample_labels(meta[FALSE, ], "{sample_id}"), character())
     expect_error(.format_sample_labels(meta, "{missing}"), "Unknown sample label columns: missing")
 })
+
+test_that("coding sequence extension handles repeated transcripts, strands and missing UTRs", {
+    asm = DNAStringSet(c(chr1="AACCCCCTAA", chr2="TTACCCCCC"))
+    utr3 = GenomicRanges::GRangesList(
+        forward = GRanges("chr1", IRanges(c(1, 8), width=3), strand="+"),
+        reverse = GRanges("chr2", IRanges(c(7, 1), width=3), strand="-"),
+        no_stop = GRanges("chr1", IRanges(1, width=3), strand="+")
+    )
+    testthat::local_mocked_bindings(.txdb_cache_get=function(txdb, value) utr3,
+        .package="pepitope")
+    left = DNAStringSet(setNames(rep("ATG", 6), rep("left", 6)))
+    right = DNAStringSet(c(forward="CCC", forward="GGG", reverse="AAA",
+        no_stop="CC", missing="CC", forward="TAA"))
+
+    expect_equal(unname(as.character(get_coding_seq(asm, NULL, left, right))),
+        c("ATGCCCAACTAA", "ATGGGGAACTAA", "ATGAAAGGGTAA", "ATGCCA", "ATG", "ATGTAA"))
+    expect_equal(unname(as.character(get_coding_seq(asm, NULL, left, right, include_stop=FALSE))),
+        c("ATGCCCAAC", "ATGGGGAAC", "ATGAAAGGG", "ATGCCA", "ATG", "ATG"))
+    expect_equal(get_coding_seq(asm, NULL, DNAStringSet()), DNAStringSet())
+    expect_error(get_coding_seq(asm, NULL, right[5]),
+        "3' DNAStringSet needs transcript IDs as names", fixed=TRUE)
+})
