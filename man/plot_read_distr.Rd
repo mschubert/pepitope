@@ -5,7 +5,7 @@
 \alias{plot_distr}
 \title{Plot the read distribution across barcodes}
 \usage{
-plot_read_distr(dset, label_format = "{sample_id} ({patient})")
+plot_read_distr(dset, label_format = "{sample_id} ({minigenes})")
 
 plot_distr(dset)
 }
@@ -22,7 +22,7 @@ Plot the read distribution across barcodes
 }
 \examples{
 if (interactive()) {
-    samples = data.frame(sample_id="sample1", patient="pat1", rep="1",
+    samples = data.frame(sample_id="sample1", minigenes="pat1", rep="1",
         origin="library", barcode="GGG")
     constructs = list(pat1=data.frame(gene_name="GENE1", mut_id="GENE1_A1V",
         pep_id="GENE1_A1V", pep_type="alt", tiled="ATGGCCGCC", barcode_1="AAAA"))

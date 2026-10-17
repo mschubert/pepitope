@@ -2,7 +2,8 @@
 #'
 #' @param fq  Path to one FASTQ file
 #' @param samples  A sample sheet as \code{data.frame} in tsv format. Requires the
-#'      columns 'sample_id', 'patient', 'rep', 'origin', 'barcode'
+#'      columns 'sample_id', 'minigenes', 'rep', 'origin', 'barcode'
+#'      `minigenes` lists construct libraries separated by `+`.
 #' @param all_constructs  A named list of all construct libraries
 #' @param valid_barcodes  A character vector of all possible construct barcodes
 #' @param read_structure  A character string describing the FASTQ read structure. If missing,
@@ -15,7 +16,7 @@
 #'      barcode, excluding reads too short to extract both barcodes.
 #'
 #' @examples
-#' samples = data.frame(sample_id="sample1", patient="pat1", rep="1",
+#' samples = data.frame(sample_id="sample1", minigenes="pat1", rep="1",
 #'     origin="library", barcode="GGG")
 #' constructs = list(pat1=data.frame(gene_name="GENE1", mut_id="GENE1_A1V",
 #'     pep_id="GENE1_A1V", pep_type="alt", tiled="ATGGCCGCC", barcode_1="AAAA"))
@@ -28,7 +29,7 @@
 #' @export
 count_fastq = function(fq, samples, all_constructs, valid_barcodes, read_structure, verbose=TRUE) {
     samples = .read_samples(samples)
-    all_samples = strsplit(samples$patient, "+", fixed=TRUE) |> unlist()
+    all_samples = strsplit(samples$minigenes, "+", fixed=TRUE) |> unlist()
     missing = setdiff(all_samples, names(all_constructs))
     if (length(missing) > 0)
         stop("Missing minigene annotations for: ", paste(sQuote(missing), collapse=", "))
@@ -85,12 +86,12 @@ count_fastq = function(fq, samples, all_constructs, valid_barcodes, read_structu
                        mapped_reads = colSums(counts))
     meta = samples |>
         left_join(stats, by="sample_id") |>
-        mutate(patient = factor(patient))
+        mutate(minigenes = factor(minigenes))
 
     rows = data.frame(barcode=valid_barcodes, unassigned_reads=res$unassigned_reads) |>
         left_join(construct_df, by="barcode") |>
-        mutate(bc_type = ifelse(is.na(bc_type), "unused", bc_type),
-               bc_type = factor(bc_type, levels=c(names(all_constructs), "unused")))
+        mutate(minigenes = ifelse(is.na(minigenes), "unused", minigenes),
+               minigenes = factor(minigenes, levels=c(names(all_constructs), "unused")))
 
     SummarizedExperiment(
         list(counts = counts[, meta$sample_id, drop=FALSE]),

@@ -12,7 +12,7 @@
 #'
 #' @examples
 #' if (interactive()) {
-#'     samples = data.frame(sample_id="sample1", patient="pat1", rep="1",
+#'     samples = data.frame(sample_id="sample1", minigenes="pat1", rep="1",
 #'         origin="library", barcode="GGG")
 #'     constructs = list(pat1=data.frame(gene_name="GENE1", mut_id="GENE1_A1V",
 #'         pep_id="GENE1_A1V", pep_type="alt", tiled="ATGGCCGCC", barcode_1="AAAA"))
@@ -26,11 +26,11 @@
 #' @importFrom patchwork wrap_plots plot_layout
 #' @importFrom S4Vectors metadata
 #' @export
-plot_read_count = function(dset, n_cutoff=10, label_format="{sample_id} ({patient})") {
+plot_read_count = function(dset, n_cutoff=10, label_format="{sample_id} ({minigenes})") {
     plot_one = function(rsum, y, position) {
-        ggplot(rsum, aes(x=sample_id, y={{ y }}, fill=bc_type)) +
+        ggplot(rsum, aes(x=sample_id, y={{ y }}, fill=minigenes)) +
             geom_col(position=position, show.legend=c(unused=TRUE, unmapped=TRUE)) +
-            scale_fill_manual(values=make_pal(rsum$bc_type), drop=FALSE) +
+            scale_fill_manual(values=make_pal(rsum$minigenes), drop=FALSE) +
             scale_x_discrete(limits=rev(meta$sample_id),
                               labels=setNames(meta$label, meta$sample_id)) +
             coord_flip()
@@ -45,13 +45,13 @@ plot_read_count = function(dset, n_cutoff=10, label_format="{sample_id} ({patien
                       mapped_reads=sum(bcs$unassigned_reads))
     meta = bind_rows(meta, add_meta)
     read_summary = calc_representation(counts, bcs, meta) |>
-        group_by(sample_id, label, bc_type) |>
+        group_by(sample_id, label, minigenes) |>
         summarize(reads=sum(value), nonzero_bcs=sum(value >= n_cutoff))
     unmapped = meta |>
-        mutate(bc_type=factor("unmapped"), reads=total_reads - mapped_reads) |>
-        select(sample_id, label, bc_type, reads)
+        mutate(minigenes=factor("unmapped"), reads=total_reads - mapped_reads) |>
+        select(sample_id, label, minigenes, reads)
     both = bind_rows(read_summary, unmapped)
-    levels(read_summary$bc_type) = levels(both$bc_type)
+    levels(read_summary$minigenes) = levels(both$minigenes)
 
     noax = theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
     plots = list(

@@ -12,8 +12,8 @@
 #' @importFrom stats setNames
 #' @export
 screen_calc = function(dset, comparisons) {
-    if (length(unique(dset$patient)) > 1)
-        stop("The 'patient' column can not span more than one value")
+    if (length(unique(dset$minigenes)) > 1)
+        stop("The 'minigenes' column can not span more than one value")
     if (is.numeric(dset$rep))
         dset$rep = factor(dset$rep)
 

@@ -2,7 +2,7 @@ test_that("sample sheets preserve identifiers, metadata names, and quoted text",
     sheet = tempfile(fileext=".tsv")
     on.exit(unlink(sheet))
     writeLines(c(
-        "sample_id\tpatient\trep\torigin\tbarcode\textra field",
+        "sample_id\tminigenes\trep\torigin\tbarcode\textra field",
         "001\t007\t1\tLibrary\tAAC\t\"O'Brien #1\"",
         "\t\t\t\t\t",
         "002\t008\t2\tMock\tCCC\tNA"
@@ -10,9 +10,24 @@ test_that("sample sheets preserve identifiers, metadata names, and quoted text",
 
     expect_warning(samples <- .read_samples(sheet), "Removing rows 2")
     expect_equal(samples$sample_id, c("001", "002"))
-    expect_equal(samples$patient, c("007", "008"))
+    expect_equal(samples$minigenes, c("007", "008"))
     expect_equal(samples$rep, c(1, 2))
     expect_equal(samples[["extra field"]], c("O'Brien #1", NA_character_))
+})
+
+test_that("barcode representation distinguishes construct and sample minigenes", {
+    counts = matrix(seq_len(6), nrow=3,
+                    dimnames=list(c("AAA", "CCC", "GGG"), c("s1", "s2")))
+    bcs = data.frame(barcode=rownames(counts), minigenes=c("pat1", "common", "pat2"),
+                      gene_name="GENE", mut_id="mut", pep_id="pep", pep_type="alt")
+    meta = data.frame(sample_id=c("s1", "s2"), barcode=c("AAC", "TTG"),
+                       minigenes=factor(c("pat1+common", "pat2")))
+    reps = calc_representation(counts, bcs, meta)
+
+    expect_equal(reps$minigenes, rep(bcs$minigenes, 2))
+    expect_equal(as.character(reps$minigenes_sample), rep(c("pat1+common", "pat2"), each=3))
+    expect_equal(reps$is_matched, c(TRUE, TRUE, FALSE, FALSE, FALSE, TRUE))
+    expect_equal(reps$value, as.vector(counts))
 })
 
 test_that("gene expression TSVs retain gene identifiers and numeric measurements", {
@@ -29,12 +44,12 @@ test_that("gene expression TSVs retain gene identifiers and numeric measurements
 })
 
 test_that("sample label templates use metadata columns literally", {
-    meta = data.frame(sample_id=c("s1", "s2"), patient=factor(c("p1", "p2")),
-                      rep=c(1, 2), origin=c("{patient}", "A\\B $1"))
+    meta = data.frame(sample_id=c("s1", "s2"), minigenes=factor(c("p1", "p2")),
+                      rep=c(1, 2), origin=c("{minigenes}", "A\\B $1"))
 
-    expect_equal(.format_sample_labels(meta, "{sample_id} ({patient})"), c("s1 (p1)", "s2 (p2)"))
-    expect_equal(.format_sample_labels(meta, "{rep}: {origin} / {patient} / {patient}"),
-                 c("1: {patient} / p1 / p1", "2: A\\B $1 / p2 / p2"))
+    expect_equal(.format_sample_labels(meta, "{sample_id} ({minigenes})"), c("s1 (p1)", "s2 (p2)"))
+    expect_equal(.format_sample_labels(meta, "{rep}: {origin} / {minigenes} / {minigenes}"),
+                 c("1: {minigenes} / p1 / p1", "2: A\\B $1 / p2 / p2"))
     expect_equal(.format_sample_labels(meta, "All samples"), rep("All samples", 2))
     expect_equal(.format_sample_labels(meta[FALSE, ], "{sample_id}"), character())
     expect_error(.format_sample_labels(meta, "{missing}"), "Unknown sample label columns: missing")

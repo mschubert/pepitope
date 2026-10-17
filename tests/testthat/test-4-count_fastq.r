@@ -12,6 +12,8 @@ test_that("count source FASTQ directly", {
     expect_true(inherits(dset, "SummarizedExperiment"))
     expect_equal(samples$sample_id, colnames(dset))
     expect_equal(valid_barcodes, rownames(dset))
+    expect_equal(as.character(SummarizedExperiment::colData(dset)$minigenes), samples$minigenes)
+    expect_true("minigenes" %in% names(SummarizedExperiment::rowData(dset)))
 
     n_reads = length(readLines(fastq_file)) / 4
     expect_equal(sum(SummarizedExperiment::assay(dset)), n_reads)
@@ -22,7 +24,7 @@ test_that("count source FASTQ directly", {
 })
 
 test_that("count_fastq uses read structure orientation", {
-    samples = data.frame(sample_id="sample1", patient="pat1", rep="1", origin="lib", barcode="GGG")
+    samples = data.frame(sample_id="sample1", minigenes="pat1", rep="1", origin="lib", barcode="GGG")
     constructs = list(pat1 = data.frame(gene_name="gene", mut_id="gene", pep_id="pep",
                                         tiled=TRUE, barcode="TTAACG"))
     fq = tempfile(fileext=".fq")
@@ -37,7 +39,7 @@ test_that("count_fastq uses read structure orientation", {
 })
 
 test_that("count_fastq infers missing read structure", {
-    samples = data.frame(sample_id="sample1", patient="pat1", rep="1", origin="lib", barcode="GGG")
+    samples = data.frame(sample_id="sample1", minigenes="pat1", rep="1", origin="lib", barcode="GGG")
     constructs = list(pat1 = data.frame(gene_name="gene", mut_id="gene", pep_id="pep",
                                         tiled=TRUE, barcode="TTAACG"))
     fq = tempfile(fileext=".fq")
@@ -48,7 +50,7 @@ test_that("count_fastq infers missing read structure", {
 })
 
 test_that("count_fastq requires both sample and construct barcode segments", {
-    samples = data.frame(sample_id="sample1", patient="pat1", rep="1",
+    samples = data.frame(sample_id="sample1", minigenes="pat1", rep="1",
                          origin="lib", barcode="GGG")
     constructs = list(pat1=data.frame(gene_name="gene", mut_id="gene", pep_id="pep",
                                      tiled=TRUE, barcode="TTAACG"))
@@ -58,7 +60,7 @@ test_that("count_fastq requires both sample and construct barcode segments", {
 })
 
 test_that("reads with unmatched samples are stored separately by construct or in metadata", {
-    samples = data.frame(sample_id="sample1", patient="pat1", rep="1",
+    samples = data.frame(sample_id="sample1", minigenes="pat1", rep="1",
                          origin="lib", barcode="GGG")
     constructs = list(pat1=data.frame(gene_name=c("gene1", "gene2"),
                                      mut_id=c("gene1", "gene2"), pep_id=c("pep1", "pep2"),

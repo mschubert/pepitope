@@ -10,13 +10,15 @@ calc_representation = function(lib_counts, bcs, meta) {
     tibble(barcode = rep(rownames(lib_counts), ncol(lib_counts)),
            sample_id = rep(colnames(lib_counts), each=nrow(lib_counts)),
            value = as.vector(lib_counts)) |>
-        inner_join(bcs |> select(barcode, bc_type, gene_name, mut_id, pep_id, pep_type), by=join_by(barcode)) |>
-        inner_join(meta |> select(-barcode), by=join_by(sample_id)) |>
+        inner_join(bcs |> select(barcode, minigenes, gene_name, mut_id, pep_id, pep_type),
+                   by=join_by(barcode)) |>
+        inner_join(meta |> select(-barcode), by=join_by(sample_id), suffix=c("", "_sample")) |>
         rowwise() |>
-            mutate(is_matched = bc_type %in% strsplit(as.character(patient), "+", fixed=TRUE)[[1]]) |>
+            mutate(is_matched = minigenes %in%
+                strsplit(as.character(minigenes_sample), "+", fixed=TRUE)[[1]]) |>
         group_by(sample_id) |>
             mutate(bcs_per_sample = n()) |>
-        group_by(sample_id, bc_type, bcs_per_sample) |>
+        group_by(sample_id, minigenes, bcs_per_sample) |>
             mutate(frac = value / bcs_per_sample,
                    rnk = (rank(value, ties.method="first")-1) / (n()-1),
                    rlab = paste0(rank(value, ties.method="first"), "/", n())) |>
@@ -31,7 +33,7 @@ calc_representation = function(lib_counts, bcs, meta) {
 #'
 #' @examples
 #' if (interactive()) {
-#'     samples = data.frame(sample_id="sample1", patient="pat1", rep="1",
+#'     samples = data.frame(sample_id="sample1", minigenes="pat1", rep="1",
 #'         origin="library", barcode="GGG")
 #'     constructs = list(pat1=data.frame(gene_name="GENE1", mut_id="GENE1_A1V",
 #'         pep_id="GENE1_A1V", pep_type="alt", tiled="ATGGCCGCC", barcode_1="AAAA"))
@@ -42,7 +44,7 @@ calc_representation = function(lib_counts, bcs, meta) {
 #' }
 #'
 #' @export
-plot_read_distr = function(dset, label_format="{sample_id} ({patient})") {
+plot_read_distr = function(dset, label_format="{sample_id} ({minigenes})") {
     meta = as_tibble(colData(dset))
     meta$label = .format_sample_labels(meta, label_format)
     reps = calc_representation(assay(dset), as_tibble(rowData(dset)), meta) |>
@@ -53,10 +55,10 @@ plot_read_distr = function(dset, label_format="{sample_id} ({patient})") {
             as.integer(value), frac*100,
             ifelse(is_matched, "matched", "contamination"), rlab))
 
-    ggplot(reps, aes(x=rnk, y=value, group=bc_type, color=bc_type, text=text)) +
+    ggplot(reps, aes(x=rnk, y=value, group=minigenes, color=minigenes, text=text)) +
         geom_line(aes(linetype=is_matched)) +
         scale_linetype_manual(values=c("TRUE"="solid", "FALSE"="dashed")) +
-        scale_color_manual(values=make_pal(reps$bc_type),
+        scale_color_manual(values=make_pal(reps$minigenes),
                            guide=guide_legend(override.aes=list(linewidth=0.8))) +
         scale_y_continuous(limits=c(0,NA), trans="log1p", breaks=c("0"=0,"100"=100,"10k"=1e4,"1M"=1e6)) +
         scale_x_continuous(limits=c(0,1), breaks=c(0,0.5,1)) +

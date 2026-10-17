@@ -4,14 +4,25 @@
 
 .read_samples = function(samples) {
     if (!is.data.frame(samples)) {
-        if (is.character(samples) && length(samples) == 1)
-            samples = .read_tsv(samples, colClasses=c(sample_id="character", patient="character",
-                                                     barcode="character"))
-        else
+        if (is.character(samples) && length(samples) == 1) {
+            samples = .read_tsv(samples, colClasses="character")
+            ids = c("sample_id", "minigenes", "patient", "barcode")
+            for (name in setdiff(names(samples), ids))
+                samples[[name]] = utils::type.convert(samples[[name]], as.is=TRUE)
+        } else
             stop("'samples' argument needs to be a single tsv file or a data.frame")
     }
 
-    req = c("sample_id", "patient", "rep", "origin", "barcode")
+    if ("patient" %in% names(samples)) {
+        warning("The sample sheet column 'patient' is deprecated; use 'minigenes' instead.",
+                call.=FALSE)
+        if (!"minigenes" %in% names(samples))
+            names(samples)[names(samples) == "patient"] = "minigenes"
+        else
+            samples$patient = NULL
+    }
+
+    req = c("sample_id", "minigenes", "rep", "origin", "barcode")
     missing = setdiff(req, colnames(samples))
     if (length(missing) > 0)
         stop("Required columns not found in sample sheet: ", paste(sQuote(missing), collapse=", "))

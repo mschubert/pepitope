@@ -14,7 +14,7 @@
 #' @export
 plot_barcode_overlap = function(all_constructs, valid_barcodes) {
     dset = merge_constructs(all_constructs, strict=FALSE) |>
-        select(bc_type, barcode) |>
+        select(minigenes, barcode) |>
         group_by(barcode) |>
             mutate(overlap = factor(n())) |>
         ungroup()
@@ -32,9 +32,9 @@ plot_barcode_overlap = function(all_constructs, valid_barcodes) {
 
     dset2 = dset |>
         mutate(barcode = as.integer(factor(barcode, levels=unique(barcode)))) |>
-        filter(!is.na(bc_type))
+        filter(!is.na(minigenes))
 
-    ggplot(dset2, aes(x=barcode, y=bc_type)) +
+    ggplot(dset2, aes(x=barcode, y=minigenes)) +
         geom_tile(aes(fill=overlap)) +
         scale_fill_brewer(palette="Set1") +
         ggtitle("Barcode overlap") +

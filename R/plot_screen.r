@@ -13,7 +13,7 @@
 #' if (interactive()) {
 #'     res = data.frame(baseMean=c(20, 30), log2FoldChange=c(-1, 1), padj=c(0.2, 0.05),
 #'         gene_name=c("GENE1", "GENE1"), pep_type=c("ref", "alt"),
-#'         bc_type=c("pat1", "pat1"), mut_id=c("GENE1_A1", "GENE1_A1"))
+#'         minigenes=c("pat1", "pat1"), mut_id=c("GENE1_A1", "GENE1_A1"))
 #'     plot_screen(res, links=FALSE, labs=FALSE)
 #' }
 #'
@@ -25,7 +25,7 @@ plot_screen = function(res, sample=NULL, links=TRUE, labs=TRUE, min_reads=10, ca
 
     p = ggplot(res, aes(x=baseMean, y=log2FoldChange)) +
         geom_hline(yintercept=0, color="grey") +
-        geom_point(aes(color=bc_type, shape=pep_type, size=padj<p_sig, alpha=padj<p_sig)) +
+        geom_point(aes(color=minigenes, shape=pep_type, size=padj<p_sig, alpha=padj<p_sig)) +
         scale_shape_manual(values=c(ref=1, alt=19), na.value=19) +
         scale_size_manual(values=c("TRUE"=1, "FALSE"=0.2), na.value=0.2) +
         scale_alpha_manual(values=c("TRUE"=0.5, "FALSE"=0.2), na.value=0.2) +
@@ -40,7 +40,7 @@ plot_screen = function(res, sample=NULL, links=TRUE, labs=TRUE, min_reads=10, ca
                 keep.fraction=1, keep.number=30)
     }
     if (labs && nrow(lab) > 0) {
-        p = p + ggpp::stat_dens2d_filter_g(data=lab, aes(label=pep_id, color=bc_type),
+        p = p + ggpp::stat_dens2d_filter_g(data=lab, aes(label=pep_id, color=minigenes),
             geom=ggrepel::GeomTextRepel, keep.fraction=1, keep.number=45,
             size=1.5, min.segment.length=0, segment.alpha=0.3, segment.size=0.3)
     }
@@ -50,12 +50,12 @@ plot_screen = function(res, sample=NULL, links=TRUE, labs=TRUE, min_reads=10, ca
 #' @keywords internal
 make_links = function(res, sample, p_sig) {
     if (is.null(sample))
-        sample = unique(res$bc_type)
-    arrs = res |> filter(bc_type %in% sample) |>
-        select(bc_type, mut_id, pep_type, baseMean, log2FoldChange, padj)
+        sample = unique(res$minigenes)
+    arrs = res |> filter(minigenes %in% sample) |>
+        select(minigenes, mut_id, pep_type, baseMean, log2FoldChange, padj)
     ar1 = arrs |> filter(pep_type == "ref") |> select(-pep_type) |>
         dplyr::rename(baseMean_ref=baseMean, log2FoldChange_ref=log2FoldChange)
     ar2 = arrs |> filter(pep_type == "alt", padj<p_sig) |> select(-pep_type) |>
         dplyr::rename(baseMean_alt=baseMean, log2FoldChange_alt=log2FoldChange, padj_alt=padj)
-    inner_join(ar1, ar2, by=join_by(bc_type, mut_id), relationship="many-to-many")
+    inner_join(ar1, ar2, by=join_by(minigenes, mut_id), relationship="many-to-many")
 }

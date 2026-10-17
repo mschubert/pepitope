@@ -1,4 +1,4 @@
-sample_id	patient	rep	origin	barcode
+sample_id	minigenes	rep	origin	barcode
 lib1	pat2+common	1	Library	AAGACCA
 lib2	pat3	1	Library	CCAGTGT
 mock1	pat1+common	1	Mock	TGAGTCC

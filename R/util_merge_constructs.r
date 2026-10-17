@@ -31,7 +31,7 @@ merge_constructs = function(all_constructs, strict=TRUE) {
     }
     construct_df = mapply(expand_barcode, name=names(all_constructs),
                           df=all_constructs, SIMPLIFY=FALSE) |>
-        bind_rows(.id="bc_type")
+        bind_rows(.id="minigenes")
 
     if (strict) {
         if (nrow(construct_df) == 0)
