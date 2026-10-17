@@ -2,7 +2,7 @@
 
 * Use `minigenes` for sample construct libraries and barcode library membership
 * Refactor `remove_cutsite()` into `Rcpp` utility function
-* Refactor and 1.6x (3.5x cached) speed up `annodate_coding()` (1000 SNVs tested)
+* Refactor and 1.6x (3.5x cached) speed up `annotate_coding()` (1000 SNVs tested)
 * Refactor and 2.2x speed up `count_fastq()` (400M .gz reads tested)
 
 # pepitope 0.4.2

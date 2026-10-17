@@ -4,7 +4,9 @@ Version: 0.4.3
 Authors@R: c(
     person('Michael', 'Schubert', email='mschu.dev@gmail.com',
            role = c('aut', 'cre'),
-           comment = c(ORCID='0000-0002-6862-5221'))
+           comment = c(ORCID='0000-0002-6862-5221')),
+    person('Moritz', 'Broft', role='ctb'),
+    person('Wouter', 'Scheper', role='ctb')
     )
 Description: Supports T cell receptor neoantigen co-culture screen analysis
     from peptide library design to sequencing quality control and differential

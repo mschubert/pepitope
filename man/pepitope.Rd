@@ -32,4 +32,10 @@ Authors:
   \item Michael Schubert \email{mschu.dev@gmail.com} (\href{https://orcid.org/0000-0002-6862-5221}{ORCID})
 }
 
+Other contributors:
+\itemize{
+  \item Moritz Broft [contributor]
+  \item Wouter Scheper [contributor]
+}
+
 }
