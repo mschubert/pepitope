@@ -89,7 +89,8 @@ describe which samples it contains. For this, we create a sample sheet
 with the following columns:
 
 - `sample_id` – a unique identifier of the sample
-- `patient` – the patient or sample group that the sample comes from
+- `minigenes` – construct libraries present in the sample, separated by
+  `+`
 - `rep` – a number indicating the replicate number
 - `origin` – a descriptor of which kind of sample this is
 - `barcode` – the barcode used to label all condition-specific
@@ -149,7 +150,7 @@ from the read sequences. However, we could also specify it via the
 ``` r
 dset = count_fastq(fastq_file, sample_sheet, all_constructs, valid_barcodes)
 #> Read structure identified as '7B12M'
-#> Counting barcodes in /tmp/RtmpqWBczP/my_seqdata.fq
+#> Counting barcodes in /tmp/Rtmpjo2yTl/my_seqdata.fq
 #> Processed 1,608,536 reads
 ```
 

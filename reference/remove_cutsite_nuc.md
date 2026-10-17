@@ -1,6 +1,9 @@
-# Remove a Restriction Enzyme cut site but keep AA
+# Remove restriction enzyme sites while preserving amino acids
 
-Remove a Restriction Enzyme cut site but keep AA
+Uses dynamic programming to minimize nucleotide substitutions while
+excluding all recognition sites and their reverse complements everywhere
+in the result. Incomplete terminal codons are kept unchanged.
+Translation uses the standard genetic code with \`no.init.codon=TRUE\`.
 
 ## Usage
 
@@ -12,16 +15,18 @@ remove_cutsite_nuc(nuc, site, seed = NULL)
 
 - nuc:
 
-  cDNA nucleotide string
+  A character vector of cDNA nucleotide strings using unambiguous DNA
+  bases
 
 - site:
 
-  Recognition site to be replaced (fwd+rev comp)
+  A character vector of recognition sequences to remove on both strands
 
 - seed:
 
-  Seed for deterministic pseudo-random candidate ordering
+  Seed for deterministic ordering of equally optimal synonymous codons
 
 ## Value
 
-cDNA with minimal changes to no longer contain the cut site
+cDNA sequences with the fewest nucleotide substitutions needed to remove
+the cut sites while preserving translation

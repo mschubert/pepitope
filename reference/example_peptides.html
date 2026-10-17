@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pepitope</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,116 +69,640 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">valid_barcodes</span> <span class="op">=</span> <span class="fu"><a href="example_barcodes.html">example_barcodes</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">example_peptides</span><span class="op">(</span><span class="va">valid_barcodes</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $pat1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 67 × 13</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    var_id             mut_id       pep_id        pep_type gene_name</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> chr1:114713908_T/A NRAS_Q61     NRAS_Q61      ref      NRAS     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> chr1:114713908_T/A NRAS_Q61     NRAS_Q61L     alt      NRAS     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> chr1:114713908_T/C NRAS_Q61     NRAS_Q61R     alt      NRAS     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> chr2:208248388_G/A IDH1_R132    IDH1_R132     ref      IDH1     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> chr2:208248388_G/A IDH1_R132    IDH1_R132L    alt      IDH1     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> chr3:179234297_A/G PIK3CA_H1047 PIK3CA_H1047  ref      PIK3CA   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> chr3:179234297_A/G PIK3CA_H1047 PIK3CA_H1047R alt      PIK3CA   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> chr4:54285926_A/T  PDGFRA_D842  PDGFRA_D842   ref      PDGFRA   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> chr4:54285926_A/T  PDGFRA_D842  PDGFRA_D842V  alt      PDGFRA   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> chr4:54733155_A/T  KIT_D816     KIT_D816      ref      KIT      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    gene_id         tx_id         tiled n_tiles    nt peptide barcode_1 barcode_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ENSG00000213281 ENST00000369… ATAG…       1    93 IDGETC… AAAAAAAA… TAACAAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ENSG00000213281 ENST00000369… ATAG…       1    93 IDGETC… CAAAAAAA… ACACAAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ENSG00000213281 ENST00000369… ATAG…       1    93 IDGETC… GAAAAAAA… CCACAAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ENSG00000138413 ENST00000345… ATCC…       1    93 IPRLVS… TAAAAAAA… GCACAAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ENSG00000138413 ENST00000345… ATCC…       1    93 IPRLVS… ACAAAAAA… TCACAAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ENSG00000121879 ENST00000263… GAGC…       1    93 EQEALE… CCAAAAAA… AGACAAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ENSG00000121879 ENST00000263… GAGC…       1    93 EQEALE… GCAAAAAA… CGACAAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ENSG00000134853 ENST00000257… GCAC…       1    93 AQGKIV… TCAAAAAA… GGACAAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ENSG00000134853 ENST00000257… GCAC…       1    93 AQGKIV… AGAAAAAA… TGACAAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ENSG00000157404 ENST00000288… ACTC…       1    93 THGRIT… CGAAAAAA… ATACAAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 57 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 var_id       mut_id        pep_id pep_type gene_name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   chr1:114713908_T/A     NRAS_Q61      NRAS_Q61      ref      NRAS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   chr1:114713908_T/A     NRAS_Q61     NRAS_Q61L      alt      NRAS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   chr1:114713908_T/C     NRAS_Q61     NRAS_Q61R      alt      NRAS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   chr2:208248388_G/A    IDH1_R132     IDH1_R132      ref      IDH1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   chr2:208248388_G/A    IDH1_R132    IDH1_R132L      alt      IDH1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   chr3:179234297_A/G PIK3CA_H1047  PIK3CA_H1047      ref    PIK3CA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   chr3:179234297_A/G PIK3CA_H1047 PIK3CA_H1047R      alt    PIK3CA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8    chr4:54285926_A/T  PDGFRA_D842   PDGFRA_D842      ref    PDGFRA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9    chr4:54285926_A/T  PDGFRA_D842  PDGFRA_D842V      alt    PDGFRA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10   chr4:54733155_A/T     KIT_D816      KIT_D816      ref       KIT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11   chr4:54733155_A/T     KIT_D816     KIT_D816V      alt       KIT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12  chr4:152326137_C/T   FBXW7_R505    FBXW7_R505      ref     FBXW7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13  chr4:152326137_C/T   FBXW7_R505   FBXW7_R505S      alt     FBXW7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14  chr7:55181370_C/CA     EGFR_787      EGFR_787      ref      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-1      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-2      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-3      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-4      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-5      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-6      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-7      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 chr7:55181374_ATC/A     EGFR_789      EGFR_789      ref      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-1      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-2      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-3      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-4      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-5      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-6      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-7      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30   chr7:55181378_C/T    EGFR_T790     EGFR_T790      ref      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31   chr7:55181378_C/T    EGFR_T790    EGFR_T790M      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32   chr7:55181394_G/A    EGFR_F795     EGFR_F795      ref      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33   chr7:55181394_G/A    EGFR_F795    EGFR_F795L      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34   chr7:55191822_T/G    EGFR_L858     EGFR_L858      ref      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35   chr7:55191822_T/G    EGFR_L858    EGFR_L858R      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36  chr7:116771936_C/T    MET_T1010     MET_T1010      ref       MET</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37  chr7:116771936_C/T    MET_T1010    MET_T1010I      alt       MET</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38    chr9:5073770_G/T    JAK2_V617     JAK2_V617      ref      JAK2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            gene_id           tx_id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  ENSG00000213281 ENST00000369535</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  ENSG00000213281 ENST00000369535</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  ENSG00000213281 ENST00000369535</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  ENSG00000138413 ENST00000345146</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  ENSG00000138413 ENST00000345146</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  ENSG00000121879 ENST00000263967</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  ENSG00000121879 ENST00000263967</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  ENSG00000134853 ENST00000257290</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  ENSG00000134853 ENST00000257290</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 ENSG00000157404 ENST00000288135</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 ENSG00000157404 ENST00000288135</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 ENSG00000109670 ENST00000281708</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 ENSG00000109670 ENST00000281708</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36 ENSG00000105976 ENST00000318493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37 ENSG00000105976 ENST00000318493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38 ENSG00000096968 ENST00000381652</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                            tiled</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  ATAGATGGTGAAACCTGTTTGTTGGACATACTGGATACAGCTGGACAAGAAGAGTACAGTGCCATGAGAGACCAATACATGAGGACAGGCGAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  ATAGATGGTGAAACCTGTTTGTTGGACATACTGGATACAGCTGGACTAGAAGAGTACAGTGCCATGAGAGACCAATACATGAGGACAGGCGAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  ATAGATGGTGAAACCTGTTTGTTGGACATACTGGATACAGCTGGACGAGAAGAGTACAGTGCCATGAGAGACCAATACATGAGGACAGGCGAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  ATCCCCCGGCTTGTGAGTGGATGGGTAAAACCTATCATCATAGGTCGTCATGCTTATGGGGATCAATACAGAGCAACTGATTTTGTTGTTCCT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  ATCCCCCGGCTTGTGAGTGGATGGGTAAAACCTATCATCATAGGTCTTCATGCTTATGGGGATCAATACAGAGCAACTGATTTTGTTGTTCCT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  GAGCAAGAGGCTTTGGAGTATTTCATGAAACAAATGAATGATGCACATCATGGTGGCTGGACAACAAAAATGGATTGGATCTTCCACACAATT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  GAGCAAGAGGCTTTGGAGTATTTCATGAAACAAATGAATGATGCACGTCATGGTGGCTGGACAACAAAAATGGATTGGATCTTCCACACAATT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  GCACAAGGAAAAATTGTGAAGATCTGTGACTTTGGCCTGGCCAGAGACATCATGCATGATTCGAACTATGTGTCGAAAGGCAGTACCTTTCTG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  GCACAAGGAAAAATTGTGAAGATCTGTGACTTTGGCCTGGCCAGAGTCATCATGCATGATTCGAACTATGTGTCGAAAGGCAGTACCTTTCTG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 ACTCATGGTCGGATCACAAAGATTTGTGATTTTGGTCTAGCCAGAGACATCAAGAATGATTCTAATTATGTGGTTAAAGGAAACGCTCGACTA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 ACTCATGGTCGGATCACAAAGATTTGTGATTTTGGTCTAGCCAGAGTCATCAAGAATGATTCTAATTATGTGGTTAAAGGAAACGCTCGACTA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 ACAGGCCAGTGTTTACATGTTTTGATGGGTCATGTTGCAGCAGTCCGCTGTGTTCAATATGATGGCAGGAGGGTTGTTAGTGGAGCATATGAT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 ACAGGCCAGTGTTTACATGTTTTGATGGGTCATGTTGCAGCAGTCAGCTGTGTTCAATATGATGGCAGGAGGGTTGTTAGTGGAGCATATGAT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 CCCCACGTGTGCCGCCTGCTGGGCATCTGCCTCACCTCCACCGTGCAGCTCATCACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 CCCCACGTGTGCCGCCTGCTGGGCATCTGCCTCACCTCCACCGTGCACACTCATCACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 ACTCATCACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAACACAAAGACAATATTGGCTCCCAGTACCTGCTCAACTGGTG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 CCGGGAACACAAAGACAATATTGGCTCCCAGTACCTGCTCAACTGGTGTGTGCAGATCGCAAAGGGCATGAACTACTTGGAGGACCGTCGCTT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 GTGTGTGCAGATCGCAAAGGGCATGAACTACTTGGAGGACCGTCGCTTGGTGCACCGCGACCTGGCAGCCAGGAACGTACTGGTGAAAACACC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 GGTGCACCGCGACCTGGCAGCCAGGAACGTACTGGTGAAAACACCGCAGCATGTCAAGATCACAGATTTTGGGCTGGCCAAACTGCTGGGTGC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 GCATGTCAAGATCACAGATTTTGGGCTGGCCAAACTGCTGGGTGCGGAAGAGAAAGAATACCATGCAGAAGGAGGCAAAGTGCCTATCAAGTG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 GGAAGAGAAAGAATACCATGCAGAAGGAGGCAAAGTGCCTATCAAGTGGATGGCATTGGAATCAATTTTACACAGAATCTATACCCACCAGAG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 GTGTGCCGCCTGCTGGGCATCTGCCTCACCTCCACCGTGCAGCTCATCACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 GTGTGCCGCCTGCTGGGCATCTGCCTCACCTCCACCGTGCAGCTCAACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAACA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 AACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAACACAAAGACAATATTGGCTCCCAGTACCTGCTCAACTGGTGTGTGCA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 ACACAAAGACAATATTGGCTCCCAGTACCTGCTCAACTGGTGTGTGCAGATCGCAAAGGGCATGAACTACTTGGAGGACCGTCGCTTGGTGCA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 GCAGATCGCAAAGGGCATGAACTACTTGGAGGACCGTCGCTTGGTGCACCGCGACCTGGCAGCCAGGAACGTACTGGTGAAAACACCGCAGCA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 GCACCGCGACCTGGCAGCCAGGAACGTACTGGTGAAAACACCGCAGCATGTCAAGATCACAGATTTTGGGCTGGCCAAACTGCTGGGTGCGGA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 GCATGTCAAGATCACAGATTTTGGGCTGGCCAAACTGCTGGGTGCGGAAGAGAAAGAATACCATGCAGAAGGAGGCAAAGTGCCTATCAAGTG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 GGAAGAGAAAGAATACCATGCAGAAGGAGGCAAAGTGCCTATCAAGTGGATGGCATTGGAATCAATTTTACACAGAATCTATACCCACCAGAG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 TGCCGCCTGCTGGGCATCTGCCTCACCTCCACCGTGCAGCTCATCACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAACAC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31 TGCCGCCTGCTGGGCATCTGCCTCACCTCCACCGTGCAGCTCATCATGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAACAC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32 ATCTGCCTCACCTCCACCGTGCAGCTCATCACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAACACAAAGACAATATTGGC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33 ATCTGCCTCACCTCCACCGTGCAGCTCATCACGCAGCTCATGCCCTTAGGCTGCCTCCTGGACTATGTCCGGGAACACAAAGACAATATTGGC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34 GTACTGGTGAAAACACCGCAGCATGTCAAGATCACAGATTTTGGGCTGGCCAAACTGCTGGGTGCGGAAGAGAAAGAATACCATGCAGAAGGA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35 GTACTGGTGAAAACACCGCAGCATGTCAAGATCACAGATTTTGGGCGGGCCAAACTGCTGGGTGCGGAAGAGAAAGAATACCATGCAGAAGGA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36 ACTCCTCATTTGGATAGGCTTGTAAGTGCCCGAAGTGTAAGCCCAACTACAGAAATGGTTTCAAATGAATCTGTAGACTACCGAGCTACTTTT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37 ACTCCTCATTTGGATAGGCTTGTAAGTGCCCGAAGTGTAAGCCCAATTACAGAAATGGTTTCAAATGAATCTGTAGACTACCGAGCTACTTTT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38 AGCAAGCTTTCTCACAAGCATTTGGTTTTAAATTATGGAGTATGTGTCTGTGGAGACGAGAATATTCTGGTTCAGGAGTTTGTAAAATTTGGA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    n_tiles nt                         peptide    barcode_1    barcode_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        1 93 IDGETCLLDILDTAGQEEYSAMRDQYMRTGE AAAAAAAAAAAA TAACAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        1 93 IDGETCLLDILDTAGLEEYSAMRDQYMRTGE CAAAAAAAAAAA ACACAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        1 93 IDGETCLLDILDTAGREEYSAMRDQYMRTGE GAAAAAAAAAAA CCACAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        1 93 IPRLVSGWVKPIIIGRHAYGDQYRATDFVVP TAAAAAAAAAAA GCACAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        1 93 IPRLVSGWVKPIIIGLHAYGDQYRATDFVVP ACAAAAAAAAAA TCACAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        1 93 EQEALEYFMKQMNDAHHGGWTTKMDWIFHTI CCAAAAAAAAAA AGACAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7        1 93 EQEALEYFMKQMNDARHGGWTTKMDWIFHTI GCAAAAAAAAAA CGACAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8        1 93 AQGKIVKICDFGLARDIMHDSNYVSKGSTFL TCAAAAAAAAAA GGACAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9        1 93 AQGKIVKICDFGLARVIMHDSNYVSKGSTFL AGAAAAAAAAAA TGACAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10       1 93 THGRITKICDFGLARDIKNDSNYVVKGNARL CGAAAAAAAAAA ATACAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11       1 93 THGRITKICDFGLARVIKNDSNYVVKGNARL GGAAAAAAAAAA CTACAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12       1 93 TGQCLHVLMGHVAAVRCVQYDGRRVVSGAYD TGAAAAAAAAAA GTACAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13       1 93 TGQCLHVLMGHVAAVSCVQYDGRRVVSGAYD ATAAAAAAAAAA TTACAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14       1 93 PHVCRLLGICLTSTVQLITQLMPFGCLLDYV CTAAAAAAAAAA AACCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15       7 93 PHVCRLLGICLTSTVHTHHAAHALRLPPGLC GTAAAAAAAAAA CACCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16       7 93 THHAAHALRLPPGLCPGTQRQYWLPVPAQLV TTAAAAAAAAAA GACCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17       7 93 PGTQRQYWLPVPAQLVCADRKGHELLGGPSL AACAAAAAAAAA TACCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18       7 93 VCADRKGHELLGGPSLGAPRPGSQERTGENT CACAAAAAAAAA ACCCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19       7 93 GAPRPGSQERTGENTAACQDHRFWAGQTAGC GACAAAAAAAAA CCCCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20       7 93 ACQDHRFWAGQTAGCGRERIPCRRRQSAYQV TACAAAAAAAAA GCCCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21       7 93 GRERIPCRRRQSAYQVDGIGINFTQNLYPPE ACCAAAAAAAAA TCCCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22       1 93 VCRLLGICLTSTVQLITQLMPFGCLLDYVRE CCCAAAAAAAAA AGCCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23       7 93 VCRLLGICLTSTVQLNAAHALRLPPGLCPGT GCCAAAAAAAAA CGCCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24       7 93 NAAHALRLPPGLCPGTQRQYWLPVPAQLVCA TCCAAAAAAAAA GGCCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25       7 93 TQRQYWLPVPAQLVCADRKGHELLGGPSLGA AGCAAAAAAAAA TGCCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26       7 93 ADRKGHELLGGPSLGAPRPGSQERTGENTAA CGCAAAAAAAAA ATCCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27       7 93 APRPGSQERTGENTAACQDHRFWAGQTAGCG GGCAAAAAAAAA CTCCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28       7 93 ACQDHRFWAGQTAGCGRERIPCRRRQSAYQV TGCAAAAAAAAA GTCCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29       7 93 GRERIPCRRRQSAYQVDGIGINFTQNLYPPE ATCAAAAAAAAA TTCCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30       1 93 CRLLGICLTSTVQLITQLMPFGCLLDYVREH CTCAAAAAAAAA AAGCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31       1 93 CRLLGICLTSTVQLIMQLMPFGCLLDYVREH GTCAAAAAAAAA CAGCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32       1 93 ICLTSTVQLITQLMPFGCLLDYVREHKDNIG TTCAAAAAAAAA GAGCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33       1 93 ICLTSTVQLITQLMPLGCLLDYVREHKDNIG AAGAAAAAAAAA TAGCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34       1 93 VLVKTPQHVKITDFGLAKLLGAEEKEYHAEG CAGAAAAAAAAA ACGCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35       1 93 VLVKTPQHVKITDFGRAKLLGAEEKEYHAEG GAGAAAAAAAAA CCGCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36       1 93 TPHLDRLVSARSVSPTTEMVSNESVDYRATF TAGAAAAAAAAA GCGCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37       1 93 TPHLDRLVSARSVSPITEMVSNESVDYRATF ACGAAAAAAAAA TCGCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38       1 93 SKLSHKHLVLNYGVCVCGDENILVQEFVKFG CCGAAAAAAAAA AGGCAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 29 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $pat2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 46 × 13</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    var_id             mut_id       pep_id        pep_type gene_name</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> chr1:114713908_T/A NRAS_Q61     NRAS_Q61      ref      NRAS     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> chr1:114713908_T/A NRAS_Q61     NRAS_Q61L     alt      NRAS     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> chr1:114713908_T/C NRAS_Q61     NRAS_Q61R     alt      NRAS     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> chr3:179234297_A/G PIK3CA_H1047 PIK3CA_H1047  ref      PIK3CA   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> chr3:179234297_A/G PIK3CA_H1047 PIK3CA_H1047R alt      PIK3CA   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> chr4:54285926_A/T  PDGFRA_D842  PDGFRA_D842   ref      PDGFRA   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> chr4:54285926_A/T  PDGFRA_D842  PDGFRA_D842V  alt      PDGFRA   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> chr4:54733155_A/T  KIT_D816     KIT_D816      ref      KIT      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> chr4:54733155_A/T  KIT_D816     KIT_D816V     alt      KIT      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> chr4:152326137_C/T FBXW7_R505   FBXW7_R505    ref      FBXW7    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    gene_id         tx_id         tiled n_tiles    nt peptide barcode_1 barcode_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ENSG00000213281 ENST00000369… ATAG…       1    93 IDGETC… GCAGAAAA… ACTGAAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ENSG00000213281 ENST00000369… ATAG…       1    93 IDGETC… TCAGAAAA… CCTGAAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ENSG00000213281 ENST00000369… ATAG…       1    93 IDGETC… AGAGAAAA… GCTGAAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ENSG00000121879 ENST00000263… GAGC…       1    93 EQEALE… CGAGAAAA… TCTGAAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ENSG00000121879 ENST00000263… GAGC…       1    93 EQEALE… GGAGAAAA… AGTGAAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ENSG00000134853 ENST00000257… GCAC…       1    93 AQGKIV… TGAGAAAA… CGTGAAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ENSG00000134853 ENST00000257… GCAC…       1    93 AQGKIV… ATAGAAAA… GGTGAAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ENSG00000157404 ENST00000288… ACTC…       1    93 THGRIT… CTAGAAAA… TGTGAAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ENSG00000157404 ENST00000288… ACTC…       1    93 THGRIT… GTAGAAAA… ATTGAAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ENSG00000109670 ENST00000281… ACAG…       1    93 TGQCLH… TTAGAAAA… CTTGAAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 36 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 var_id       mut_id        pep_id pep_type gene_name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   chr1:114713908_T/A     NRAS_Q61      NRAS_Q61      ref      NRAS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   chr1:114713908_T/A     NRAS_Q61     NRAS_Q61L      alt      NRAS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   chr1:114713908_T/C     NRAS_Q61     NRAS_Q61R      alt      NRAS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   chr3:179234297_A/G PIK3CA_H1047  PIK3CA_H1047      ref    PIK3CA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   chr3:179234297_A/G PIK3CA_H1047 PIK3CA_H1047R      alt    PIK3CA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    chr4:54285926_A/T  PDGFRA_D842   PDGFRA_D842      ref    PDGFRA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    chr4:54285926_A/T  PDGFRA_D842  PDGFRA_D842V      alt    PDGFRA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8    chr4:54733155_A/T     KIT_D816      KIT_D816      ref       KIT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9    chr4:54733155_A/T     KIT_D816     KIT_D816V      alt       KIT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  chr4:152326137_C/T   FBXW7_R505    FBXW7_R505      ref     FBXW7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11  chr4:152326137_C/T   FBXW7_R505   FBXW7_R505S      alt     FBXW7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12  chr7:55181370_C/CA     EGFR_787      EGFR_787      ref      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-1      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-2      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-3      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-4      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-5      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-6      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-7      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 chr7:55181374_ATC/A     EGFR_789      EGFR_789      ref      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-1      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-2      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-3      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-4      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-5      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-6      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-7      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28   chr7:55181378_C/T    EGFR_T790     EGFR_T790      ref      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29   chr7:55181378_C/T    EGFR_T790    EGFR_T790M      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30   chr7:55181394_G/A    EGFR_F795     EGFR_F795      ref      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31   chr7:55181394_G/A    EGFR_F795    EGFR_F795L      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32  chr7:116771936_C/T    MET_T1010     MET_T1010      ref       MET</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33  chr7:116771936_C/T    MET_T1010    MET_T1010I      alt       MET</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34  chr11:32396341_C/T     WT1_R377      WT1_R377      ref       WT1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35  chr11:32396341_C/T     WT1_R377     WT1_R377S      alt       WT1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36  chr12:25245350_C/T     KRAS_G12      KRAS_G12      ref      KRAS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37  chr12:25245350_C/T     KRAS_G12     KRAS_G12D      alt      KRAS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38  chr12:25245350_C/A     KRAS_G12     KRAS_G12V      alt      KRAS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            gene_id           tx_id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  ENSG00000213281 ENST00000369535</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  ENSG00000213281 ENST00000369535</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  ENSG00000213281 ENST00000369535</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  ENSG00000121879 ENST00000263967</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  ENSG00000121879 ENST00000263967</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  ENSG00000134853 ENST00000257290</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  ENSG00000134853 ENST00000257290</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  ENSG00000157404 ENST00000288135</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  ENSG00000157404 ENST00000288135</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 ENSG00000109670 ENST00000281708</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 ENSG00000109670 ENST00000281708</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32 ENSG00000105976 ENST00000318493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33 ENSG00000105976 ENST00000318493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34 ENSG00000184937 ENST00000332351</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35 ENSG00000184937 ENST00000332351</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36 ENSG00000133703 ENST00000256078</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37 ENSG00000133703 ENST00000256078</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38 ENSG00000133703 ENST00000256078</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                            tiled</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  ATAGATGGTGAAACCTGTTTGTTGGACATACTGGATACAGCTGGACAAGAAGAGTACAGTGCCATGAGAGACCAATACATGAGGACAGGCGAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  ATAGATGGTGAAACCTGTTTGTTGGACATACTGGATACAGCTGGACTAGAAGAGTACAGTGCCATGAGAGACCAATACATGAGGACAGGCGAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  ATAGATGGTGAAACCTGTTTGTTGGACATACTGGATACAGCTGGACGAGAAGAGTACAGTGCCATGAGAGACCAATACATGAGGACAGGCGAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  GAGCAAGAGGCTTTGGAGTATTTCATGAAACAAATGAATGATGCACATCATGGTGGCTGGACAACAAAAATGGATTGGATCTTCCACACAATT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  GAGCAAGAGGCTTTGGAGTATTTCATGAAACAAATGAATGATGCACGTCATGGTGGCTGGACAACAAAAATGGATTGGATCTTCCACACAATT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  GCACAAGGAAAAATTGTGAAGATCTGTGACTTTGGCCTGGCCAGAGACATCATGCATGATTCGAACTATGTGTCGAAAGGCAGTACCTTTCTG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  GCACAAGGAAAAATTGTGAAGATCTGTGACTTTGGCCTGGCCAGAGTCATCATGCATGATTCGAACTATGTGTCGAAAGGCAGTACCTTTCTG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  ACTCATGGTCGGATCACAAAGATTTGTGATTTTGGTCTAGCCAGAGACATCAAGAATGATTCTAATTATGTGGTTAAAGGAAACGCTCGACTA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  ACTCATGGTCGGATCACAAAGATTTGTGATTTTGGTCTAGCCAGAGTCATCAAGAATGATTCTAATTATGTGGTTAAAGGAAACGCTCGACTA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 ACAGGCCAGTGTTTACATGTTTTGATGGGTCATGTTGCAGCAGTCCGCTGTGTTCAATATGATGGCAGGAGGGTTGTTAGTGGAGCATATGAT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 ACAGGCCAGTGTTTACATGTTTTGATGGGTCATGTTGCAGCAGTCAGCTGTGTTCAATATGATGGCAGGAGGGTTGTTAGTGGAGCATATGAT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 CCCCACGTGTGCCGCCTGCTGGGCATCTGCCTCACCTCCACCGTGCAGCTCATCACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 CCCCACGTGTGCCGCCTGCTGGGCATCTGCCTCACCTCCACCGTGCACACTCATCACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 ACTCATCACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAACACAAAGACAATATTGGCTCCCAGTACCTGCTCAACTGGTG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 CCGGGAACACAAAGACAATATTGGCTCCCAGTACCTGCTCAACTGGTGTGTGCAGATCGCAAAGGGCATGAACTACTTGGAGGACCGTCGCTT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 GTGTGTGCAGATCGCAAAGGGCATGAACTACTTGGAGGACCGTCGCTTGGTGCACCGCGACCTGGCAGCCAGGAACGTACTGGTGAAAACACC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 GGTGCACCGCGACCTGGCAGCCAGGAACGTACTGGTGAAAACACCGCAGCATGTCAAGATCACAGATTTTGGGCTGGCCAAACTGCTGGGTGC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 GCATGTCAAGATCACAGATTTTGGGCTGGCCAAACTGCTGGGTGCGGAAGAGAAAGAATACCATGCAGAAGGAGGCAAAGTGCCTATCAAGTG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 GGAAGAGAAAGAATACCATGCAGAAGGAGGCAAAGTGCCTATCAAGTGGATGGCATTGGAATCAATTTTACACAGAATCTATACCCACCAGAG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 GTGTGCCGCCTGCTGGGCATCTGCCTCACCTCCACCGTGCAGCTCATCACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 GTGTGCCGCCTGCTGGGCATCTGCCTCACCTCCACCGTGCAGCTCAACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAACA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 AACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAACACAAAGACAATATTGGCTCCCAGTACCTGCTCAACTGGTGTGTGCA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 ACACAAAGACAATATTGGCTCCCAGTACCTGCTCAACTGGTGTGTGCAGATCGCAAAGGGCATGAACTACTTGGAGGACCGTCGCTTGGTGCA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 GCAGATCGCAAAGGGCATGAACTACTTGGAGGACCGTCGCTTGGTGCACCGCGACCTGGCAGCCAGGAACGTACTGGTGAAAACACCGCAGCA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 GCACCGCGACCTGGCAGCCAGGAACGTACTGGTGAAAACACCGCAGCATGTCAAGATCACAGATTTTGGGCTGGCCAAACTGCTGGGTGCGGA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 GCATGTCAAGATCACAGATTTTGGGCTGGCCAAACTGCTGGGTGCGGAAGAGAAAGAATACCATGCAGAAGGAGGCAAAGTGCCTATCAAGTG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 GGAAGAGAAAGAATACCATGCAGAAGGAGGCAAAGTGCCTATCAAGTGGATGGCATTGGAATCAATTTTACACAGAATCTATACCCACCAGAG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 TGCCGCCTGCTGGGCATCTGCCTCACCTCCACCGTGCAGCTCATCACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAACAC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 TGCCGCCTGCTGGGCATCTGCCTCACCTCCACCGTGCAGCTCATCATGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAACAC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 ATCTGCCTCACCTCCACCGTGCAGCTCATCACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAACACAAAGACAATATTGGC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31 ATCTGCCTCACCTCCACCGTGCAGCTCATCACGCAGCTCATGCCCTTAGGCTGCCTCCTGGACTATGTCCGGGAACACAAAGACAATATTGGC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32 ACTCCTCATTTGGATAGGCTTGTAAGTGCCCGAAGTGTAAGCCCAACTACAGAAATGGTTTCAAATGAATCTGTAGACTACCGAGCTACTTTT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33 ACTCCTCATTTGGATAGGCTTGTAAGTGCCCGAAGTGTAAGCCCAATTACAGAAATGGTTTCAAATGAATCTGTAGACTACCGAGCTACTTTT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34 GTAGCCCCGACTCTTGTACGGTCGGCATCTGAGACCAGTGAGAAACGCCCCTTCATGTGTGCTTACCCAGGCTGCAATAAGAGATATTTTAAG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35 GTAGCCCCGACTCTTGTACGGTCGGCATCTGAGACCAGTGAGAAAAGCCCCTTCATGTGTGCTTACCCAGGCTGCAATAAGAGATATTTTAAG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36 ATGACTGAATATAAACTTGTGGTAGTTGGAGCTGGTGGCGTAGGCAAGAGTGCCTTGACGATACAGCTAATTCAGAATCATTTTGTGGACGAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37 ATGACTGAATATAAACTTGTGGTAGTTGGAGCTGATGGCGTAGGCAAGAGTGCCTTGACGATACAGCTAATTCAGAATCATTTTGTGGACGAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38 ATGACTGAATATAAACTTGTGGTAGTTGGAGCTGTTGGCGTAGGCAAGAGTGCCTTGACGATACAGCTAATTCAGAATCATTTTGTGGACGAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    n_tiles nt                         peptide    barcode_1    barcode_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        1 93 IDGETCLLDILDTAGQEEYSAMRDQYMRTGE GCAGAAAAAAAA ACTGAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        1 93 IDGETCLLDILDTAGLEEYSAMRDQYMRTGE TCAGAAAAAAAA CCTGAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        1 93 IDGETCLLDILDTAGREEYSAMRDQYMRTGE AGAGAAAAAAAA GCTGAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        1 93 EQEALEYFMKQMNDAHHGGWTTKMDWIFHTI CGAGAAAAAAAA TCTGAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        1 93 EQEALEYFMKQMNDARHGGWTTKMDWIFHTI GGAGAAAAAAAA AGTGAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        1 93 AQGKIVKICDFGLARDIMHDSNYVSKGSTFL TGAGAAAAAAAA CGTGAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7        1 93 AQGKIVKICDFGLARVIMHDSNYVSKGSTFL ATAGAAAAAAAA GGTGAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8        1 93 THGRITKICDFGLARDIKNDSNYVVKGNARL CTAGAAAAAAAA TGTGAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9        1 93 THGRITKICDFGLARVIKNDSNYVVKGNARL GTAGAAAAAAAA ATTGAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10       1 93 TGQCLHVLMGHVAAVRCVQYDGRRVVSGAYD TTAGAAAAAAAA CTTGAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11       1 93 TGQCLHVLMGHVAAVSCVQYDGRRVVSGAYD AACGAAAAAAAA GTTGAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12       1 93 PHVCRLLGICLTSTVQLITQLMPFGCLLDYV CACGAAAAAAAA TTTGAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13       7 93 PHVCRLLGICLTSTVHTHHAAHALRLPPGLC GACGAAAAAAAA AAATAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14       7 93 THHAAHALRLPPGLCPGTQRQYWLPVPAQLV TACGAAAAAAAA CAATAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15       7 93 PGTQRQYWLPVPAQLVCADRKGHELLGGPSL ACCGAAAAAAAA GAATAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16       7 93 VCADRKGHELLGGPSLGAPRPGSQERTGENT CCCGAAAAAAAA TAATAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17       7 93 GAPRPGSQERTGENTAACQDHRFWAGQTAGC GCCGAAAAAAAA ACATAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18       7 93 ACQDHRFWAGQTAGCGRERIPCRRRQSAYQV TCCGAAAAAAAA CCATAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19       7 93 GRERIPCRRRQSAYQVDGIGINFTQNLYPPE AGCGAAAAAAAA GCATAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20       1 93 VCRLLGICLTSTVQLITQLMPFGCLLDYVRE CGCGAAAAAAAA TCATAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21       7 93 VCRLLGICLTSTVQLNAAHALRLPPGLCPGT GGCGAAAAAAAA AGATAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22       7 93 NAAHALRLPPGLCPGTQRQYWLPVPAQLVCA TGCGAAAAAAAA CGATAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23       7 93 TQRQYWLPVPAQLVCADRKGHELLGGPSLGA ATCGAAAAAAAA GGATAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24       7 93 ADRKGHELLGGPSLGAPRPGSQERTGENTAA CTCGAAAAAAAA TGATAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25       7 93 APRPGSQERTGENTAACQDHRFWAGQTAGCG GTCGAAAAAAAA ATATAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26       7 93 ACQDHRFWAGQTAGCGRERIPCRRRQSAYQV TTCGAAAAAAAA CTATAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27       7 93 GRERIPCRRRQSAYQVDGIGINFTQNLYPPE AAGGAAAAAAAA GTATAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28       1 93 CRLLGICLTSTVQLITQLMPFGCLLDYVREH CAGGAAAAAAAA TTATAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29       1 93 CRLLGICLTSTVQLIMQLMPFGCLLDYVREH GAGGAAAAAAAA AACTAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30       1 93 ICLTSTVQLITQLMPFGCLLDYVREHKDNIG TAGGAAAAAAAA CACTAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31       1 93 ICLTSTVQLITQLMPLGCLLDYVREHKDNIG ACGGAAAAAAAA GACTAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32       1 93 TPHLDRLVSARSVSPTTEMVSNESVDYRATF CCGGAAAAAAAA TACTAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33       1 93 TPHLDRLVSARSVSPITEMVSNESVDYRATF GCGGAAAAAAAA ACCTAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34       1 93 VAPTLVRSASETSEKRPFMCAYPGCNKRYFK TCGGAAAAAAAA CCCTAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35       1 93 VAPTLVRSASETSEKSPFMCAYPGCNKRYFK AGGGAAAAAAAA GCCTAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36       1 93 MTEYKLVVVGAGGVGKSALTIQLIQNHFVDE CGGGAAAAAAAA TCCTAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37       1 93 MTEYKLVVVGADGVGKSALTIQLIQNHFVDE GGGGAAAAAAAA AGCTAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38       1 93 MTEYKLVVVGAVGVGKSALTIQLIQNHFVDE TGGGAAAAAAAA CGCTAAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 8 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $pat3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 47 × 13</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    var_id             mut_id       pep_id        pep_type gene_name</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> chr2:208248388_G/A IDH1_R132    IDH1_R132     ref      IDH1     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> chr2:208248388_G/A IDH1_R132    IDH1_R132L    alt      IDH1     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> chr3:179234297_A/G PIK3CA_H1047 PIK3CA_H1047  ref      PIK3CA   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> chr3:179234297_A/G PIK3CA_H1047 PIK3CA_H1047R alt      PIK3CA   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> chr4:54285926_A/T  PDGFRA_D842  PDGFRA_D842   ref      PDGFRA   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> chr4:54285926_A/T  PDGFRA_D842  PDGFRA_D842V  alt      PDGFRA   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> chr4:54733155_A/T  KIT_D816     KIT_D816      ref      KIT      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> chr4:54733155_A/T  KIT_D816     KIT_D816V     alt      KIT      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> chr4:152326137_C/T FBXW7_R505   FBXW7_R505    ref      FBXW7    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> chr4:152326137_C/T FBXW7_R505   FBXW7_R505S   alt      FBXW7    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    gene_id         tx_id         tiled n_tiles    nt peptide barcode_1 barcode_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ENSG00000138413 ENST00000345… ATCC…       1    93 IPRLVS… GAGTAAAA… CACACAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ENSG00000138413 ENST00000345… ATCC…       1    93 IPRLVS… TAGTAAAA… GACACAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ENSG00000121879 ENST00000263… GAGC…       1    93 EQEALE… ACGTAAAA… TACACAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ENSG00000121879 ENST00000263… GAGC…       1    93 EQEALE… CCGTAAAA… ACCACAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ENSG00000134853 ENST00000257… GCAC…       1    93 AQGKIV… GCGTAAAA… CCCACAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ENSG00000134853 ENST00000257… GCAC…       1    93 AQGKIV… TCGTAAAA… GCCACAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ENSG00000157404 ENST00000288… ACTC…       1    93 THGRIT… AGGTAAAA… TCCACAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ENSG00000157404 ENST00000288… ACTC…       1    93 THGRIT… CGGTAAAA… AGCACAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ENSG00000109670 ENST00000281… ACAG…       1    93 TGQCLH… GGGTAAAA… CGCACAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ENSG00000109670 ENST00000281… ACAG…       1    93 TGQCLH… TGGTAAAA… GGCACAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 37 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 var_id       mut_id        pep_id pep_type gene_name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   chr2:208248388_G/A    IDH1_R132     IDH1_R132      ref      IDH1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   chr2:208248388_G/A    IDH1_R132    IDH1_R132L      alt      IDH1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   chr3:179234297_A/G PIK3CA_H1047  PIK3CA_H1047      ref    PIK3CA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   chr3:179234297_A/G PIK3CA_H1047 PIK3CA_H1047R      alt    PIK3CA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    chr4:54285926_A/T  PDGFRA_D842   PDGFRA_D842      ref    PDGFRA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    chr4:54285926_A/T  PDGFRA_D842  PDGFRA_D842V      alt    PDGFRA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    chr4:54733155_A/T     KIT_D816      KIT_D816      ref       KIT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8    chr4:54733155_A/T     KIT_D816     KIT_D816V      alt       KIT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   chr4:152326137_C/T   FBXW7_R505    FBXW7_R505      ref     FBXW7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  chr4:152326137_C/T   FBXW7_R505   FBXW7_R505S      alt     FBXW7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11  chr7:55181370_C/CA     EGFR_787      EGFR_787      ref      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-1      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-2      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-3      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-4      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-5      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-6      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-7      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 chr7:55181374_ATC/A     EGFR_789      EGFR_789      ref      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-1      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-2      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-3      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-4      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-5      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-6      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-7      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27   chr7:55181378_C/T    EGFR_T790     EGFR_T790      ref      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28   chr7:55181378_C/T    EGFR_T790    EGFR_T790M      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29   chr7:55191822_T/G    EGFR_L858     EGFR_L858      ref      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30   chr7:55191822_T/G    EGFR_L858    EGFR_L858R      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31    chr9:5073770_G/T    JAK2_V617     JAK2_V617      ref      JAK2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32    chr9:5073770_G/T    JAK2_V617    JAK2_V617F      alt      JAK2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33  chr12:25245347_G/A     KRAS_G13      KRAS_G13      ref      KRAS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34  chr12:25245347_G/A     KRAS_G13     KRAS_G13V      alt      KRAS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35  chr15:90088702_C/T    IDH2_R140     IDH2_R140      ref      IDH2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36  chr15:90088702_C/T    IDH2_R140    IDH2_R140Q      alt      IDH2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37        BCR--ABL1.fs BCR--ABL1.fs           BCR      ref       BCR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38        BCR--ABL1.fs BCR--ABL1.fs          ABL1      ref   ABL1.fs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            gene_id           tx_id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  ENSG00000138413 ENST00000345146</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  ENSG00000138413 ENST00000345146</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  ENSG00000121879 ENST00000263967</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  ENSG00000121879 ENST00000263967</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  ENSG00000134853 ENST00000257290</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  ENSG00000134853 ENST00000257290</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  ENSG00000157404 ENST00000288135</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  ENSG00000157404 ENST00000288135</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  ENSG00000109670 ENST00000281708</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 ENSG00000109670 ENST00000281708</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31 ENSG00000096968 ENST00000381652</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32 ENSG00000096968 ENST00000381652</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33 ENSG00000133703 ENST00000256078</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34 ENSG00000133703 ENST00000256078</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35 ENSG00000182054 ENST00000330062</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36 ENSG00000182054 ENST00000330062</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37 ENSG00000186716 ENST00000305877</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38 ENSG00000097007 ENST00000318560</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                            tiled</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  ATCCCCCGGCTTGTGAGTGGATGGGTAAAACCTATCATCATAGGTCGTCATGCTTATGGGGATCAATACAGAGCAACTGATTTTGTTGTTCCT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  ATCCCCCGGCTTGTGAGTGGATGGGTAAAACCTATCATCATAGGTCTTCATGCTTATGGGGATCAATACAGAGCAACTGATTTTGTTGTTCCT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  GAGCAAGAGGCTTTGGAGTATTTCATGAAACAAATGAATGATGCACATCATGGTGGCTGGACAACAAAAATGGATTGGATCTTCCACACAATT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  GAGCAAGAGGCTTTGGAGTATTTCATGAAACAAATGAATGATGCACGTCATGGTGGCTGGACAACAAAAATGGATTGGATCTTCCACACAATT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  GCACAAGGAAAAATTGTGAAGATCTGTGACTTTGGCCTGGCCAGAGACATCATGCATGATTCGAACTATGTGTCGAAAGGCAGTACCTTTCTG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  GCACAAGGAAAAATTGTGAAGATCTGTGACTTTGGCCTGGCCAGAGTCATCATGCATGATTCGAACTATGTGTCGAAAGGCAGTACCTTTCTG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  ACTCATGGTCGGATCACAAAGATTTGTGATTTTGGTCTAGCCAGAGACATCAAGAATGATTCTAATTATGTGGTTAAAGGAAACGCTCGACTA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  ACTCATGGTCGGATCACAAAGATTTGTGATTTTGGTCTAGCCAGAGTCATCAAGAATGATTCTAATTATGTGGTTAAAGGAAACGCTCGACTA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  ACAGGCCAGTGTTTACATGTTTTGATGGGTCATGTTGCAGCAGTCCGCTGTGTTCAATATGATGGCAGGAGGGTTGTTAGTGGAGCATATGAT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 ACAGGCCAGTGTTTACATGTTTTGATGGGTCATGTTGCAGCAGTCAGCTGTGTTCAATATGATGGCAGGAGGGTTGTTAGTGGAGCATATGAT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 CCCCACGTGTGCCGCCTGCTGGGCATCTGCCTCACCTCCACCGTGCAGCTCATCACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 CCCCACGTGTGCCGCCTGCTGGGCATCTGCCTCACCTCCACCGTGCACACTCATCACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 ACTCATCACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAACACAAAGACAATATTGGCTCCCAGTACCTGCTCAACTGGTG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 CCGGGAACACAAAGACAATATTGGCTCCCAGTACCTGCTCAACTGGTGTGTGCAGATCGCAAAGGGCATGAACTACTTGGAGGACCGTCGCTT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 GTGTGTGCAGATCGCAAAGGGCATGAACTACTTGGAGGACCGTCGCTTGGTGCACCGCGACCTGGCAGCCAGGAACGTACTGGTGAAAACACC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 GGTGCACCGCGACCTGGCAGCCAGGAACGTACTGGTGAAAACACCGCAGCATGTCAAGATCACAGATTTTGGGCTGGCCAAACTGCTGGGTGC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 GCATGTCAAGATCACAGATTTTGGGCTGGCCAAACTGCTGGGTGCGGAAGAGAAAGAATACCATGCAGAAGGAGGCAAAGTGCCTATCAAGTG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 GGAAGAGAAAGAATACCATGCAGAAGGAGGCAAAGTGCCTATCAAGTGGATGGCATTGGAATCAATTTTACACAGAATCTATACCCACCAGAG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 GTGTGCCGCCTGCTGGGCATCTGCCTCACCTCCACCGTGCAGCTCATCACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 GTGTGCCGCCTGCTGGGCATCTGCCTCACCTCCACCGTGCAGCTCAACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAACA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 AACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAACACAAAGACAATATTGGCTCCCAGTACCTGCTCAACTGGTGTGTGCA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 ACACAAAGACAATATTGGCTCCCAGTACCTGCTCAACTGGTGTGTGCAGATCGCAAAGGGCATGAACTACTTGGAGGACCGTCGCTTGGTGCA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 GCAGATCGCAAAGGGCATGAACTACTTGGAGGACCGTCGCTTGGTGCACCGCGACCTGGCAGCCAGGAACGTACTGGTGAAAACACCGCAGCA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 GCACCGCGACCTGGCAGCCAGGAACGTACTGGTGAAAACACCGCAGCATGTCAAGATCACAGATTTTGGGCTGGCCAAACTGCTGGGTGCGGA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 GCATGTCAAGATCACAGATTTTGGGCTGGCCAAACTGCTGGGTGCGGAAGAGAAAGAATACCATGCAGAAGGAGGCAAAGTGCCTATCAAGTG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 GGAAGAGAAAGAATACCATGCAGAAGGAGGCAAAGTGCCTATCAAGTGGATGGCATTGGAATCAATTTTACACAGAATCTATACCCACCAGAG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 TGCCGCCTGCTGGGCATCTGCCTCACCTCCACCGTGCAGCTCATCACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAACAC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 TGCCGCCTGCTGGGCATCTGCCTCACCTCCACCGTGCAGCTCATCATGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAACAC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 GTACTGGTGAAAACACCGCAGCATGTCAAGATCACAGATTTTGGGCTGGCCAAACTGCTGGGTGCGGAAGAGAAAGAATACCATGCAGAAGGA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 GTACTGGTGAAAACACCGCAGCATGTCAAGATCACAGATTTTGGGCGGGCCAAACTGCTGGGTGCGGAAGAGAAAGAATACCATGCAGAAGGA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31 AGCAAGCTTTCTCACAAGCATTTGGTTTTAAATTATGGAGTATGTGTCTGTGGAGACGAGAATATTCTGGTTCAGGAGTTTGTAAAATTTGGA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32 AGCAAGCTTTCTCACAAGCATTTGGTTTTAAATTATGGAGTATGTTTCTGTGGAGACGAGAATATTCTGGTTCAGGAGTTTGTAAAATTTGGA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33 ATGACTGAATATAAACTTGTGGTAGTTGGAGCTGGTGGCGTAGGCAAGAGTGCCTTGACGATACAGCTAATTCAGAATCATTTTGTGGACGAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34 ATGACTGAATATAAACTTGTGGTAGTTGGAGCTGGTGTCGTAGGCAAGAGTGCCTTGACGATACAGCTAATTCAGAATCATTTTGTGGACGAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35 GAGTTCAAGCTGAAGAAGATGTGGAAAAGTCCCAATGGAACTATCCGGAACATCCTGGGGGGGACTGTCTTCCGGGAGCCCATCATCTGCAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36 GAGTTCAAGCTGAAGAAGATGTGGAAAAGTCCCAATGGAACTATCCAGAACATCCTGGGGGGGACTGTCTTCCGGGAGCCCATCATCTGCAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37 AAACTCCAGACTGTCCACAGCATTCCGCTGACCATCAATAAGGAAGATGATGAGTCTCCGGGGCTCTATGGGTTTCTGAATGTCATCGTCCAC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38 ATGTTGGAGATCTGCCTGAAGCTGGTGGGCTGCAAATCCAAGAAGGGGCTGTCCTCGTCCTCCAGCTGTTATCTGGAAGAAGCCCTTCAGCGG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    n_tiles nt                         peptide    barcode_1    barcode_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        1 93 IPRLVSGWVKPIIIGRHAYGDQYRATDFVVP GAGTAAAAAAAA CACACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        1 93 IPRLVSGWVKPIIIGLHAYGDQYRATDFVVP TAGTAAAAAAAA GACACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        1 93 EQEALEYFMKQMNDAHHGGWTTKMDWIFHTI ACGTAAAAAAAA TACACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        1 93 EQEALEYFMKQMNDARHGGWTTKMDWIFHTI CCGTAAAAAAAA ACCACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        1 93 AQGKIVKICDFGLARDIMHDSNYVSKGSTFL GCGTAAAAAAAA CCCACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        1 93 AQGKIVKICDFGLARVIMHDSNYVSKGSTFL TCGTAAAAAAAA GCCACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7        1 93 THGRITKICDFGLARDIKNDSNYVVKGNARL AGGTAAAAAAAA TCCACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8        1 93 THGRITKICDFGLARVIKNDSNYVVKGNARL CGGTAAAAAAAA AGCACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9        1 93 TGQCLHVLMGHVAAVRCVQYDGRRVVSGAYD GGGTAAAAAAAA CGCACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10       1 93 TGQCLHVLMGHVAAVSCVQYDGRRVVSGAYD TGGTAAAAAAAA GGCACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11       1 93 PHVCRLLGICLTSTVQLITQLMPFGCLLDYV ATGTAAAAAAAA TGCACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12       7 93 PHVCRLLGICLTSTVHTHHAAHALRLPPGLC CTGTAAAAAAAA ATCACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13       7 93 THHAAHALRLPPGLCPGTQRQYWLPVPAQLV GTGTAAAAAAAA CTCACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14       7 93 PGTQRQYWLPVPAQLVCADRKGHELLGGPSL TTGTAAAAAAAA GTCACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15       7 93 VCADRKGHELLGGPSLGAPRPGSQERTGENT AATTAAAAAAAA TTCACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16       7 93 GAPRPGSQERTGENTAACQDHRFWAGQTAGC CATTAAAAAAAA AAGACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17       7 93 ACQDHRFWAGQTAGCGRERIPCRRRQSAYQV GATTAAAAAAAA CAGACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18       7 93 GRERIPCRRRQSAYQVDGIGINFTQNLYPPE TATTAAAAAAAA GAGACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19       1 93 VCRLLGICLTSTVQLITQLMPFGCLLDYVRE ACTTAAAAAAAA TAGACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20       7 93 VCRLLGICLTSTVQLNAAHALRLPPGLCPGT CCTTAAAAAAAA ACGACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21       7 93 NAAHALRLPPGLCPGTQRQYWLPVPAQLVCA GCTTAAAAAAAA CCGACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22       7 93 TQRQYWLPVPAQLVCADRKGHELLGGPSLGA TCTTAAAAAAAA GCGACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23       7 93 ADRKGHELLGGPSLGAPRPGSQERTGENTAA AGTTAAAAAAAA TCGACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24       7 93 APRPGSQERTGENTAACQDHRFWAGQTAGCG CGTTAAAAAAAA AGGACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25       7 93 ACQDHRFWAGQTAGCGRERIPCRRRQSAYQV GGTTAAAAAAAA CGGACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26       7 93 GRERIPCRRRQSAYQVDGIGINFTQNLYPPE TGTTAAAAAAAA GGGACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27       1 93 CRLLGICLTSTVQLITQLMPFGCLLDYVREH ATTTAAAAAAAA TGGACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28       1 93 CRLLGICLTSTVQLIMQLMPFGCLLDYVREH CTTTAAAAAAAA ATGACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29       1 93 VLVKTPQHVKITDFGLAKLLGAEEKEYHAEG GTTTAAAAAAAA CTGACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30       1 93 VLVKTPQHVKITDFGRAKLLGAEEKEYHAEG TTTTAAAAAAAA GTGACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31       1 93 SKLSHKHLVLNYGVCVCGDENILVQEFVKFG AAAACAAAAAAA TTGACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32       1 93 SKLSHKHLVLNYGVCFCGDENILVQEFVKFG CAAACAAAAAAA AATACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33       1 93 MTEYKLVVVGAGGVGKSALTIQLIQNHFVDE GAAACAAAAAAA CATACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34       1 93 MTEYKLVVVGAGVVGKSALTIQLIQNHFVDE TAAACAAAAAAA GATACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35       1 93 EFKLKKMWKSPNGTIRNILGGTVFREPIICK ACAACAAAAAAA TATACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36       1 93 EFKLKKMWKSPNGTIQNILGGTVFREPIICK CCAACAAAAAAA ACTACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37       1 93 KLQTVHSIPLTINKEDDESPGLYGFLNVIVH GCAACAAAAAAA CCTACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38       1 93 MLEICLKLVGCKSKKGLSSSSSCYLEEALQR TCAACAAAAAAA GCTACAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 9 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $common</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 46 × 13</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    var_id             mut_id       pep_id        pep_type gene_name</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> chr1:114713908_T/A NRAS_Q61     NRAS_Q61      ref      NRAS     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> chr1:114713908_T/A NRAS_Q61     NRAS_Q61L     alt      NRAS     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> chr1:114713908_T/C NRAS_Q61     NRAS_Q61R     alt      NRAS     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> chr2:208248388_G/A IDH1_R132    IDH1_R132     ref      IDH1     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> chr2:208248388_G/A IDH1_R132    IDH1_R132L    alt      IDH1     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> chr3:179234297_A/G PIK3CA_H1047 PIK3CA_H1047  ref      PIK3CA   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> chr3:179234297_A/G PIK3CA_H1047 PIK3CA_H1047R alt      PIK3CA   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> chr4:54285926_A/T  PDGFRA_D842  PDGFRA_D842   ref      PDGFRA   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> chr4:54285926_A/T  PDGFRA_D842  PDGFRA_D842V  alt      PDGFRA   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> chr4:54733155_A/T  KIT_D816     KIT_D816      ref      KIT      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    gene_id         tx_id         tiled n_tiles    nt peptide barcode_1 barcode_2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ENSG00000213281 ENST00000369… ATAG…       1    93 IDGETC… AAACCAAA… GTGCCAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ENSG00000213281 ENST00000369… ATAG…       1    93 IDGETC… CAACCAAA… TTGCCAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ENSG00000213281 ENST00000369… ATAG…       1    93 IDGETC… GAACCAAA… AATCCAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ENSG00000138413 ENST00000345… ATCC…       1    93 IPRLVS… TAACCAAA… CATCCAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ENSG00000138413 ENST00000345… ATCC…       1    93 IPRLVS… ACACCAAA… GATCCAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ENSG00000121879 ENST00000263… GAGC…       1    93 EQEALE… CCACCAAA… TATCCAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ENSG00000121879 ENST00000263… GAGC…       1    93 EQEALE… GCACCAAA… ACTCCAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ENSG00000134853 ENST00000257… GCAC…       1    93 AQGKIV… TCACCAAA… CCTCCAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ENSG00000134853 ENST00000257… GCAC…       1    93 AQGKIV… AGACCAAA… GCTCCAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ENSG00000157404 ENST00000288… ACTC…       1    93 THGRIT… CGACCAAA… TCTCCAAA…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 36 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 var_id       mut_id        pep_id pep_type gene_name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   chr1:114713908_T/A     NRAS_Q61      NRAS_Q61      ref      NRAS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   chr1:114713908_T/A     NRAS_Q61     NRAS_Q61L      alt      NRAS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   chr1:114713908_T/C     NRAS_Q61     NRAS_Q61R      alt      NRAS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   chr2:208248388_G/A    IDH1_R132     IDH1_R132      ref      IDH1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   chr2:208248388_G/A    IDH1_R132    IDH1_R132L      alt      IDH1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   chr3:179234297_A/G PIK3CA_H1047  PIK3CA_H1047      ref    PIK3CA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   chr3:179234297_A/G PIK3CA_H1047 PIK3CA_H1047R      alt    PIK3CA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8    chr4:54285926_A/T  PDGFRA_D842   PDGFRA_D842      ref    PDGFRA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9    chr4:54285926_A/T  PDGFRA_D842  PDGFRA_D842V      alt    PDGFRA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10   chr4:54733155_A/T     KIT_D816      KIT_D816      ref       KIT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11   chr4:54733155_A/T     KIT_D816     KIT_D816V      alt       KIT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12  chr4:152326137_C/T   FBXW7_R505    FBXW7_R505      ref     FBXW7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13  chr4:152326137_C/T   FBXW7_R505   FBXW7_R505S      alt     FBXW7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14  chr7:55181370_C/CA     EGFR_787      EGFR_787      ref      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-1      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-2      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-3      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-4      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-5      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-6      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21  chr7:55181370_C/CA     EGFR_787  EGFR_787fs-7      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 chr7:55181374_ATC/A     EGFR_789      EGFR_789      ref      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-1      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-2      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-3      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-4      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-5      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-6      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 chr7:55181374_ATC/A     EGFR_789  EGFR_789fs-7      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30   chr7:55181394_G/A    EGFR_F795     EGFR_F795      ref      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31   chr7:55181394_G/A    EGFR_F795    EGFR_F795L      alt      EGFR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32  chr7:116771936_C/T    MET_T1010     MET_T1010      ref       MET</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33  chr7:116771936_C/T    MET_T1010    MET_T1010I      alt       MET</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34  chr11:32396341_C/T     WT1_R377      WT1_R377      ref       WT1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35  chr11:32396341_C/T     WT1_R377     WT1_R377S      alt       WT1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36  chr12:25245350_C/T     KRAS_G12      KRAS_G12      ref      KRAS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37  chr12:25245350_C/T     KRAS_G12     KRAS_G12D      alt      KRAS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38  chr12:25245350_C/A     KRAS_G12     KRAS_G12V      alt      KRAS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            gene_id           tx_id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  ENSG00000213281 ENST00000369535</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  ENSG00000213281 ENST00000369535</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  ENSG00000213281 ENST00000369535</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  ENSG00000138413 ENST00000345146</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  ENSG00000138413 ENST00000345146</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  ENSG00000121879 ENST00000263967</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  ENSG00000121879 ENST00000263967</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  ENSG00000134853 ENST00000257290</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  ENSG00000134853 ENST00000257290</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 ENSG00000157404 ENST00000288135</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 ENSG00000157404 ENST00000288135</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 ENSG00000109670 ENST00000281708</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 ENSG00000109670 ENST00000281708</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31 ENSG00000146648 ENST00000275493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32 ENSG00000105976 ENST00000318493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33 ENSG00000105976 ENST00000318493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34 ENSG00000184937 ENST00000332351</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35 ENSG00000184937 ENST00000332351</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36 ENSG00000133703 ENST00000256078</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37 ENSG00000133703 ENST00000256078</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38 ENSG00000133703 ENST00000256078</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                            tiled</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  ATAGATGGTGAAACCTGTTTGTTGGACATACTGGATACAGCTGGACAAGAAGAGTACAGTGCCATGAGAGACCAATACATGAGGACAGGCGAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  ATAGATGGTGAAACCTGTTTGTTGGACATACTGGATACAGCTGGACTAGAAGAGTACAGTGCCATGAGAGACCAATACATGAGGACAGGCGAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  ATAGATGGTGAAACCTGTTTGTTGGACATACTGGATACAGCTGGACGAGAAGAGTACAGTGCCATGAGAGACCAATACATGAGGACAGGCGAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  ATCCCCCGGCTTGTGAGTGGATGGGTAAAACCTATCATCATAGGTCGTCATGCTTATGGGGATCAATACAGAGCAACTGATTTTGTTGTTCCT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  ATCCCCCGGCTTGTGAGTGGATGGGTAAAACCTATCATCATAGGTCTTCATGCTTATGGGGATCAATACAGAGCAACTGATTTTGTTGTTCCT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  GAGCAAGAGGCTTTGGAGTATTTCATGAAACAAATGAATGATGCACATCATGGTGGCTGGACAACAAAAATGGATTGGATCTTCCACACAATT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  GAGCAAGAGGCTTTGGAGTATTTCATGAAACAAATGAATGATGCACGTCATGGTGGCTGGACAACAAAAATGGATTGGATCTTCCACACAATT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  GCACAAGGAAAAATTGTGAAGATCTGTGACTTTGGCCTGGCCAGAGACATCATGCATGATTCGAACTATGTGTCGAAAGGCAGTACCTTTCTG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  GCACAAGGAAAAATTGTGAAGATCTGTGACTTTGGCCTGGCCAGAGTCATCATGCATGATTCGAACTATGTGTCGAAAGGCAGTACCTTTCTG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 ACTCATGGTCGGATCACAAAGATTTGTGATTTTGGTCTAGCCAGAGACATCAAGAATGATTCTAATTATGTGGTTAAAGGAAACGCTCGACTA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 ACTCATGGTCGGATCACAAAGATTTGTGATTTTGGTCTAGCCAGAGTCATCAAGAATGATTCTAATTATGTGGTTAAAGGAAACGCTCGACTA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 ACAGGCCAGTGTTTACATGTTTTGATGGGTCATGTTGCAGCAGTCCGCTGTGTTCAATATGATGGCAGGAGGGTTGTTAGTGGAGCATATGAT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 ACAGGCCAGTGTTTACATGTTTTGATGGGTCATGTTGCAGCAGTCAGCTGTGTTCAATATGATGGCAGGAGGGTTGTTAGTGGAGCATATGAT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 CCCCACGTGTGCCGCCTGCTGGGCATCTGCCTCACCTCCACCGTGCAGCTCATCACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 CCCCACGTGTGCCGCCTGCTGGGCATCTGCCTCACCTCCACCGTGCACACTCATCACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 ACTCATCACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAACACAAAGACAATATTGGCTCCCAGTACCTGCTCAACTGGTG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 CCGGGAACACAAAGACAATATTGGCTCCCAGTACCTGCTCAACTGGTGTGTGCAGATCGCAAAGGGCATGAACTACTTGGAGGACCGTCGCTT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 GTGTGTGCAGATCGCAAAGGGCATGAACTACTTGGAGGACCGTCGCTTGGTGCACCGCGACCTGGCAGCCAGGAACGTACTGGTGAAAACACC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 GGTGCACCGCGACCTGGCAGCCAGGAACGTACTGGTGAAAACACCGCAGCATGTCAAGATCACAGATTTTGGGCTGGCCAAACTGCTGGGTGC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 GCATGTCAAGATCACAGATTTTGGGCTGGCCAAACTGCTGGGTGCGGAAGAGAAAGAATACCATGCAGAAGGAGGCAAAGTGCCTATCAAGTG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 GGAAGAGAAAGAATACCATGCAGAAGGAGGCAAAGTGCCTATCAAGTGGATGGCATTGGAATCAATTTTACACAGAATCTATACCCACCAGAG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 GTGTGCCGCCTGCTGGGCATCTGCCTCACCTCCACCGTGCAGCTCATCACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 GTGTGCCGCCTGCTGGGCATCTGCCTCACCTCCACCGTGCAGCTCAACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAACA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 AACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAACACAAAGACAATATTGGCTCCCAGTACCTGCTCAACTGGTGTGTGCA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 ACACAAAGACAATATTGGCTCCCAGTACCTGCTCAACTGGTGTGTGCAGATCGCAAAGGGCATGAACTACTTGGAGGACCGTCGCTTGGTGCA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 GCAGATCGCAAAGGGCATGAACTACTTGGAGGACCGTCGCTTGGTGCACCGCGACCTGGCAGCCAGGAACGTACTGGTGAAAACACCGCAGCA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 GCACCGCGACCTGGCAGCCAGGAACGTACTGGTGAAAACACCGCAGCATGTCAAGATCACAGATTTTGGGCTGGCCAAACTGCTGGGTGCGGA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 GCATGTCAAGATCACAGATTTTGGGCTGGCCAAACTGCTGGGTGCGGAAGAGAAAGAATACCATGCAGAAGGAGGCAAAGTGCCTATCAAGTG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 GGAAGAGAAAGAATACCATGCAGAAGGAGGCAAAGTGCCTATCAAGTGGATGGCATTGGAATCAATTTTACACAGAATCTATACCCACCAGAG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 ATCTGCCTCACCTCCACCGTGCAGCTCATCACGCAGCTCATGCCCTTCGGCTGCCTCCTGGACTATGTCCGGGAACACAAAGACAATATTGGC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31 ATCTGCCTCACCTCCACCGTGCAGCTCATCACGCAGCTCATGCCCTTAGGCTGCCTCCTGGACTATGTCCGGGAACACAAAGACAATATTGGC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32 ACTCCTCATTTGGATAGGCTTGTAAGTGCCCGAAGTGTAAGCCCAACTACAGAAATGGTTTCAAATGAATCTGTAGACTACCGAGCTACTTTT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33 ACTCCTCATTTGGATAGGCTTGTAAGTGCCCGAAGTGTAAGCCCAATTACAGAAATGGTTTCAAATGAATCTGTAGACTACCGAGCTACTTTT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34 GTAGCCCCGACTCTTGTACGGTCGGCATCTGAGACCAGTGAGAAACGCCCCTTCATGTGTGCTTACCCAGGCTGCAATAAGAGATATTTTAAG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35 GTAGCCCCGACTCTTGTACGGTCGGCATCTGAGACCAGTGAGAAAAGCCCCTTCATGTGTGCTTACCCAGGCTGCAATAAGAGATATTTTAAG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36 ATGACTGAATATAAACTTGTGGTAGTTGGAGCTGGTGGCGTAGGCAAGAGTGCCTTGACGATACAGCTAATTCAGAATCATTTTGTGGACGAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37 ATGACTGAATATAAACTTGTGGTAGTTGGAGCTGATGGCGTAGGCAAGAGTGCCTTGACGATACAGCTAATTCAGAATCATTTTGTGGACGAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38 ATGACTGAATATAAACTTGTGGTAGTTGGAGCTGTTGGCGTAGGCAAGAGTGCCTTGACGATACAGCTAATTCAGAATCATTTTGTGGACGAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    n_tiles nt                         peptide    barcode_1    barcode_2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        1 93 IDGETCLLDILDTAGQEEYSAMRDQYMRTGE AAACCAAAAAAA GTGCCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        1 93 IDGETCLLDILDTAGLEEYSAMRDQYMRTGE CAACCAAAAAAA TTGCCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        1 93 IDGETCLLDILDTAGREEYSAMRDQYMRTGE GAACCAAAAAAA AATCCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        1 93 IPRLVSGWVKPIIIGRHAYGDQYRATDFVVP TAACCAAAAAAA CATCCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        1 93 IPRLVSGWVKPIIIGLHAYGDQYRATDFVVP ACACCAAAAAAA GATCCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        1 93 EQEALEYFMKQMNDAHHGGWTTKMDWIFHTI CCACCAAAAAAA TATCCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7        1 93 EQEALEYFMKQMNDARHGGWTTKMDWIFHTI GCACCAAAAAAA ACTCCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8        1 93 AQGKIVKICDFGLARDIMHDSNYVSKGSTFL TCACCAAAAAAA CCTCCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9        1 93 AQGKIVKICDFGLARVIMHDSNYVSKGSTFL AGACCAAAAAAA GCTCCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10       1 93 THGRITKICDFGLARDIKNDSNYVVKGNARL CGACCAAAAAAA TCTCCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11       1 93 THGRITKICDFGLARVIKNDSNYVVKGNARL GGACCAAAAAAA AGTCCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12       1 93 TGQCLHVLMGHVAAVRCVQYDGRRVVSGAYD TGACCAAAAAAA CGTCCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13       1 93 TGQCLHVLMGHVAAVSCVQYDGRRVVSGAYD ATACCAAAAAAA GGTCCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14       1 93 PHVCRLLGICLTSTVQLITQLMPFGCLLDYV CTACCAAAAAAA TGTCCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15       7 93 PHVCRLLGICLTSTVHTHHAAHALRLPPGLC GTACCAAAAAAA ATTCCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16       7 93 THHAAHALRLPPGLCPGTQRQYWLPVPAQLV TTACCAAAAAAA CTTCCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17       7 93 PGTQRQYWLPVPAQLVCADRKGHELLGGPSL AACCCAAAAAAA GTTCCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18       7 93 VCADRKGHELLGGPSLGAPRPGSQERTGENT CACCCAAAAAAA TTTCCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19       7 93 GAPRPGSQERTGENTAACQDHRFWAGQTAGC GACCCAAAAAAA AAAGCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20       7 93 ACQDHRFWAGQTAGCGRERIPCRRRQSAYQV TACCCAAAAAAA CAAGCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21       7 93 GRERIPCRRRQSAYQVDGIGINFTQNLYPPE ACCCCAAAAAAA GAAGCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22       1 93 VCRLLGICLTSTVQLITQLMPFGCLLDYVRE CCCCCAAAAAAA TAAGCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23       7 93 VCRLLGICLTSTVQLNAAHALRLPPGLCPGT GCCCCAAAAAAA ACAGCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24       7 93 NAAHALRLPPGLCPGTQRQYWLPVPAQLVCA TCCCCAAAAAAA CCAGCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25       7 93 TQRQYWLPVPAQLVCADRKGHELLGGPSLGA AGCCCAAAAAAA GCAGCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26       7 93 ADRKGHELLGGPSLGAPRPGSQERTGENTAA CGCCCAAAAAAA TCAGCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27       7 93 APRPGSQERTGENTAACQDHRFWAGQTAGCG GGCCCAAAAAAA AGAGCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28       7 93 ACQDHRFWAGQTAGCGRERIPCRRRQSAYQV TGCCCAAAAAAA CGAGCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29       7 93 GRERIPCRRRQSAYQVDGIGINFTQNLYPPE ATCCCAAAAAAA GGAGCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30       1 93 ICLTSTVQLITQLMPFGCLLDYVREHKDNIG CTCCCAAAAAAA TGAGCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31       1 93 ICLTSTVQLITQLMPLGCLLDYVREHKDNIG GTCCCAAAAAAA ATAGCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32       1 93 TPHLDRLVSARSVSPTTEMVSNESVDYRATF TTCCCAAAAAAA CTAGCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33       1 93 TPHLDRLVSARSVSPITEMVSNESVDYRATF AAGCCAAAAAAA GTAGCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34       1 93 VAPTLVRSASETSEKRPFMCAYPGCNKRYFK CAGCCAAAAAAA TTAGCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35       1 93 VAPTLVRSASETSEKSPFMCAYPGCNKRYFK GAGCCAAAAAAA AACGCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36       1 93 MTEYKLVVVGAGGVGKSALTIQLIQNHFVDE TAGCCAAAAAAA CACGCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37       1 93 MTEYKLVVVGADGVGKSALTIQLIQNHFVDE ACGCCAAAAAAA GACGCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38       1 93 MTEYKLVVVGAVGVGKSALTIQLIQNHFVDE CCGCCAAAAAAA TACGCAAAAAAA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 8 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

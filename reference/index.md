@@ -30,8 +30,8 @@
 - [`plot_read_structure()`](plot_read_structure.md) : Plot annotated
   read structure examples
 - [`plot_screen()`](plot_screen.md) : Plot screen results
-- [`remove_cutsite()`](remove_cutsite.md) : Remove a Restriction Enzyme
-  cut site but keep AA in a tiled peptide data.frame
+- [`remove_cutsite()`](remove_cutsite.md) : Remove restriction enzyme
+  sites while preserving amino acids
 - [`screen_calc()`](screen_calc.md) : Calculate differential abundance
   of construct barcodes
 - [`subset_context()`](subset_context.md) : Subset nucleotide/protein

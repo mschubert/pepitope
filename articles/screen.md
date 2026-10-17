@@ -22,21 +22,21 @@ However, we need to make sure to perform the screen analysis only on
 relevant samples, otherwise the model may mis-estimate the variability:
 
 ``` r
-dset = dset[,grepl("pat1", dset$patient)]
+dset = dset[,grepl("pat1", dset$minigenes)]
 colData(dset)
-#> DataFrame with 4 rows and 10 columns
-#>           sample_id     patient       rep      origin     barcode total_reads
-#>         <character>    <factor> <numeric> <character> <character>   <numeric>
+#> DataFrame with 4 rows and 7 columns
+#>           sample_id   minigenes       rep      origin     barcode total_reads
+#>         <character>    <factor> <integer> <character> <character>   <numeric>
 #> mock1         mock1 pat1+common         1        Mock     TGAGTCC      228629
 #> mock2         mock2 pat1+common         2        Mock     CAAGATG      219012
 #> screen1     screen1 pat1+common         1      Sample     AACCGAC      450998
 #> screen2     screen2 pat1+common         2      Sample     AGAATCG      431578
-#>         mapped_reads         smp                short                  label
-#>            <numeric> <character>          <character>            <character>
-#> mock1         228629      Mock-1   pat1+common Mock-1 pat1+common Mock-1 (..
-#> mock2         219012      Mock-2   pat1+common Mock-2 pat1+common Mock-2 (..
-#> screen1       450998    Sample-1 pat1+common Sample-1 pat1+common Sample-1..
-#> screen2       431578    Sample-2 pat1+common Sample-2 pat1+common Sample-2..
+#>         mapped_reads
+#>            <numeric>
+#> mock1         228629
+#> mock2         219012
+#> screen1       450998
+#> screen2       431578
 ```
 
 ## Calculating differential abundance
@@ -86,9 +86,9 @@ res[[1]]
 #>  9 AAAGAAAAAAAA    1782.         -0.455 0.173  -2.64 8.36e- 3 2.10e- 1
 #> 10 CTCAAAAAAAAA    2679.          0.420 0.163   2.57 1.01e- 2 2.13e- 1
 #> # ℹ 216 more rows
-#> # ℹ 13 more variables: unassigned_reads <dbl>, bc_type <fct>, var_id <chr>,
+#> # ℹ 13 more variables: unassigned_reads <dbl>, minigenes <fct>, var_id <chr>,
 #> #   mut_id <chr>, pep_id <chr>, pep_type <chr>, gene_name <chr>, gene_id <chr>,
-#> #   tx_id <chr>, tiled <chr>, n_tiles <dbl>, nt <dbl>, peptide <chr>
+#> #   tx_id <chr>, tiled <chr>, n_tiles <int>, nt <int>, peptide <chr>
 ```
 
 ## Plotting the screen results

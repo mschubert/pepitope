@@ -21,7 +21,7 @@ plot_read_structure(fq, samples, all_constructs, nrec = 100000L)
 - samples:
 
   A sample sheet as \`data.frame\` in tsv format. Requires the columns
-  'sample_id', 'patient', 'rep', 'origin', 'barcode'
+  'sample_id', 'minigenes', 'rep', 'origin', 'barcode'
 
 - all_constructs:
 
@@ -39,7 +39,7 @@ A patchwork object containing barcode counts and read examples
 
 ``` r
 if (interactive()) {
-    samples = data.frame(sample_id="sample1", patient="pat1", rep="1",
+    samples = data.frame(sample_id="sample1", minigenes="pat1", rep="1",
         origin="library", barcode="GGG")
     constructs = list(pat1=data.frame(gene_name="GENE1", mut_id="GENE1_A1V",
         pep_id="GENE1_A1V", pep_type="alt", tiled="ATGGCCGCC", barcode_1="AAAA"))
