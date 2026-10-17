@@ -6,8 +6,9 @@
   membership
 - Refactor [`remove_cutsite()`](../reference/remove_cutsite.md) into
   `Rcpp` utility function
-- Refactor and 1.6x (3.5x cached) speed up `annodate_coding()` (1000
-  SNVs tested)
+- Refactor and 1.6x (3.5x cached) speed up
+  [`annotate_coding()`](../reference/annotate_coding.md) (1000 SNVs
+  tested)
 - Refactor and 2.2x speed up
   [`count_fastq()`](../reference/count_fastq.md) (400M .gz reads tested)
 

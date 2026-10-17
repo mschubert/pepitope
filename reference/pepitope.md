@@ -28,3 +28,9 @@ Authors:
 
 - Michael Schubert <mschu.dev@gmail.com>
   ([ORCID](https://orcid.org/0000-0002-6862-5221))
+
+Other contributors:
+
+- Moritz Broft \[contributor\]
+
+- Wouter Scheper \[contributor\]
