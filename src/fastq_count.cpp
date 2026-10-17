@@ -3,8 +3,8 @@
 #include <zlib.h>
 
 #include <algorithm>
-#include <cctype>
 #include <cstdint>
+#include <cstring>
 #include <ostream>
 #include <string>
 #include <unordered_map>
@@ -17,14 +17,6 @@ struct Segment {
     int width;
 };
 
-std::string uppercase_subseq(const char *seq, int start, int width) {
-    std::string out(seq + start, seq + start + width);
-    std::transform(out.begin(), out.end(), out.begin(), [](unsigned char c) {
-        return static_cast<char>(std::toupper(c));
-    });
-    return out;
-}
-
 std::vector<Segment> as_segments(Rcpp::IntegerVector start, Rcpp::IntegerVector width) {
     std::vector<Segment> out;
     out.reserve(start.size());
@@ -33,26 +25,71 @@ std::vector<Segment> as_segments(Rcpp::IntegerVector start, Rcpp::IntegerVector 
     return out;
 }
 
-bool read_gz_line(gzFile fp, std::string &out) {
-    out.clear();
-    char buffer[65536];
-    while (gzgets(fp, buffer, sizeof(buffer)) != Z_NULL) {
-        out += buffer;
-        if (!out.empty() && out.back() == '\n')
-            break;
+class FastqReader {
+    const std::string path;
+    gzFile fp;
+    std::vector<char> buffer;
+    std::size_t pos = 0, end = 0;
+
+public:
+    explicit FastqReader(const std::string &path) : path(path), fp(nullptr), buffer(1 << 20) {
+        fp = gzopen(path.c_str(), "r");
+        if (fp == nullptr)
+            Rcpp::stop("Could not open FASTQ file '%s'", path);
+        gzbuffer(fp, 1 << 20);
     }
-    if (out.empty())
-        return false;
-    while (!out.empty() && (out.back() == '\n' || out.back() == '\r'))
-        out.pop_back();
-    return true;
-}
+
+    ~FastqReader() { gzclose(fp); }
+    FastqReader(const FastqReader &) = delete;
+    FastqReader &operator=(const FastqReader &) = delete;
+
+    // Passing no output skips a line without copying its contents.
+    bool line(std::string *out = nullptr) {
+        if (out)
+            out->clear();
+        bool seen = false;
+        for (;;) {
+            if (pos == end) {
+                const int size = gzread(fp, buffer.data(), buffer.size());
+                // A truncated stream can return data and set an error in the same read.
+                int status;
+                const char *message = gzerror(fp, &status);
+                if (status != Z_OK && status != Z_STREAM_END)
+                    Rcpp::stop("Could not read FASTQ file '%s': %s", path, message);
+                if (size <= 0)
+                    break;
+                pos = 0;
+                end = size;
+            }
+            const char *begin = buffer.data() + pos;
+            const char *newline = static_cast<const char *>(std::memchr(begin, '\n', end-pos));
+            const std::size_t length = newline ? static_cast<std::size_t>(newline-begin) : end-pos;
+            if (out)
+                out->append(begin, length);
+            seen = true;
+            pos += length;
+            if (newline) {
+                ++pos;
+                break;
+            }
+        }
+        if (out)
+            while (!out->empty() && out->back() == '\r')
+                out->pop_back();
+        return seen;
+    }
+};
 
 bool append_segments(std::string &out, const std::vector<Segment> &segments, const std::string &seq) {
     for (const Segment &segment : segments) {
         if (seq.size() < static_cast<std::size_t>(segment.start + segment.width))
             return false;
-        out += uppercase_subseq(seq.data(), segment.start, segment.width);
+        const auto previous = out.size();
+        out.append(seq, segment.start, segment.width);
+        std::transform(out.begin() + previous, out.end(), out.begin() + previous,
+            [](unsigned char c) {
+                return static_cast<char>(c >= 'a' && c <= 'z' ? c - ('a' - 'A') : c);
+            });
     }
     return true;
 }
@@ -106,19 +143,21 @@ Rcpp::List count_fastq_barcodes_cpp(Rcpp::CharacterVector fq,
     if (verbose)
         Rcpp::Rcout << "Counting barcodes in " << path << "\n";
 
-    gzFile fp = gzopen(path.c_str(), "r");
-    if (fp == nullptr)
-        Rcpp::stop("Could not open FASTQ file '%s'", path);
+    std::string sample_key;
+    std::string construct_key;
+    std::size_t sample_size = 0, construct_size = 0;
+    for (const auto &segment : sample_segments)
+        sample_size += segment.width;
+    for (const auto &segment : construct_segments)
+        construct_size += segment.width;
+    sample_key.reserve(sample_size);
+    construct_key.reserve(construct_size);
 
-    std::string header;
+    FastqReader reader(path);
     std::string seq;
-    std::string plus;
-    std::string qual;
-    while (read_gz_line(fp, header)) {
-        if (!read_gz_line(fp, seq) || !read_gz_line(fp, plus) || !read_gz_line(fp, qual)) {
-            gzclose(fp);
+    while (reader.line()) {
+        if (!reader.line(&seq) || !reader.line() || !reader.line())
             Rcpp::stop("Malformed FASTQ file '%s'", path);
-        }
         ++reads_seen;
         if (reads_seen % 1000000 == 0) {
             Rcpp::checkUserInterrupt();
@@ -126,8 +165,8 @@ Rcpp::List count_fastq_barcodes_cpp(Rcpp::CharacterVector fq,
                 Rcpp::Rcout << "\rProcessed " << format_reads(reads_seen, format) << " reads" << std::flush;
         }
 
-        std::string sample_key;
-        std::string construct_key;
+        sample_key.clear();
+        construct_key.clear();
         if (!append_segments(sample_key, sample_segments, seq) ||
                 !append_segments(construct_key, construct_segments, seq))
             continue;
@@ -149,8 +188,6 @@ Rcpp::List count_fastq_barcodes_cpp(Rcpp::CharacterVector fq,
 
         ++counts(construct_hit->second, sample_i);
     }
-
-    gzclose(fp);
 
     if (verbose)
         Rcpp::Rcout << "\rProcessed " << format_reads(reads_seen, format) << " reads\n";

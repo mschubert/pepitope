@@ -82,3 +82,55 @@ test_that("reads with unmatched samples are stored separately by construct or in
     expect_equal(SummarizedExperiment::colData(dset)$total_reads, 2)
     expect_equal(SummarizedExperiment::colData(dset)$mapped_reads, 1)
 })
+
+count_fixture = function(fq) {
+    count_fastq_barcodes_cpp(fq, sample_barcodes="GGG", construct_barcodes="AAAA",
+        sample_start=1L, sample_width=3L, construct_start=4L, construct_width=4L,
+        verbose=FALSE, progress=FALSE)
+}
+
+test_that("FASTQ blocks preserve long records, CRLF and a final line without newline", {
+    block = 2^20
+    seq = paste0("gggaaaa", strrep("N", block))
+    # The barcode and a CRLF pair cross block boundaries; records span several blocks.
+    long_read = c(paste0("@", strrep("h", block-6)), seq,
+        paste0("+", strrep("p", block-8)), strrep("I", nchar(seq)))
+    reads = c("g", "aacaaaa", "gggcccc", "ttttttt", "gggaaaa")
+    lines = c(long_read, as.vector(rbind(paste0("@r", seq_along(reads)), reads, "+",
+        strrep("I", nchar(reads)))))
+    text = charToRaw(paste(lines, collapse="\r\n"))
+    fq = c(tempfile(fileext=".fq"), tempfile(fileext=".fq.gz"))
+    on.exit(unlink(fq))
+    writeBin(text, fq[1])
+    con = gzfile(fq[2], "wb")
+    writeBin(text, con)
+    close(con)
+
+    expected = list(counts=matrix(2, nrow=1), unassigned_reads=1, total_reads=3, unmapped_reads=1)
+    for (path in fq)
+        expect_equal(count_fixture(path), expected)
+})
+
+test_that("FASTQ reading handles empty files and rejects incomplete records", {
+    fq = tempfile(fileext=".fq")
+    on.exit(unlink(fq))
+    writeBin(raw(), fq)
+    expect_equal(count_fixture(fq),
+        list(counts=matrix(0, nrow=1), unassigned_reads=0, total_reads=0, unmapped_reads=0))
+    for (lines in list("@r", c("@r", "GGGAAAA"), c("@r", "GGGAAAA", "+"))) {
+        writeLines(lines, fq)
+        expect_error(count_fixture(fq), "Malformed FASTQ file", fixed=TRUE)
+    }
+    expect_error(count_fixture(paste0(fq, ".missing")), "Could not open FASTQ file", fixed=TRUE)
+})
+
+test_that("truncated gzip data are reported as read errors", {
+    fq = tempfile(fileext=".fq.gz")
+    on.exit(unlink(fq))
+    con = gzfile(fq, "wb")
+    writeLines(c("@r", "GGGAAAA", "+", "IIIIIII"), con)
+    close(con)
+    bytes = readBin(fq, "raw", n=file.info(fq)$size)
+    writeBin(head(bytes, -8), fq)
+    expect_error(count_fixture(fq), "Could not read FASTQ file", fixed=TRUE)
+})
